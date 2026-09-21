@@ -5,7 +5,7 @@ Pasos para dejar tu computador listo: instalar las herramientas, crear la base d
 - En **Windows**, los comandos se escriben en **PowerShell**, la terminal de VS Code.
 - En **macOS**, en la app **Terminal** o en la terminal de VS Code.
 
-> **¿Ya instalaste Git, el JDK 21 y VS Code para el proyecto teambsoft?** Salta al paso 1.4 (MySQL). Solo te faltan MySQL, MySQL Workbench, Postman y la extensión Live Server.
+> **¿Ya instalaste Git, el JDK 21 y VS Code para el proyecto teambsoft?** Salta al paso 1.4. Te faltan Node.js 24 (si no lo tienes), MySQL con Workbench, MongoDB con Compass y Postman.
 
 ## 0. Acceso al repositorio
 
@@ -17,13 +17,25 @@ Pasos para dejar tu computador listo: instalar las herramientas, crear la base d
 | Herramienta | Para qué |
 |---|---|
 | Git | Control de versiones |
-| JDK 21 (Temurin) | Compilar y ejecutar el backend |
-| VS Code, con sus extensiones | Editor, y servidor del frontend con Live Server |
-| MySQL Community Server 8.4 LTS | Base de datos |
+| JDK 21 (Temurin) | Compilar y ejecutar el servicio de cuentas (Spring Boot) |
+| VS Code, con sus extensiones | Editor |
+| Node.js 24 LTS | Ejecutar el servicio de entrenamiento y el frontend de React |
+| MySQL Community Server 8.4 LTS | Base de datos del servicio de cuentas |
 | MySQL Workbench | Ver las tablas y los datos |
+| MongoDB Community Server 8.0 y Compass | Base de datos del servicio de entrenamiento, y su visor |
 | Postman | Probar la API |
 
-**No hace falta instalar Maven:** el proyecto trae el Maven Wrapper (`mvnw`), que lo descarga solo. **Tampoco hace falta Docker ni Node.js.**
+**No hace falta instalar Maven:** el proyecto trae el Maven Wrapper (`mvnw`), que lo descarga solo. **Tampoco hace falta Docker.**
+
+**Qué instalar primero.** Al final, los tres necesitan todo. Pero para empezar la primera tarea basta con esto:
+
+| Quién | Para su primera tarea | Lo demás, cuando pueda |
+|---|---|---|
+| Rances (T1 y T4) | Git, JDK 21, VS Code, MySQL con Workbench y Postman | Node.js 24, MongoDB y Compass |
+| Javier (T2) | Git, VS Code y Node.js 24 | JDK 21 y MySQL con Workbench (los necesita el 23 para la API de catálogo), MongoDB, Compass y Postman |
+| Santiago (T3) | Git, VS Code, Node.js 24, MongoDB con Compass y Postman | JDK 21 y MySQL con Workbench |
+
+El computador donde se presente la demostración del martes 22 necesita todo, porque ahí corren los dos servicios, las dos bases de datos y el frontend.
 
 ### 1.1 Git
 
@@ -47,9 +59,20 @@ Abre Extensiones (`Ctrl+Shift+X` en Windows, `Cmd+Shift+X` en macOS) e instala:
 
 - **Extension Pack for Java**
 - **Spring Boot Extension Pack**
-- **Live Server** (de Ritwick Dey)
 
-### 1.4 MySQL Community Server 8.4 LTS
+### 1.4 Node.js 24 LTS
+
+Descárgalo de https://nodejs.org/es/download: elige la versión **24 (LTS)** y el instalador de tu sistema (`.msi` en Windows, `.pkg` en macOS). Deja las opciones por defecto. Node.js trae `npm`, la herramienta que instala las librerías del frontend y del servicio de entrenamiento.
+
+Si ya tenías Node.js, revisa la versión con `node --version`: sirve la 24 o una más nueva. Algunas librerías del proyecto exigen al menos la 22.
+
+**Windows:** si al usar `npm` en PowerShell aparece que *la ejecución de scripts está deshabilitada en este sistema*, ejecuta esto una sola vez y confirma con `S` (o `Y` si tu Windows está en inglés). Permite que tu usuario ejecute los scripts de npm:
+
+```powershell
+Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
+```
+
+### 1.5 MySQL Community Server 8.4 LTS
 
 1. Entra a https://dev.mysql.com/downloads/mysql/
 2. En **Select Version** elige **8.4.x LTS**. No elijas 9.x ni 26.x: el equipo usa la 8.4 (la razón está en [ARQUITECTURA.md](docs/ARQUITECTURA.md), decisión DEC-03).
@@ -64,11 +87,26 @@ Abre Extensiones (`Ctrl+Shift+X` en Windows, `Cmd+Shift+X` en macOS) e instala:
 
 Si la página pide iniciar sesión con una cuenta de Oracle, usa el enlace **"No thanks, just start my download"**.
 
-### 1.5 MySQL Workbench
+### 1.6 MySQL Workbench
 
 Descárgalo de https://dev.mysql.com/downloads/workbench/ (la versión que aparezca) e instálalo con las opciones por defecto.
 
-### 1.6 Postman
+### 1.7 MongoDB Community Server 8.0 y MongoDB Compass
+
+- **Windows:** entra a https://www.mongodb.com/try/download/community y elige **Version 8.0.x**, **Platform Windows x64** y **Package msi**. Instala con la opción **Complete** y deja marcadas **Install MongoDB as a Service** (así arranca solo con Windows) e **Install MongoDB Compass**.
+- **macOS:** con Homebrew (si no lo tienes, instálalo desde https://brew.sh):
+
+```bash
+brew tap mongodb/brew
+brew install mongodb-community@8.0
+brew services start mongodb-community@8.0
+```
+
+  Después descarga MongoDB Compass (DMG) de https://www.mongodb.com/try/download/compass.
+
+**Comprobar:** abre Compass → **New connection** → deja `mongodb://localhost:27017` → **Connect**. Deben aparecer las bases `admin`, `config` y `local`. La base `gymrutine` la crea el servicio de entrenamiento la primera vez que arranca.
+
+### 1.8 Postman
 
 Descarga la aplicación de escritorio de https://www.postman.com/downloads/ e instálala.
 
@@ -79,9 +117,11 @@ Cierra VS Code y las terminales, y vuelve a abrirlos para que reconozcan lo que 
 ```bash
 git --version
 java -version
+node --version
+npm --version
 ```
 
-`java -version` debe mostrar la versión **21**.
+`java -version` debe mostrar la versión **21**, y `node --version`, la 24 o una más nueva. Si `npm --version` da error en Windows, mira la nota del paso 1.4.
 
 ## 2. Configurar Git (una sola vez)
 
@@ -101,12 +141,12 @@ git config --global core.editor "code --wait"
 
 No tienes que iniciar sesión en GitHub ahora. La primera vez que hagas `git push` se abrirá el navegador para que autorices tu cuenta.
 
-## 3. Crear la base de datos (una sola vez)
+## 3. Crear la base de datos de MySQL (una sola vez)
 
-La base de datos y su usuario se crean a mano **una vez**. Las tablas no: las crea el backend al arrancar.
+La base de MySQL y su usuario se crean a mano **una vez**. Las tablas no: las crea el servicio de cuentas al arrancar. **En MongoDB no hay que crear nada**: el servicio de entrenamiento crea la base `gymrutine`, sus colecciones y sus índices al arrancar.
 
 1. Abre **MySQL Workbench**.
-2. En *MySQL Connections*, abre la conexión **Local instance** (o crea una: host `localhost`, puerto `3306`, usuario `root`) y escribe la contraseña de `root` del paso 1.4.
+2. En *MySQL Connections*, abre la conexión **Local instance** (o crea una: host `localhost`, puerto `3306`, usuario `root`) y escribe la contraseña de `root` del paso 1.5.
 3. En la pestaña de consultas, pega lo siguiente y ejecútalo con el ícono del rayo:
 
 ```sql
@@ -145,44 +185,78 @@ code .
 
 `code .` abre la carpeta del proyecto en VS Code. Si en macOS dice `command not found`, abre VS Code, presiona `Cmd+Shift+P` y ejecuta **Shell Command: Install 'code' command in PATH**.
 
-## 5. Arrancar el backend
+## 5. Arrancar los servicios
 
-> **Disponible cuando la tarea T1 esté en `main`.** Hasta entonces, la carpeta `backend/` no existe.
+> **Disponibles cuando T1 (servicio de cuentas) y T3 (servicio de entrenamiento) estén en `main`.**
 
-Con MySQL encendido, en la terminal de VS Code:
+Con MySQL y MongoDB encendidos, abre **dos** terminales en VS Code (menú **Terminal → New Terminal**), una por servicio.
+
+### 5.1 Servicio de cuentas (Spring Boot)
 
 - **Windows:**
 
 ```powershell
-cd backend
+cd backend-spring
 .\mvnw.cmd spring-boot:run
 ```
 
 - **macOS:**
 
 ```bash
-cd backend
+cd backend-spring
 ./mvnw spring-boot:run
 ```
 
 El `.\` de Windows es obligatorio en PowerShell: significa "el archivo que está en esta carpeta". La primera vez tarda unos minutos, porque descarga Maven y las librerías.
 
-**Para comprobar que funciona:**
+**Para comprobar que funciona:** abre http://localhost:8080/api/referencias (deben aparecer los objetivos, los grupos musculares y los equipos) y, en MySQL Workbench, actualiza el esquema `gymrutine`: deben aparecer las 6 tablas.
 
-1. Abre http://localhost:8080/api/referencias en el navegador: deben aparecer los objetivos, los grupos musculares y los equipos.
-2. En MySQL Workbench, actualiza el esquema `gymrutine`: deben aparecer las 10 tablas.
+### 5.2 Servicio de entrenamiento (Node.js)
 
-Para detener el backend, presiona `Ctrl + C` en la terminal.
+La primera vez hay que crear tu archivo `.env` a partir del ejemplo e instalar las librerías:
 
-## 6. Abrir el frontend
+- **Windows:**
+
+```powershell
+cd backend-node
+Copy-Item .env.ejemplo .env
+npm install
+npm run dev
+```
+
+- **macOS:**
+
+```bash
+cd backend-node
+cp .env.ejemplo .env
+npm install
+npm run dev
+```
+
+Las siguientes veces basta con `npm run dev`. El `.env` no se sube al repositorio: cada uno tiene el suyo.
+
+**Para comprobar que funciona:** abre http://localhost:3000/salud (debe decir `"estado": "ok"`) y, en MongoDB Compass, actualiza la conexión: debe aparecer la base `gymrutine` con las colecciones `sesiones` y `registrosPeso`.
+
+Para detener cualquiera de los dos servicios, presiona `Ctrl + C` en su terminal.
+
+## 6. Arrancar el frontend
 
 > **Disponible cuando la tarea T2 esté en `main`.**
 
-1. Deja el backend corriendo (paso 5).
-2. En VS Code, en el explorador de archivos, haz clic derecho sobre `frontend/index.html` → **Open with Live Server**.
-3. Se abre el navegador en `http://127.0.0.1:5500/frontend/index.html`.
+Deja los dos servicios corriendo (paso 5) y, en **otra** terminal de VS Code:
 
-Live Server recarga la página sola cada vez que guardas un archivo del frontend.
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+1. **`npm install`** descarga las librerías del frontend en la carpeta `frontend/node_modules/`. Se hace la primera vez y cada vez que cambie `package.json` (por ejemplo, después de un `git pull` que lo modifique).
+2. **`npm run dev`** arranca Vite en http://localhost:5173. Ábrelo en el navegador: debe aparecer la pantalla de iniciar sesión.
+
+Vite recarga la página sola cada vez que guardas un archivo. Las peticiones a `/api` llegan al backend gracias al proxy de `vite.config.js`. Si el backend está apagado, la app muestra "No se pudo conectar con el servidor".
+
+Para detener el frontend, presiona `Ctrl + C` en su terminal.
 
 ## 7. Probar la API con Postman
 
@@ -194,23 +268,28 @@ Live Server recarga la página sola cada vez que guardas un archivo del frontend
 
 ## 8. Si cambió el modelo de datos
 
-El backend crea y actualiza las tablas solo, pero **no borra ni renombra columnas**. Cuando alguien avise en el grupo que cambió [MODELO-DATOS.md](docs/MODELO-DATOS.md) de una forma que lo requiera, recrea tu base local.
+Los servicios crean y actualizan solos las tablas, las colecciones y los índices, pero **no borran ni renombran** columnas o campos viejos. Cuando alguien avise en el grupo que cambió [MODELO-DATOS.md](docs/MODELO-DATOS.md) de una forma que lo requiera, recrea tus bases locales. **Esto borra todos tus datos de prueba.**
 
-**Esto borra todos tus datos de prueba.** Detén el backend y ejecuta en MySQL Workbench, conectado como `root`:
+- **MySQL:** detén el servicio de cuentas y ejecuta en MySQL Workbench, conectado como `root`:
 
 ```sql
 DROP DATABASE gymrutine;
 CREATE DATABASE gymrutine CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
 ```
 
-El usuario `gymrutine` y sus permisos se conservan. Al arrancar de nuevo el backend, las tablas se crean con la estructura nueva.
+  El usuario `gymrutine` y sus permisos se conservan.
+
+- **MongoDB:** detén el servicio de entrenamiento y, en MongoDB Compass, pasa el mouse sobre la base `gymrutine` y elige **Drop database**.
+
+Al arrancar de nuevo los servicios, todo se crea con la estructura nueva.
 
 ## 9. Antes de programar
 
 1. Lee el [contrato de API](docs/CONTRATO-API.md) y el [modelo de datos](docs/MODELO-DATOS.md). Son el acuerdo entre los tres y no se cambian sin consultarlo.
-2. Busca tu tarea en el [plan de trabajo](PLAN-DE-TRABAJO.md).
-3. Lee la [guía de git](GUIA-GIT.md): cómo crear tu rama, qué hacer cada día y cómo entregar tu tarea con un pull request.
+2. Busca tu tarea en el [plan de trabajo](PLAN-DE-TRABAJO.md). En [¿Quién espera a quién?](PLAN-DE-TRABAJO.md#quién-espera-a-quién) ves con qué empiezas y de quién dependes.
+3. Si tu primera tarea es T2 o T3, sigue su guía paso a paso, con el código ya probado: [T2, frontend](docs/guias/T2-FRONTEND.md) (Javier) o [T3, servicio de entrenamiento](docs/guias/T3-NODE.md) (Santiago).
+4. Lee la [guía de git](GUIA-GIT.md): cómo crear tu rama, qué hacer cada día y cómo entregar tu tarea con un pull request.
 
 ---
 
-_Última actualización: 2026-09-14_
+_Última actualización: 2026-09-21_

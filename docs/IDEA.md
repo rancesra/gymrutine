@@ -1,10 +1,10 @@
 # GymRutine — Informe inicial
 
 **Asignatura:** Entornos de Programación (código 24542) · Universidad Industrial de Santander, Escuela de Ingeniería de Sistemas e Informática
-**Corte:** 2 — Proyecto Spring Boot + JavaScript (30 % de la nota, en 4 sprints)
+**Entregas:** login y base de datos el 22 de septiembre de 2026 · **proyecto final el 3 de octubre de 2026**
 **Equipo:** Rances Ramírez (Product Owner y coordinador) · Javier · Santiago
 **Repositorio:** https://github.com/rancesra/gymrutine
-**Versión:** 2.0 · **Fecha:** 2026-09-14
+**Versión:** 3.0 · **Fecha:** 2026-09-21
 
 Este documento presenta el proyecto: qué problema resuelve, para quién, qué incluye y qué no, y qué decisiones se tomaron. El detalle técnico está en los documentos de la sección 14.
 
@@ -35,10 +35,13 @@ Esa es la diferencia entre usar una app y usar una libreta: la app compara, graf
 | Entender Scrum: roles, responsabilidades, artefactos y fases | Scrum adaptado a 3 personas ([plan de trabajo](../PLAN-DE-TRABAJO.md)) |
 | Usar una herramienta de gestión para el seguimiento de errores e incidencias | GitHub Projects como tablero e Issues con la etiqueta `error` |
 | Gestionar versiones con Git y un repositorio en GitHub | Ramas por tarea, pull requests y `main` protegida ([guía de git](../GUIA-GIT.md)) |
-| Arquitectura en capas que desacopla el frontend del backend y los comunica por API REST | API en Spring Boot y frontend que solo habla con ella ([arquitectura](ARQUITECTURA.md)) |
-| Construir la capa del cliente con JavaScript consumiendo la API REST | Frontend en HTML, CSS y JavaScript |
+| Arquitectura en capas que desacopla el frontend del backend y los comunica por API REST | Dos APIs (Spring Boot y Node.js) y un frontend que solo habla con ellas |
+| Construir la capa del cliente con JavaScript consumiendo la API REST | Frontend en React (temario §10) |
+| Diseño de bases de datos y MySQL (temario §6) | Modelo entidad-relación normalizado sobre MySQL ([modelo de datos](MODELO-DATOS.md)) |
 | Verificar programas diseñando y realizando pruebas | Pruebas unitarias de la regla de récords y colección de Postman |
-| Backend con Spring Boot, API REST, Maven, JPA y Postman (temario §7) | Stack del backend |
+| Backend con Spring Boot, API REST, Maven, JPA y Postman (temario §7) | Servicio de cuentas y rutinas |
+| Arquitectura de microservicios (temario §7.1) | Dos servicios, cada uno con su base de datos, que se comunican por REST ([arquitectura](ARQUITECTURA.md)) |
+| Backend con Node.js y base de datos NoSQL MongoDB (temario §8 y §9) | Servicio de entrenamiento con Express y Mongoose |
 
 ## 3. Usuario principal
 
@@ -48,7 +51,7 @@ Esa es la diferencia entre usar una app y usar una libreta: la app compara, graf
 
 ## 4. Plataforma
 
-**Aplicación web responsiva.** Se ve y funciona bien desde el navegador del celular, que es donde realmente se usa: de pie, entre series y con una mano.
+**Aplicación web responsiva, hecha con React.** Se ve y funciona bien desde el navegador del celular, que es donde realmente se usa: de pie, entre series y con una mano.
 
 - **Sin app móvil nativa:** no se enseña en el curso y consumiría el tiempo del proyecto. Queda como trabajo futuro.
 - **Sin funcionamiento sin conexión (decisión D1):** una PWA cambiaría la arquitectura y no está en el temario. Para la mala señal del gimnasio, el entrenamiento en curso se guarda como borrador en el navegador y el guardado se puede reintentar sin perder datos.
@@ -120,7 +123,7 @@ Su propuesta central coincide con la nuestra: **biblioteca de ejercicios + const
 
 | Idea tomada de GymTracker | Por qué nos sirve | Dónde quedó |
 |---|---|---|
-| **Prellenar con los valores de la última vez** | La mejora de usabilidad más grande por el menor costo: entre series, el usuario solo corrige un número en lugar de escribirlo todo. El dato ya está en la base de datos | H14, `GET /rutinas/{id}/ultimos-registros`, pantalla P7 |
+| **Prellenar con los valores de la última vez** | La mejora de usabilidad más grande por el menor costo: entre series, el usuario solo corrige un número en lugar de escribirlo todo. El dato ya está en la base de datos | H14, `GET /sesiones/ultimos-registros`, pantalla P7 |
 | **Resumen al terminar la sesión** con volumen total, series, repeticiones y récords | Da sensación de progreso incluso en días sin récord. Son sumas, no una funcionalidad nueva | H14, pantalla P8 |
 | **Mostrar el récord actual mientras se entrena** | Dice exactamente qué peso hay que superar | Pantalla P7 |
 | **Catálogo agrupado por músculo, con contador y filtros de equipo** | Con 40 ejercicios o más, armar una rutina sin filtros es incómodo | H5, pantalla P4 |
@@ -159,11 +162,12 @@ El diagrama entidad-relación, el diccionario de datos y la regla exacta de réc
 
 | Capa | Tecnología | Por qué |
 |---|---|---|
-| Backend | **Spring Boot 4.1.1** (Java 21) con API REST | Contenido central del corte 2 |
-| Persistencia | **JPA / Hibernate** sobre **MySQL 8.4 LTS** | JPA está en el temario (§7.6) y MySQL en la bibliografía del curso |
+| Servicio de cuentas y rutinas | **Spring Boot 4.1.1** (Java 21) con API REST | Temario §7 |
+| Persistencia | **JPA / Hibernate** sobre **MySQL 8.4 LTS** | MySQL (§6.2) y JPA (§7.6) están en el temario |
 | Construcción | **Maven** (con Maven Wrapper) | Temario §7.5 |
+| Servicio de entrenamiento | **Node.js 24 + Express 5 + Mongoose** sobre **MongoDB 8.0** | Temario §8 y §9 (MERN) |
 | Pruebas de la API | **Postman** | Temario §7.7 |
-| Frontend | **HTML, CSS y JavaScript** consumiendo la API | Propósito explícito del curso |
+| Frontend | **React 19** con Vite, consumiendo la API | El curso pide construir el cliente en JavaScript, y React está en el temario (§10). Decisión D10 |
 | Control de versiones | **Git + GitHub** | Repositorio compartido entre los tres |
 
 **Dos piezas que no se ven en clase**, cada una con su justificación (decisiones DEC-07 y DEC-08 de la [arquitectura](ARQUITECTURA.md)):
@@ -171,11 +175,11 @@ El diagrama entidad-relación, el diccionario de datos y la regla exacta de réc
 - **Chart.js 4.5.1** para las gráficas. Solo visualiza y no tiene lógica de negocio. Dibujar gráficas a mano no es evaluable.
 - **spring-security-crypto**, solo para cifrar contraseñas con BCrypt. Guardarlas en texto es inaceptable, y programar el cifrado a mano es propenso a errores. No activa Spring Security.
 
-Las dos quedan por confirmar con el profesor (decisión D8).
+Quedan por confirmar con el profesor, junto con React Router (decisión D8).
 
-### Nota sobre el corte 3
+### Un solo proyecto para todo el curso
 
-El programa define el **corte 3 como un proyecto FullStack MERN** (Node, MongoDB y React; 40 %). Si el frontend de este corte consume la API de forma limpia y sin lógica de negocio, en el corte 3 se puede reemplazar por React sin tocar el dominio. **Un contrato de API bien diseñado ahora es trabajo adelantado para el corte que más pesa.**
+El programa separaba un corte de Spring Boot con JavaScript y otro FullStack MERN. Como el curso ya dio todas las clases, **GymRutine los une**: lo que se planea (cuentas, catálogo y rutinas) vive en Spring Boot con MySQL, y lo que se ejecuta (sesiones, récords, progreso y peso) vive en Node.js con MongoDB. El frontend en React habla con los dos. Así cada tecnología del curso tiene un papel real en la aplicación (decisión D11).
 
 ## 10. Metodología de trabajo
 
@@ -196,37 +200,41 @@ El programa define el **corte 3 como un proyecto FullStack MERN** (Node, MongoDB
 7. **Ramas, pull requests y `main` protegida.** Nadie sube directo a `main`, y todo PR lo revisa otra persona.
 8. **Pasos pequeños** que terminan en algo verificable y un commit.
 9. **Versiones fijadas y verificadas en la documentación oficial**, no en tutoriales.
-10. **Mockup con las reglas anotadas en cada pantalla**, porque GymRutine es sobre todo interfaz.
+10. **Mockup en HTML con las reglas anotadas en cada pantalla**, porque GymRutine es sobre todo interfaz.
 
 ### Lo que explícitamente no hacemos
 
-- **Microservicios, API gateway, registro de servicios ni colas de mensajes.** Un solo backend. Esa infraestructura se comería el proyecto y no es lo que evalúa el corte 2.
+- **API gateway, registro de servicios ni colas de mensajes.** Dos servicios que se hablan por REST muestran la arquitectura de microservicios; esa infraestructura se comería los 12 días.
 - **Scrum con toda su ceremonia.** Con 3 personas, los roles se combinan y los eventos son cortos.
 
 ## 11. Plan de entregas
 
-El corte 2 se evalúa en **4 sprints que valen 5 %, 5 %, 10 % y 10 %**. El peso está al final: los sprints 1 y 2 dejan la base sólida y los sprints 3 y 4 concentran lo que se ve.
+El curso ya dio todas las clases, así que el proyecto **deja de ir por cortes**: se entrega una sola aplicación, completa, el **sábado 3 de octubre de 2026**. Antes hay una entrega intermedia, el **martes 22 de septiembre: login y base de datos**. El calendario día a día y el reparto están en el [plan de trabajo](../PLAN-DE-TRABAJO.md).
 
-| Sprint | Peso | Objetivo | Entregable verificable |
+| Sprint | Fechas | Objetivo | Entregable verificable |
 |---|---|---|---|
-| **1** | 5 % | Definición y bases | Documentación completa, backend base conectado a MySQL con la API de autenticación, frontend base y algoritmo de récords con pruebas |
-| **2** | 5 % | Cuenta y catálogo | Crear cuenta, iniciar sesión y catálogo de ejercicios funcionando de punta a punta; API de rutinas y de sesiones lista |
-| **3** | 10 % | El corazón de la app | Rutinas, registro de sesiones con récords automáticos, historial y peso corporal |
-| **4** | 10 % | Progreso y cierre | Gráfica de progreso, vista de récords, datos de demostración, pulido en celular y sustentación |
+| **1** | 21 – 22 sep | Login y base de datos | **Entrega 1:** registro e inicio de sesión desde React; MySQL con sus 6 tablas y el catálogo base; MongoDB con sus colecciones; los dos servicios conectados |
+| **2** | 23 – 26 sep | Catálogo, rutinas y API de entrenamiento | Catálogo y perfil de punta a punta; API de rutinas, de sesiones y de peso; algoritmo de récords con pruebas |
+| **3** | 27 – 30 sep | Entrenar de punta a punta | Rutinas, registro de sesiones con récords automáticos, historial y peso corporal |
+| **4** | 1 – 3 oct | Progreso, pulido y entrega | Gráfica de progreso, récords, inicio, datos de demostración, pulido en celular y **entrega final** |
 
 ## 12. Riesgos
 
 | Riesgo | Mitigación |
 |---|---|
-| Los tres tocan los mismos archivos y se pisan | T1 crea todas las entidades y las piezas compartidas; una rama por tarea y PR con revisión |
+| Solo 12 días para todo | Prioridades explícitas en el plan (imprescindible, importante y si da el tiempo), congelamiento el 1 de octubre y margen en el sprint 4 |
+| Los dos servicios no se entienden entre sí | La validación del token entre servicios se prueba desde la entrega 1 (T3); el contrato dice qué servicio atiende cada endpoint |
+| Los tres tocan los mismos archivos y se pisan | Cada proyecto vive en su carpeta; T1, T2 y T3 crean las piezas compartidas; una rama por tarea y PR con revisión |
 | El frontend se queda esperando al backend | Contrato escrito desde el sprint 1; las pantallas se construyen antes y se conectan cuando el endpoint está en `main` |
 | La base del backend y la autenticación se atrasan (cuello de botella del sprint 1) | Son lo primero del sprint; mientras tanto, Javier y Santiago avanzan en la base del frontend y el algoritmo de récords |
 | La autenticación consume más tiempo del previsto | Diseño mínimo: token en una tabla más un interceptor, sin Spring Security |
 | La regla de récords tiene errores sutiles (fechas pasadas, eliminaciones) | Se programa como una función separada con pruebas unitarias de 7 casos desde el sprint 1 |
 | Mala señal en el gimnasio | Borrador del entrenamiento en el navegador y reintento de guardado |
 | Chart.js se vuelve un hueco de tiempo | Cada gráfica tiene primero su tabla: si la gráfica falla, la pantalla sigue siendo útil |
+| MongoDB en local no tiene transacciones entre documentos | El recálculo de récords es idempotente: la siguiente escritura corrige cualquier falla a mitad (ARQUITECTURA DEC-18) |
+| Tres tecnologías de backend y frontend a la vez | El equipo ya trabajó con Vite, componentes y microservicios en teambsoft; las bases (T1, T2 y T3) dejan listas las piezas compartidas y el mockup HTML define los estilos |
 | Diferencias entre Windows y macOS | Guía de inicio para los dos sistemas, finales de línea normalizados y versiones fijadas |
-| La demostración se ve vacía | Datos de demostración con 6 semanas de sesiones, cargados con Postman (T10) |
+| La demostración se ve vacía | Datos de demostración con 6 semanas de sesiones, cargados con Postman (T11) |
 
 ## 13. Decisiones
 
@@ -239,15 +247,18 @@ El corte 2 se evalúa en **4 sprints que valen 5 %, 5 %, 10 % y 10 %**. El peso 
 | D3 | ¿Se incluyen métricas corporales? | **Sí, solo el peso corporal**, con registro y gráfica | 2026-09-14 |
 | D4 | ¿Login real o usuario fijo? | **Login con email y contraseña:** contraseñas con BCrypt y token guardado en MySQL | 2026-09-14 |
 | D5 | ¿Cómo se reparte el trabajo? | **Por funcionalidad, de punta a punta:** Rances, cuenta y peso corporal; Javier, catálogo, rutinas y progreso; Santiago, sesiones y récords | 2026-09-14 |
+| D10 | ¿Frontend con React o con JavaScript sin framework? | **React con Vite.** Está en el temario (§10) y es JavaScript | 2026-09-15 |
+| D7 | Fechas de entrega | **22 de septiembre:** login y base de datos. **3 de octubre:** proyecto final. No hay otras entregas | 2026-09-21 |
+| D11 | ¿Cómo se usan todas las tecnologías del curso? | **Dos servicios:** cuentas y rutinas en Spring Boot + MySQL; entrenamiento (sesiones, récords, progreso y peso) en Node.js + Express + MongoDB | 2026-09-21 |
+| D12 | ¿Cómo nos repartimos para terminar el 3 de octubre? | **Rances:** servicio de cuentas, peso corporal, perfil, inicio e integración. **Javier:** frontend, catálogo y rutinas, progreso. **Santiago:** servicio de entrenamiento con sus pantallas | 2026-09-21 |
 
 ### Pendientes — no asumir
 
 | ID | Decisión | Por qué importa | Fecha límite |
 |---|---|---|---|
-| D6 | Identidad visual mínima: colores, tipografía y logo | Define los estilos de la base del frontend | Antes de cerrar T2 (sprint 1) |
-| D7 | Fechas de inicio, cierre y entrega de los 4 sprints | Completa el calendario del plan de trabajo | Primera semana del corte |
-| D8 | Confirmar con el profesor el uso de Chart.js y de spring-security-crypto | Son las dos piezas que no se ven en clase. Si no se aprueban, cambian las gráficas y el cifrado de contraseñas | Antes de empezar T1 |
-| D9 | Confirmar los roles de Scrum (Product Owner y rotación de Scrum Master) | Queda registrado en el plan | Planeación del sprint 1 |
+| D6 | Identidad visual: aprobar la propuesta del [mockup HTML](mockup/mockup.html) (colores, tipografía y logo) o usar el template que se vea en clase (§10.2) | Define los estilos de la base del frontend | Antes de cerrar T2 (sprint 1) |
+| D8 | Confirmar con el profesor las tres piezas que no están en el temario: React Router, Chart.js y spring-security-crypto | Si no se aprueba alguna, cambian la navegación, las gráficas o el cifrado de contraseñas | Entrega del 22 de septiembre |
+| D9 | Confirmar los roles de Scrum (Product Owner y rotación de Scrum Master) | Queda registrado en el plan | Hoy, en la planeación del sprint 1 |
 
 ## 14. Documentos del proyecto
 
@@ -261,7 +272,8 @@ El corte 2 se evalúa en **4 sprints que valen 5 %, 5 %, 10 % y 10 %**. El peso 
 | [MODELO-DATOS.md](MODELO-DATOS.md) | Diagrama entidad-relación, diccionario de datos, reglas de negocio y catálogo base |
 | [ARQUITECTURA.md](ARQUITECTURA.md) | Stack, capas, autenticación, diagramas de secuencia y decisiones |
 | [CONTRATO-API.md](CONTRATO-API.md) | Contrato entre frontend y backend |
-| [mockup/README.md](mockup/README.md) | Las 14 pantallas con sus reglas |
+| [mockup/mockup.html](mockup/mockup.html) | Cómo se ven las 14 pantallas (propuesta visual), con sus reglas anotadas |
+| [mockup/README.md](mockup/README.md) | Ruta, datos y reglas de cada pantalla |
 
 ## 15. Historial de cambios
 
@@ -269,3 +281,5 @@ El corte 2 se evalúa en **4 sprints que valen 5 %, 5 %, 10 % y 10 %**. El peso 
 |---|---|
 | 2026-09-11 | v1.0: idea inicial, benchmark con la ficha de GymTracker y decisiones pendientes D1 a D6 |
 | 2026-09-14 | v2.0: cierre de D1 a D5; se agregan el peso corporal (F7) y la cuenta con login (F1); benchmark con las capturas de GymTracker; metodología Scrum adaptada; nuevas decisiones pendientes D7 a D9 |
+| 2026-09-15 | v2.1: frontend con React (D10); mockup en HTML con una propuesta visual para D6; D8 incluye confirmar React en este corte; MySQL referenciado al temario (§6) |
+| 2026-09-21 | v3.0: el proyecto une los cortes y se entrega completo el 3 de octubre (D7). Arquitectura de dos servicios con Node.js y MongoDB para el entrenamiento (D11) y nuevo reparto (D12) |

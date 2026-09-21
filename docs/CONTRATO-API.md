@@ -1,8 +1,8 @@
 # Contrato de API — GymRutine
 
-**Versión:** 1.0
-**Fecha:** 2026-09-14
-**Lo implementa:** el backend (tareas T1, T3 a T9)
+**Versión:** 2.0
+**Fecha:** 2026-09-21
+**Lo implementan:** el servicio de cuentas (Spring Boot) y el servicio de entrenamiento (Node.js)
 **Lo consumen:** el frontend y la colección de Postman
 
 Es el acuerdo entre el frontend y el backend: qué endpoints existen, qué reciben, qué devuelven y cómo responden cuando algo sale mal. Permite que las pantallas y la API se construyan en paralelo sin esperarse.
@@ -13,49 +13,49 @@ Es el acuerdo entre el frontend y el backend: qué endpoints existen, qué recib
 
 | Tema | Regla |
 |---|---|
-| URL base | `http://localhost:8080/api` |
+| Servicios | **Cuentas** (Spring Boot, `http://localhost:8080/api`): autenticación, usuarios, referencias, ejercicios y rutinas. **Entrenamiento** (Node.js, `http://localhost:3000/api`): sesiones, récords, progreso y peso corporal. La columna *Servicio* de §2 dice cuál atiende cada endpoint |
+| Desde el frontend | Siempre la ruta relativa `/api/...`: el proxy de Vite la manda al servicio que corresponde |
 | Formato | JSON en UTF-8 (`Content-Type: application/json`) |
 | Nombres de campos | En español y `camelCase`: `fechaInicio`, `pesoKg` |
 | Fechas | `fecha`: `AAAA-MM-DD`. Fecha y hora: `AAAA-MM-DDTHH:mm:ss`, en hora local de Colombia y sin zona horaria |
 | Pesos | Número en kilogramos, máximo 2 decimales: `57.5` |
-| Identificadores | Números enteros |
-| Autenticación | Los endpoints marcados con 🔒 exigen la cabecera `Authorization: Bearer <token>` |
+| Identificadores | Enteros en el servicio de cuentas (`7`). Texto en el de entrenamiento: el `ObjectId` de MongoDB, de 24 caracteres (`"66f1c0a2e4b0a1b2c3d4e5f6"`) |
+| Autenticación | Los endpoints marcados con 🔒 exigen la cabecera `Authorization: Bearer <token>`, en los dos servicios. El token lo emite el servicio de cuentas |
 | Enumerados | Viajan como código (`PERDIDA_PESO`). El nombre visible sale de `GET /referencias` |
 | Consultas sin resultados | Responden 200 con una lista vacía, no 404 |
 | Recursos de otro usuario | Responden igual que un recurso inexistente: 404 |
-| CORS | El backend acepta peticiones desde `http://localhost:5500` y `http://127.0.0.1:5500` (Live Server) |
 
 ## 2. Resumen de endpoints
 
-| Método | Endpoint | Descripción | Auth | Historia |
-|---|---|---|---|---|
-| POST | `/auth/registro` | Crea la cuenta y devuelve un token | Pública | H1 |
-| POST | `/auth/login` | Inicia sesión y devuelve un token | Pública | H2 |
-| POST | `/auth/logout` | Invalida el token | 🔒 | H3 |
-| GET | `/usuarios/me` | Perfil del usuario autenticado | 🔒 | H4 |
-| PUT | `/usuarios/me` | Cambia nombre y objetivo | 🔒 | H4 |
-| GET | `/referencias` | Objetivos, grupos musculares y equipos | Pública | H1, H5, H10 |
-| GET | `/ejercicios` | Catálogo visible, con filtros | 🔒 | H5 |
-| GET | `/ejercicios/{id}` | Detalle de un ejercicio | 🔒 | H6 |
-| POST | `/ejercicios` | Crea un ejercicio propio | 🔒 | H7 |
-| PUT | `/ejercicios/{id}` | Edita un ejercicio propio | 🔒 | H8 |
-| DELETE | `/ejercicios/{id}` | Elimina (borrado lógico) un ejercicio propio | 🔒 | H9 |
-| GET | `/rutinas` | Mis rutinas activas | 🔒 | H11 |
-| GET | `/rutinas/{id}` | Detalle de una rutina con sus ejercicios | 🔒 | H11 |
-| POST | `/rutinas` | Crea una rutina | 🔒 | H10 |
-| PUT | `/rutinas/{id}` | Reemplaza una rutina completa | 🔒 | H12 |
-| DELETE | `/rutinas/{id}` | Elimina (borrado lógico) una rutina | 🔒 | H13 |
-| GET | `/rutinas/{id}/ultimos-registros` | Lo que se hizo la última vez en cada ejercicio de la rutina | 🔒 | H14 |
-| POST | `/sesiones` | Registra una sesión y recalcula récords | 🔒 | H14, H18 |
-| GET | `/sesiones` | Historial de sesiones | 🔒 | H15 |
-| GET | `/sesiones/{id}` | Detalle de una sesión | 🔒 | H16 |
-| DELETE | `/sesiones/{id}` | Elimina una sesión y recalcula récords | 🔒 | H17, H18 |
-| GET | `/records` | Récord vigente de cada ejercicio | 🔒 | H19 |
-| GET | `/progreso/ejercicios` | Ejercicios que el usuario ha registrado | 🔒 | H20 |
-| GET | `/progreso/ejercicios/{id}` | Evolución de un ejercicio sesión a sesión | 🔒 | H20 |
-| GET | `/peso-corporal` | Registros de peso corporal | 🔒 | H22 |
-| POST | `/peso-corporal` | Registra el peso de una fecha | 🔒 | H21 |
-| DELETE | `/peso-corporal/{id}` | Elimina un registro de peso | 🔒 | H22 |
+| Método | Endpoint | Descripción | Servicio | Auth | Historia |
+|---|---|---|---|---|---|
+| POST | `/auth/registro` | Crea la cuenta y devuelve un token | Cuentas | Pública | H1 |
+| POST | `/auth/login` | Inicia sesión y devuelve un token | Cuentas | Pública | H2 |
+| POST | `/auth/logout` | Invalida el token | Cuentas | 🔒 | H3 |
+| GET | `/usuarios/me` | Perfil del usuario autenticado. También lo usa el servicio de entrenamiento para validar el token | Cuentas | 🔒 | H4 |
+| PUT | `/usuarios/me` | Cambia nombre y objetivo | Cuentas | 🔒 | H4 |
+| GET | `/referencias` | Objetivos, grupos musculares y equipos | Cuentas | Pública | H1, H5, H10 |
+| GET | `/ejercicios` | Catálogo visible, con filtros | Cuentas | 🔒 | H5 |
+| GET | `/ejercicios/{id}` | Detalle de un ejercicio | Cuentas | 🔒 | H6 |
+| POST | `/ejercicios` | Crea un ejercicio propio | Cuentas | 🔒 | H7 |
+| PUT | `/ejercicios/{id}` | Edita un ejercicio propio | Cuentas | 🔒 | H8 |
+| DELETE | `/ejercicios/{id}` | Elimina (borrado lógico) un ejercicio propio | Cuentas | 🔒 | H9 |
+| GET | `/rutinas` | Mis rutinas activas | Cuentas | 🔒 | H11 |
+| GET | `/rutinas/{id}` | Detalle de una rutina con sus ejercicios | Cuentas | 🔒 | H11 |
+| POST | `/rutinas` | Crea una rutina | Cuentas | 🔒 | H10 |
+| PUT | `/rutinas/{id}` | Reemplaza una rutina completa | Cuentas | 🔒 | H12 |
+| DELETE | `/rutinas/{id}` | Elimina (borrado lógico) una rutina | Cuentas | 🔒 | H13 |
+| POST | `/sesiones` | Registra una sesión y recalcula récords | Entrenamiento | 🔒 | H14, H18 |
+| GET | `/sesiones` | Historial de sesiones | Entrenamiento | 🔒 | H15 |
+| GET | `/sesiones/{id}` | Detalle de una sesión | Entrenamiento | 🔒 | H16 |
+| GET | `/sesiones/ultimos-registros?rutinaId={id}` | Lo que se hizo la última vez en cada ejercicio de la rutina | Entrenamiento | 🔒 | H14 |
+| DELETE | `/sesiones/{id}` | Elimina una sesión y recalcula récords | Entrenamiento | 🔒 | H17, H18 |
+| GET | `/records` | Récord vigente de cada ejercicio | Entrenamiento | 🔒 | H19 |
+| GET | `/progreso/ejercicios` | Ejercicios que el usuario ha registrado | Entrenamiento | 🔒 | H20 |
+| GET | `/progreso/ejercicios/{id}` | Evolución de un ejercicio sesión a sesión | Entrenamiento | 🔒 | H20 |
+| GET | `/peso-corporal` | Registros de peso corporal | Entrenamiento | 🔒 | H22 |
+| POST | `/peso-corporal` | Registra el peso de una fecha | Entrenamiento | 🔒 | H21 |
+| DELETE | `/peso-corporal/{id}` | Elimina un registro de peso | Entrenamiento | 🔒 | H22 |
 
 ## 3. Autenticación y perfil
 
@@ -126,8 +126,7 @@ Mismas reglas que en el registro. El email y la contraseña no se cambian en est
 
 - Vence **7 días** después de emitido.
 - Si falta, no existe o está vencido, cualquier endpoint 🔒 responde **401** `NO_AUTENTICADO`.
-- Ante un 401, el frontend borra el token guardado y lleva al usuario a la pantalla de inicio de sesión.
-- Las peticiones `OPTIONS` (verificación previa de CORS que hace el navegador) no llevan token y **no deben ser bloqueadas**.
+- Ante un 401, el frontend borra el token guardado y lleva al usuario a `/login`.
 
 ## 4. Referencias
 
@@ -261,13 +260,12 @@ Rutinas activas del usuario, ordenadas por nombre.
     "id": 3,
     "nombre": "Pecho y tríceps",
     "objetivo": "FUERZA",
-    "cantidadEjercicios": 2,
-    "ultimaSesion": "2026-09-14T18:30:00"
+    "cantidadEjercicios": 2
   }
 ]
 ```
 
-`ultimaSesion` es la `fechaInicio` de la sesión más reciente con esa rutina, o `null` si nunca se ha entrenado.
+La última vez que se entrenó cada rutina no viene aquí, porque las sesiones viven en el servicio de entrenamiento: la pantalla la obtiene de `GET /sesiones`.
 
 ### GET /rutinas/{id} 🔒
 
@@ -338,44 +336,6 @@ Borrado lógico (`activa: false`). La rutina deja de listarse, no se puede edita
 
 → **204** · **404** `RUTINA_NO_ENCONTRADA`
 
-### GET /rutinas/{id}/ultimos-registros 🔒
-
-Datos para prellenar la pantalla de entrenamiento. Devuelve un elemento por cada ejercicio de la rutina, en el mismo orden.
-
-→ **200**
-
-```json
-[
-  {
-    "ejercicioId": 1,
-    "recordKg": 60.0,
-    "fechaInicio": "2026-09-10T18:00:00",
-    "series": [
-      { "numero": 1, "pesoKg": 55.0, "repeticiones": 5 },
-      { "numero": 2, "pesoKg": 57.5, "repeticiones": 5 },
-      { "numero": 3, "pesoKg": 60.0, "repeticiones": 5 },
-      { "numero": 4, "pesoKg": 60.0, "repeticiones": 5 }
-    ]
-  },
-  {
-    "ejercicioId": 23,
-    "recordKg": 27.5,
-    "fechaInicio": "2026-09-10T18:00:00",
-    "series": [
-      { "numero": 1, "pesoKg": 25.0, "repeticiones": 12 },
-      { "numero": 2, "pesoKg": 27.5, "repeticiones": 10 },
-      { "numero": 3, "pesoKg": 27.5, "repeticiones": 8 }
-    ]
-  }
-]
-```
-
-- **La última vez** es la sesión más reciente del usuario, por `fechaInicio`, que incluyó ese ejercicio, **en cualquier rutina**.
-- `recordKg` es el peso del récord vigente, o `null` si no hay ninguno.
-- Si el ejercicio nunca se ha registrado: `fechaInicio: null` y `series: []`.
-
-→ **404** `RUTINA_NO_ENCONTRADA`
-
 ## 7. Sesiones de entrenamiento
 
 ### POST /sesiones 🔒
@@ -419,18 +379,19 @@ Datos para prellenar la pantalla de entrenamiento. Devuelve un elemento por cada
 | `series[].repeticiones` | Requerido, 1 a 100 |
 
 - `orden` y `numero` los asigna el servidor según la posición en los arreglos.
-- `esRecord` no se envía: lo calcula el servidor con la regla R6 de [MODELO-DATOS.md](MODELO-DATOS.md) §6.1. Si llega, se ignora.
+- `esRecord` no se envía: lo calcula el servidor con la regla R6 de [MODELO-DATOS.md](MODELO-DATOS.md) §7.1. Si llega, se ignora.
 - Los ejercicios de la rutina que no vienen en `registros` se consideran no realizados.
-- Guardar la sesión y recalcular los récords de sus ejercicios ocurre **en una sola transacción**.
+- La rutina se consulta al servicio de cuentas con el token del usuario: si no existe, es de otro usuario o está eliminada, la sesión se rechaza con 400.
+- Después de guardar la sesión se recalculan los récords de sus ejercicios. MongoDB en local no tiene transacciones: el recálculo es idempotente ([MODELO-DATOS.md](MODELO-DATOS.md) §7.1).
 
-→ **201** con el detalle de la sesión · **400** `VALIDACION_FALLIDA`
+→ **201** con el detalle de la sesión · **400** `VALIDACION_FALLIDA` · **503** `SERVICIO_NO_DISPONIBLE` si el servicio de cuentas no responde
 
 ### Modelo SesionDetalle
 
 ```json
 {
-  "id": 42,
-  "rutina": { "id": 3, "nombre": "Pecho y tríceps", "activa": true },
+  "id": "66f1c0a2e4b0a1b2c3d4e5f6",
+  "rutina": { "id": 3, "nombre": "Pecho y tríceps" },
   "fechaInicio": "2026-09-14T18:30:00",
   "duracionMinutos": 55,
   "resumen": {
@@ -443,7 +404,7 @@ Datos para prellenar la pantalla de entrenamiento. Devuelve un elemento por cada
   "registros": [
     {
       "orden": 1,
-      "ejercicio": { "id": 1, "nombre": "Press de banca con barra", "grupoMuscular": "PECHO", "activo": true },
+      "ejercicio": { "id": 1, "nombre": "Press de banca con barra", "grupoMuscular": "PECHO" },
       "volumenKg": 1112.5,
       "series": [
         { "numero": 1, "pesoKg": 55.0, "repeticiones": 5, "esRecord": false },
@@ -454,7 +415,7 @@ Datos para prellenar la pantalla de entrenamiento. Devuelve un elemento por cada
     },
     {
       "orden": 2,
-      "ejercicio": { "id": 23, "nombre": "Extensión de tríceps en polea", "grupoMuscular": "TRICEPS", "activo": true },
+      "ejercicio": { "id": 23, "nombre": "Extensión de tríceps en polea", "grupoMuscular": "TRICEPS" },
       "volumenKg": 822.5,
       "series": [
         { "numero": 1, "pesoKg": 25.0, "repeticiones": 12, "esRecord": false },
@@ -485,8 +446,8 @@ Historial del usuario, de la sesión más reciente a la más antigua (por `fecha
 ```json
 [
   {
-    "id": 42,
-    "rutina": { "id": 3, "nombre": "Pecho y tríceps", "activa": true },
+    "id": "66f1c0a2e4b0a1b2c3d4e5f6",
+    "rutina": { "id": 3, "nombre": "Pecho y tríceps" },
     "fechaInicio": "2026-09-14T18:30:00",
     "duracionMinutos": 55,
     "resumen": { "ejercicios": 2, "series": 7, "repeticiones": 50, "volumenKg": 1935.0, "records": 1 }
@@ -498,9 +459,47 @@ Historial del usuario, de la sesión más reciente a la más antigua (por `fecha
 
 → **200** con SesionDetalle · **404** `SESION_NO_ENCONTRADA` si no existe o es de otro usuario
 
+### GET /sesiones/ultimos-registros?rutinaId={id} 🔒
+
+Datos para prellenar la pantalla de entrenamiento. El servicio de entrenamiento pide la rutina al de cuentas, con el token del usuario, y devuelve un elemento por cada ejercicio de la rutina, en el mismo orden.
+
+→ **200**
+
+```json
+[
+  {
+    "ejercicioId": 1,
+    "recordKg": 60.0,
+    "fechaInicio": "2026-09-10T18:00:00",
+    "series": [
+      { "numero": 1, "pesoKg": 55.0, "repeticiones": 5 },
+      { "numero": 2, "pesoKg": 57.5, "repeticiones": 5 },
+      { "numero": 3, "pesoKg": 60.0, "repeticiones": 5 },
+      { "numero": 4, "pesoKg": 60.0, "repeticiones": 5 }
+    ]
+  },
+  {
+    "ejercicioId": 23,
+    "recordKg": 27.5,
+    "fechaInicio": "2026-09-10T18:00:00",
+    "series": [
+      { "numero": 1, "pesoKg": 25.0, "repeticiones": 12 },
+      { "numero": 2, "pesoKg": 27.5, "repeticiones": 10 },
+      { "numero": 3, "pesoKg": 27.5, "repeticiones": 8 }
+    ]
+  }
+]
+```
+
+- **La última vez** es la sesión más reciente del usuario, por `fechaInicio`, que incluyó ese ejercicio, **en cualquier rutina**.
+- `recordKg` es el peso del récord vigente, o `null` si no hay ninguno.
+- Si el ejercicio nunca se ha registrado: `fechaInicio: null` y `series: []`.
+
+→ **404** `RUTINA_NO_ENCONTRADA` si la rutina no existe o es de otro usuario · **503** `SERVICIO_NO_DISPONIBLE`
+
 ### DELETE /sesiones/{id} 🔒
 
-Borrado físico de la sesión con sus registros y series. Después se recalculan los récords de cada ejercicio que tenía, en la misma transacción. Como el borrado es físico, repetir la petición responde 404.
+Borrado físico del documento de la sesión, con sus registros y series. Después se recalculan los récords de cada ejercicio que tenía. Como el borrado es físico, repetir la petición responde 404.
 
 → **204** · **404** `SESION_NO_ENCONTRADA`
 
@@ -508,7 +507,7 @@ Borrado físico de la sesión con sus registros y series. Después se recalculan
 
 ### GET /records 🔒
 
-El récord vigente de cada ejercicio: la serie marcada como récord con el mayor peso. Ordenados por grupo muscular (en el mismo orden de `GET /referencias`) y luego por nombre. Los ejercicios registrados solo con 0 kg no aparecen.
+El récord vigente de cada ejercicio: la serie marcada como récord con el mayor peso. Ordenados por nombre del ejercicio; la pantalla los agrupa por grupo muscular en el orden de `GET /referencias`. Los ejercicios registrados solo con 0 kg no aparecen.
 
 → **200**
 
@@ -519,7 +518,7 @@ El récord vigente de cada ejercicio: la serie marcada como récord con el mayor
     "pesoKg": 62.5,
     "repeticiones": 4,
     "fechaInicio": "2026-09-14T18:30:00",
-    "sesionId": 42
+    "sesionId": "66f1c0a2e4b0a1b2c3d4e5f6"
   }
 ]
 ```
@@ -546,9 +545,9 @@ Un punto por cada sesión en la que se hizo el ejercicio, en orden cronológico.
 {
   "ejercicio": { "id": 1, "nombre": "Press de banca con barra", "grupoMuscular": "PECHO" },
   "puntos": [
-    { "sesionId": 38, "fechaInicio": "2026-09-07T18:10:00", "pesoMaximoKg": 60.0, "volumenKg": 1100.0, "esRecord": true },
-    { "sesionId": 40, "fechaInicio": "2026-09-10T18:00:00", "pesoMaximoKg": 60.0, "volumenKg": 1162.5, "esRecord": false },
-    { "sesionId": 42, "fechaInicio": "2026-09-14T18:30:00", "pesoMaximoKg": 62.5, "volumenKg": 1112.5, "esRecord": true }
+    { "sesionId": "66ed9a10e4b0a1b2c3d4e5a1", "fechaInicio": "2026-09-07T18:10:00", "pesoMaximoKg": 60.0, "volumenKg": 1100.0, "esRecord": true },
+    { "sesionId": "66f0b1c4e4b0a1b2c3d4e5b2", "fechaInicio": "2026-09-10T18:00:00", "pesoMaximoKg": 60.0, "volumenKg": 1162.5, "esRecord": false },
+    { "sesionId": "66f1c0a2e4b0a1b2c3d4e5f6", "fechaInicio": "2026-09-14T18:30:00", "pesoMaximoKg": 62.5, "volumenKg": 1112.5, "esRecord": true }
   ]
 }
 ```
@@ -556,9 +555,9 @@ Un punto por cada sesión en la que se hizo el ejercicio, en orden cronológico.
 - `pesoMaximoKg`: el mayor peso del ejercicio en esa sesión.
 - `volumenKg`: suma de `pesoKg × repeticiones` del ejercicio en esa sesión.
 - `esRecord`: `true` si alguna serie del ejercicio en esa sesión es récord.
-- Un ejercicio visible sin historial responde 200 con `puntos: []`.
+- El nombre y el grupo del ejercicio salen de la copia guardada en las sesiones.
 
-→ **404** `EJERCICIO_NO_ENCONTRADO` si el ejercicio no existe o es propio de otro usuario
+→ **404** `EJERCICIO_NO_ENCONTRADO` si el usuario no tiene registros de ese ejercicio (el selector solo ofrece ejercicios con historial)
 
 ## 9. Peso corporal
 
@@ -570,9 +569,9 @@ Registros del usuario en orden cronológico (del más antiguo al más reciente).
 
 ```json
 [
-  { "id": 5, "fecha": "2026-08-31", "pesoKg": 78.2 },
-  { "id": 9, "fecha": "2026-09-07", "pesoKg": 78.4 },
-  { "id": 12, "fecha": "2026-09-14", "pesoKg": 77.9 }
+  { "id": "66e0a1f2e4b0a1b2c3d4e501", "fecha": "2026-08-31", "pesoKg": 78.2 },
+  { "id": "66e8b3a4e4b0a1b2c3d4e502", "fecha": "2026-09-07", "pesoKg": 78.4 },
+  { "id": "66f1c3b8e4b0a1b2c3d4e601", "fecha": "2026-09-14", "pesoKg": 77.9 }
 ]
 ```
 
@@ -625,29 +624,30 @@ Todos los errores previstos en este contrato responden con este formato:
 | `EMAIL_YA_REGISTRADO` | 409 | Ya hay una cuenta con ese email |
 | `EJERCICIO_DUPLICADO` | 409 | Ya existe un ejercicio visible con ese nombre |
 | `PESO_YA_REGISTRADO` | 409 | Ya hay un registro de peso en esa fecha |
+| `SERVICIO_NO_DISPONIBLE` | 503 | El servicio de entrenamiento no pudo comunicarse con el de cuentas |
 
-Los errores no previstos (una falla interna o una ruta que no existe) usan el formato por defecto de Spring Boot. El frontend los muestra como un error genérico.
+Los errores no previstos (una falla interna o una ruta que no existe) usan el formato por defecto de cada servicio. El frontend los muestra como un error genérico. Los errores previstos, en cambio, llegan con este mismo formato desde los dos servicios.
 
 ## 11. Pantallas y endpoints
 
-Qué consume cada pantalla del [mockup](mockup/README.md).
+Qué consume cada pantalla del [mockup](mockup/README.md), con su ruta en el frontend.
 
-| Pantalla | Endpoints |
-|---|---|
-| P1 Iniciar sesión | `POST /auth/login` |
-| P2 Crear cuenta | `GET /referencias`, `POST /auth/registro` |
-| P3 Inicio | `GET /rutinas`, `GET /sesiones`, `GET /records`, `GET /peso-corporal` |
-| P4 Catálogo de ejercicios | `GET /referencias`, `GET /ejercicios`, `GET /ejercicios/{id}`, `POST`, `PUT` y `DELETE /ejercicios` |
-| P5 Mis rutinas | `GET /rutinas`, `DELETE /rutinas/{id}` |
-| P6 Constructor de rutina | `GET /referencias`, `GET /ejercicios`, `GET /rutinas/{id}`, `POST /rutinas`, `PUT /rutinas/{id}` |
-| P7 Entrenar | `GET /rutinas/{id}`, `GET /rutinas/{id}/ultimos-registros`, `POST /sesiones` |
-| P8 Resumen de la sesión | Respuesta de `POST /sesiones` (sin peticiones nuevas) |
-| P9 Historial | `GET /sesiones` |
-| P10 Detalle de sesión | `GET /sesiones/{id}`, `DELETE /sesiones/{id}` |
-| P11 Progreso por ejercicio | `GET /progreso/ejercicios`, `GET /progreso/ejercicios/{id}` |
-| P12 Récords | `GET /records` |
-| P13 Peso corporal | `GET /peso-corporal`, `POST /peso-corporal`, `DELETE /peso-corporal/{id}` |
-| P14 Perfil | `GET /usuarios/me`, `PUT /usuarios/me`, `GET /referencias`, `POST /auth/logout` |
+| Pantalla | Ruta del frontend | Endpoints |
+|---|---|---|
+| P1 Iniciar sesión | `/login` | `POST /auth/login` |
+| P2 Crear cuenta | `/registro` | `GET /referencias`, `POST /auth/registro` |
+| P3 Inicio | `/` | `GET /rutinas`, `GET /sesiones`, `GET /records`, `GET /peso-corporal` |
+| P4 Catálogo de ejercicios | `/ejercicios` | `GET /referencias`, `GET /ejercicios`, `GET /ejercicios/{id}`, `POST`, `PUT` y `DELETE /ejercicios` |
+| P5 Mis rutinas | `/rutinas` | `GET /rutinas`, `DELETE /rutinas/{id}` y `GET /sesiones` (para la última vez de cada rutina) |
+| P6 Constructor de rutina | `/rutinas/nueva`, `/rutinas/:id/editar` | `GET /referencias`, `GET /ejercicios`, `GET /rutinas/{id}`, `POST /rutinas`, `PUT /rutinas/{id}` |
+| P7 Entrenar | `/rutinas/:id/entrenar` | `GET /rutinas/{id}`, `GET /sesiones/ultimos-registros?rutinaId=`, `POST /sesiones` |
+| P8 Resumen de la sesión | `/rutinas/:id/entrenar` (al guardar) | Respuesta de `POST /sesiones` (sin peticiones nuevas) |
+| P9 Historial | `/historial` | `GET /sesiones` |
+| P10 Detalle de sesión | `/historial/:id` | `GET /sesiones/{id}`, `DELETE /sesiones/{id}` |
+| P11 Progreso por ejercicio | `/progreso` | `GET /progreso/ejercicios`, `GET /progreso/ejercicios/{id}` |
+| P12 Récords | `/progreso/records` | `GET /records`, `GET /referencias` (para agrupar) |
+| P13 Peso corporal | `/progreso/peso` | `GET /peso-corporal`, `POST /peso-corporal`, `DELETE /peso-corporal/{id}` |
+| P14 Perfil | `/perfil` | `GET /usuarios/me`, `PUT /usuarios/me`, `GET /referencias`, `POST /auth/logout` |
 
 ## 12. Fuera de alcance en esta versión
 
@@ -664,3 +664,5 @@ Qué consume cada pantalla del [mockup](mockup/README.md).
 | Fecha | Cambio |
 |---|---|
 | 2026-09-14 | v1.0: versión inicial |
+| 2026-09-15 | v1.1: sin CORS, porque el frontend usa el proxy de Vite; §11 con la ruta de cada pantalla en React. Ningún endpoint cambia |
+| 2026-09-21 | v2.0: dos servicios. Columna *Servicio* en §2; ids de texto en el servicio de entrenamiento; `GET /rutinas/{id}/ultimos-registros` pasa a `GET /sesiones/ultimos-registros?rutinaId=`; `GET /rutinas` ya no trae `ultimaSesion`; la sesión guarda copia de los nombres (sin `activa` ni `activo`); `GET /records` se ordena por nombre; progreso responde 404 sin registros; nuevo error `SERVICIO_NO_DISPONIBLE` (503) |

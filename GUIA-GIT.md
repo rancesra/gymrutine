@@ -65,7 +65,7 @@ git config --global core.editor "code --wait"
 
 ## 1. Empezar una tarea (una vez por rama)
 
-Espera a que tu tarea esté desbloqueada (ver "¿Quién depende de quién?" en el plan). Luego, cambiando `t5-rutinas-api` por el nombre de tu rama:
+Espera a que tu tarea esté desbloqueada (ver [¿Quién espera a quién?](PLAN-DE-TRABAJO.md#quién-espera-a-quién) en el plan). Luego, cambiando `t5-rutinas-api` por el nombre de tu rama:
 
 ```bash
 git switch main
@@ -95,7 +95,7 @@ git pull origin main
 2. **`git status`** debe decir `nothing to commit, working tree clean`. Si muestra archivos modificados, son cambios que no guardaste la última vez: haz commit primero (paso 3).
 3. **`git pull origin main`** trae lo que tus compañeros ya unieron a `main` y lo mezcla con tu rama. Si nadie unió nada, dice `Already up to date`. Si se abre una pestaña `MERGE_MSG` en VS Code, es el mensaje del commit de unión: ciérrala.
 
-Después, **enciende MySQL** si no arranca solo con tu computador (ver la [guía de inicio](GUIA-INICIO.md) §1.4).
+Después, **revisa que MySQL y MongoDB estén encendidos** (ver la [guía de inicio](GUIA-INICIO.md) §1.5 y §1.7).
 
 ## 3. Mientras trabajas: guardar commits
 
@@ -107,7 +107,7 @@ git add .
 git commit -m "Agrega validaciones de RutinaRequest"
 ```
 
-- **Revisa `git status` antes de `git add .`:** solo deben aparecer archivos que quieres guardar. Si aparece `target/`, `.vscode/`, `.DS_Store` o algo que no reconoces, pregunta antes.
+- **Revisa `git status` antes de `git add .`:** solo deben aparecer archivos que quieres guardar. Si aparece `target/`, `node_modules/`, `dist/`, `.vscode/`, `.DS_Store` o algo que no reconoces, pregunta antes.
 - **Un buen mensaje dice qué cambió**, en español y empezando con un verbo: `Agrega POST /api/rutinas`, `Corrige validación de series negativas`, `Documenta la regla de récords`. **Uno malo no dice nada:** `cambios`, `avance`, `asdf`.
 - **Hacer commit no sube nada.** Los commits quedan en tu computador hasta que hagas push.
 
@@ -115,13 +115,13 @@ git commit -m "Agrega validaciones de RutinaRequest"
 
 Sube al menos una vez al día. Así queda un respaldo y tus compañeros ven tu avance.
 
-**Si tu rama toca el backend:**
+**Si tu rama toca el servicio de cuentas (Spring Boot):**
 
 - **Windows:**
 
 ```powershell
 git pull origin main
-cd backend
+cd backend-spring
 .\mvnw.cmd test
 cd ..
 git push
@@ -131,16 +131,41 @@ git push
 
 ```bash
 git pull origin main
-cd backend
+cd backend-spring
 ./mvnw test
 cd ..
 git push
 ```
 
-**Si tu rama solo toca el frontend o la documentación:** `git pull origin main`, revisa en el navegador que tus páginas funcionan (o que tu documento se ve bien) y `git push`.
+**Si tu rama toca el servicio de entrenamiento (Node)** (igual en Windows y en macOS):
+
+```bash
+git pull origin main
+cd backend-node
+npm install
+npm test
+cd ..
+git push
+```
+
+**Si tu rama toca el frontend** (igual en Windows y en macOS):
+
+```bash
+git pull origin main
+cd frontend
+npm install
+npm run lint
+npm run build
+cd ..
+git push
+```
+
+`npm install` solo hace falta si el pull cambió `package.json`. Además de que compile, revisa en el navegador que tus pantallas funcionan.
+
+**Si tu rama solo toca documentación:** `git pull origin main`, revisa que el documento se vea bien y `git push`.
 
 1. **`git pull origin main`:** traes lo nuevo de `main` **antes** de subir. Si hay un conflicto, aparece ahora, en tu rama, y lo resuelves tú (sección 7), en lugar de aparecer después en el pull request.
-2. **Las pruebas** comprueban que lo nuevo de `main` y lo tuyo, juntos, compilan y pasan. MySQL tiene que estar encendido.
+2. **Las pruebas** comprueban que lo nuevo de `main` y lo tuyo, juntos, compilan y pasan. La base de datos del servicio tiene que estar encendida.
 3. **`git push`:** sube tus commits a tu rama en GitHub. **No toca `main`.**
 
 ## 5. Terminar la tarea: el pull request
@@ -205,7 +230,7 @@ Un conflicto ocurre cuando tú y otra persona cambiaron **las mismas líneas** d
 **Cuándo lo verás:** al hacer `git pull origin main`, git dice algo como:
 
 ```
-CONFLICT (content): Merge conflict in frontend/css/estilos.css
+CONFLICT (content): Merge conflict in frontend/src/estilos.css
 Automatic merge failed; fix conflicts and then commit the result.
 ```
 
@@ -233,7 +258,9 @@ Automatic merge failed; fix conflicts and then commit the result.
    `--no-edit` usa el mensaje automático del commit de unión.
 5. Sigue con normalidad: prueba y `git push`.
 
-**Archivos donde es más probable:** `README.md` (casillas de las historias), `css/estilos.css` y `ConfiguracionWeb`. Si no estás seguro de qué versión dejar, **no adivines**: pregúntale a quien escribió la otra parte.
+**Archivos donde es más probable:** `README.md` (casillas de las historias), `frontend/src/estilos.css` y `frontend/src/App.jsx` (las rutas). Si no estás seguro de qué versión dejar, **no adivines**: pregúntale a quien escribió la otra parte.
+
+**Si el conflicto es en `package-lock.json`, no lo edites a mano.** Acepta la versión de `main` (**Accept Incoming Change** en cada bloque), ejecuta `npm install` dentro de su carpeta (`frontend/` o `backend-node/`) para que el archivo se regenere con las dependencias de los dos, y termina la unión con `git add .` y `git commit --no-edit`.
 
 ## 8. Cuando git se queja
 
@@ -294,4 +321,4 @@ Así queda registrado exactamente qué se entregó en cada sprint, y se puede vo
 
 ---
 
-_Última actualización: 2026-09-14_
+_Última actualización: 2026-09-21_

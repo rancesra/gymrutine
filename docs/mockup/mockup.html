@@ -1,0 +1,1381 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GymRutine — Mockup de pantallas</title>
+<style>
+  /* ============ Propuesta visual (decisión D6): tokens ============ */
+  :root{
+    --pagina:#EDEFF2; --papel:#FFFFFF; --app:#F5F5F4; --linea:#E7E5E4; --borde:#D6D3D1;
+    --tinta:#1C1917; --tinta-2:#57534E; --tinta-3:#78716C;
+    --carbon:#1F2937;
+    --naranja:#C2410C; --naranja-osc:#9A3412; --naranja-suave:#FFEDD5; --naranja-fondo:#FFF7ED;
+    --oro:#EAB308; --oro-suave:#FEF3C7; --oro-tinta:#713F12;
+    --verde:#15803D; --verde-suave:#DCFCE7;
+    --rojo:#B91C1C; --rojo-suave:#FEE2E2;
+    --azul-suave:#E0E7FF; --azul-tinta:#3730A3;
+    --nota:#4338CA; --nota-suave:#EEF2FF;
+    --radio:14px;
+    --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--pagina);color:var(--tinta);font:15px/1.5 var(--sans)}
+  a{color:var(--nota)}
+  code{font-family:var(--mono);font-size:.84em;background:#E3E6EC;padding:1px 5px;border-radius:4px}
+  .num{font-variant-numeric:tabular-nums}
+
+  /* ============ Documento ============ */
+  .doc{max-width:1200px;margin:0 auto;padding:40px 24px 96px}
+  .doc-cabecera{display:flex;gap:24px;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;border-bottom:2px solid var(--tinta);padding-bottom:24px;margin-bottom:0}
+  .doc-cabecera h1{font-size:32px;line-height:1.1;margin:10px 0 8px;letter-spacing:-.02em}
+  .doc-cabecera p{margin:0;color:var(--tinta-2);max-width:70ch}
+  .meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+  .meta span{font-size:12px;border:1px solid var(--borde);background:var(--papel);border-radius:999px;padding:2px 10px;color:var(--tinta-2)}
+  .indice{position:sticky;top:0;z-index:20;background:rgba(237,239,242,.94);backdrop-filter:blur(6px);padding:10px 0;margin-bottom:28px;border-bottom:1px solid #D9DCE2}
+  .indice ol{list-style:none;margin:0;padding:0;display:flex;gap:6px;flex-wrap:wrap}
+  .indice a{display:block;font-size:12.5px;text-decoration:none;color:var(--tinta);background:var(--papel);border:1px solid var(--borde);border-radius:999px;padding:3px 10px}
+  .indice a:hover{border-color:var(--naranja);color:var(--naranja)}
+  .aviso-doc{background:var(--nota-suave);border-left:3px solid var(--nota);border-radius:0 12px 12px 0;padding:14px 18px;margin:0 0 48px;font-size:14px;color:#312E81}
+  .aviso-doc ul{margin:6px 0 0;padding-left:18px}
+  .aviso-doc li{margin:2px 0}
+
+  .seccion{margin:0 0 80px;scroll-margin-top:70px}
+  .seccion > h2{font-size:23px;margin:0 0 6px;letter-spacing:-.01em}
+  .seccion > p{margin:0 0 18px;color:var(--tinta-2);max-width:80ch}
+  .seccion-meta{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px;color:var(--tinta-2);margin:0 0 22px}
+  .seccion-meta b{color:var(--tinta);font-weight:600}
+  .bloque{display:grid;grid-template-columns:auto minmax(280px,1fr);gap:36px;align-items:start}
+  .bloque + .bloque{margin-top:40px}
+  @media (max-width:980px){.bloque{grid-template-columns:1fr}}
+  .moviles{display:flex;flex-wrap:wrap;gap:28px;align-items:flex-start}
+  .rotulo{font-size:12px;color:var(--tinta-3);text-align:center;margin:10px 0 0}
+
+  /* Anotaciones de reglas */
+  .notas{background:var(--papel);border:1px dashed var(--nota);border-radius:var(--radio);padding:18px 20px;font-size:14px}
+  .notas h3{margin:0 0 12px;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--nota)}
+  .notas ol{list-style:none;margin:0;padding:0;display:grid;gap:9px}
+  .notas li{display:grid;grid-template-columns:22px 1fr;gap:8px;align-items:start}
+  .notas .datos{margin-top:16px;padding-top:12px;border-top:1px solid var(--linea);font-size:13px;color:var(--tinta-2)}
+  .notas .datos b{color:var(--tinta)}
+  .m{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--nota);color:#fff;font:700 11px/1 var(--sans);vertical-align:middle;flex:none;box-shadow:0 0 0 2px #fff}
+  .m-abs{position:absolute;z-index:3}
+
+  /* ============ Marco de celular ============ */
+  .movil{width:380px;border:10px solid #0F0F10;border-radius:46px;background:var(--app);overflow:hidden;box-shadow:0 30px 60px -30px rgba(15,23,42,.55);position:relative}
+  @media (max-width:440px){.movil{width:100%}}
+  .movil-estado{height:36px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;font:600 13px var(--sans);background:var(--papel)}
+  .movil-estado .isla{width:92px;height:24px;background:#0F0F10;border-radius:999px}
+  .movil-estado .senal{letter-spacing:1px;font-size:11px}
+  .app{display:flex;flex-direction:column;min-height:700px;position:relative}
+  .app.corta{min-height:0}
+  .app-barra{display:flex;align-items:center;gap:6px;padding:8px 12px 12px;background:var(--papel);border-bottom:1px solid var(--linea);position:relative}
+  .app-barra h4{margin:0;font-size:17px;flex:1;letter-spacing:-.01em;line-height:1.2}
+  .app-barra h4 small{display:block;font-size:12px;font-weight:500;color:var(--tinta-3)}
+  .icono-btn{width:40px;height:40px;display:grid;place-items:center;border-radius:12px;color:var(--tinta);flex:none}
+  .icono-btn.naranja{color:var(--naranja)}
+  .app-cuerpo{flex:1;padding:16px;display:grid;gap:14px;align-content:start;position:relative}
+  .app-pie{padding:12px 16px 16px;background:var(--papel);border-top:1px solid var(--linea)}
+  .nav-inferior{display:grid;grid-template-columns:repeat(5,1fr);background:var(--papel);border-top:1px solid var(--linea);padding:6px 4px 16px}
+  .nav-inferior span{display:grid;justify-items:center;gap:1px;font-size:10.5px;color:var(--tinta-3)}
+  .nav-inferior span.activo{color:var(--naranja);font-weight:700}
+  .ic{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+  .ic.sm{width:16px;height:16px}
+  .ic.lg{width:44px;height:44px;stroke-width:1.6}
+
+  /* ============ Componentes de la app ============ */
+  .tarjeta{background:var(--papel);border:1px solid var(--linea);border-radius:var(--radio);padding:14px;position:relative}
+  .tarjeta h5{margin:0;font-size:15.5px;letter-spacing:-.01em}
+  .fila{display:flex;align-items:center;gap:10px}
+  .fila .crece{flex:1;min-width:0}
+  .entre{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .titulo-bloque{font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--tinta-3);margin:6px 2px -6px}
+  .texto-2{color:var(--tinta-2);font-size:13px}
+  .texto-3{color:var(--tinta-3);font-size:12px}
+  .grande{font-size:24px;font-weight:700;letter-spacing:-.02em}
+
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:44px;padding:0 16px;border-radius:12px;border:1.5px solid transparent;font:600 15px var(--sans);text-decoration:none;white-space:nowrap}
+  .btn-primario{background:var(--naranja);color:#fff}
+  .btn-secundario{background:var(--papel);color:var(--tinta);border-color:var(--borde)}
+  .btn-fantasma{background:transparent;color:var(--naranja);padding:0 6px}
+  .btn-peligro{background:var(--papel);color:var(--rojo);border-color:#FCA5A5}
+  .btn-bloque{width:100%}
+  .btn-sm{min-height:36px;font-size:13.5px;padding:0 12px;border-radius:10px}
+  .btn.cargando{opacity:.6}
+
+  .campo{display:grid;gap:6px}
+  .campo > label{font-size:13px;font-weight:600;color:var(--tinta-2)}
+  .entrada{display:flex;align-items:center;gap:8px;min-height:46px;padding:0 12px;border:1.5px solid var(--borde);border-radius:12px;background:var(--papel);color:var(--tinta-3)}
+  .entrada input,.entrada select,.entrada textarea{border:0;outline:0;font:15px var(--sans);color:var(--tinta);background:transparent;width:100%;min-width:0;padding:0;resize:none}
+  .entrada textarea{padding:10px 0}
+  .entrada.foco{border-color:var(--naranja);box-shadow:0 0 0 3px var(--naranja-suave)}
+  .entrada.error{border-color:var(--rojo);background:#FFFBFB}
+  .error-texto{font-size:12.5px;color:var(--rojo)}
+  .ayuda{font-size:12px;color:var(--tinta-3)}
+
+  .chips{display:flex;gap:6px;flex-wrap:wrap}
+  .chip{display:inline-flex;align-items:center;gap:4px;height:32px;padding:0 12px;border-radius:999px;border:1px solid var(--borde);background:var(--papel);font-size:13px;color:var(--tinta-2);white-space:nowrap}
+  .chip.activo{background:var(--carbon);border-color:var(--carbon);color:#fff}
+  .etiqueta{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;font-weight:600;padding:2px 8px;border-radius:999px;background:#F1F5F9;color:var(--tinta-2);white-space:nowrap}
+  .etiqueta.record{background:var(--oro-suave);color:var(--oro-tinta)}
+  .etiqueta.propio{background:var(--naranja-suave);color:var(--naranja-osc)}
+  .etiqueta.objetivo{background:var(--azul-suave);color:var(--azul-tinta)}
+  .etiqueta.gris{background:#E7E5E4;color:var(--tinta-2)}
+
+  .opcion{display:grid;grid-template-columns:22px 1fr;gap:10px;padding:12px;border:1.5px solid var(--borde);border-radius:12px;background:var(--papel)}
+  .opcion.elegida{border-color:var(--naranja);background:var(--naranja-fondo)}
+  .opcion b{font-size:14.5px}
+  .radio{width:20px;height:20px;border-radius:50%;border:2px solid #A8A29E;margin-top:1px;background:#fff}
+  .elegida .radio,.radio.si{border:6px solid var(--naranja)}
+  .casilla{width:22px;height:22px;border-radius:6px;border:2px solid #A8A29E;display:grid;place-items:center;background:var(--papel);color:#fff;flex:none}
+  .casilla.si{background:var(--naranja);border-color:var(--naranja)}
+  .interruptor{width:42px;height:24px;border-radius:999px;background:var(--naranja);position:relative;flex:none}
+  .interruptor::after{content:"";position:absolute;top:3px;right:3px;width:18px;height:18px;border-radius:50%;background:#fff}
+
+  .aviso{display:grid;grid-template-columns:20px 1fr;gap:10px;padding:12px;border-radius:12px;font-size:13.5px;align-items:start}
+  .aviso.error{background:var(--rojo-suave);color:#7F1D1D}
+  .aviso.info{background:#E0F2FE;color:#0C4A6E}
+  .aviso.exito{background:var(--verde-suave);color:#14532D}
+  .aviso.alerta{background:var(--oro-suave);color:var(--oro-tinta)}
+
+  .lista{background:var(--papel);border:1px solid var(--linea);border-radius:var(--radio);overflow:hidden}
+  .lista-fila{display:flex;align-items:center;gap:10px;padding:12px 14px;border-top:1px solid var(--linea);position:relative}
+  .lista-fila:first-child{border-top:0}
+  .lista-fila .crece{flex:1;min-width:0}
+  .lista-cab{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:#FAFAF9;font-weight:700;font-size:13px}
+
+  .kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .kpi{background:var(--papel);border:1px solid var(--linea);border-radius:var(--radio);padding:12px 14px}
+  .kpi small{display:block;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--tinta-3);font-weight:700}
+  .kpi b{font-size:22px;letter-spacing:-.02em}
+
+  .segmento{display:grid;grid-template-columns:repeat(3,1fr);background:#E7E5E4;border-radius:12px;padding:3px}
+  .segmento span{text-align:center;font-size:13px;padding:7px 4px;border-radius:9px;color:var(--tinta-2)}
+  .segmento span.activo{background:var(--papel);color:var(--tinta);font-weight:700;box-shadow:0 1px 2px rgba(0,0,0,.1)}
+
+  .avatar{width:44px;height:44px;border-radius:50%;background:var(--carbon);color:#fff;display:grid;place-items:center;font-weight:700;flex:none}
+  .miniatura{width:40px;height:40px;border-radius:10px;background:var(--naranja-suave);color:var(--naranja);display:grid;place-items:center;flex:none}
+
+  /* Series (pantalla Entrenar) */
+  .series{display:grid;gap:7px}
+  .serie{display:grid;grid-template-columns:20px 1fr 1fr 44px;gap:8px;align-items:center}
+  .serie-cab{font-size:11.5px;color:var(--tinta-3);font-weight:600}
+  .serie .entrada{min-height:42px;padding:0 10px;font-variant-numeric:tabular-nums}
+  .serie .entrada span{font-size:12px;color:var(--tinta-3)}
+  .serie.hecha .entrada{background:#F0FDF4;border-color:#86EFAC}
+  .serie.posible .entrada{background:#FFFBEB;border-color:var(--oro)}
+  .check{width:44px;height:42px;border-radius:10px;border:1.5px solid var(--borde);display:grid;place-items:center;background:var(--papel);color:#A8A29E}
+  .serie.hecha .check{background:var(--verde);border-color:var(--verde);color:#fff}
+  .serie.posible .check{background:var(--oro);border-color:var(--oro);color:var(--oro-tinta)}
+
+  /* Gráficas y tablas */
+  .grafica{background:var(--papel);border:1px solid var(--linea);border-radius:var(--radio);padding:10px 8px 4px}
+  .grafica svg{display:block;width:100%;height:auto}
+  .tabla{width:100%;border-collapse:separate;border-spacing:0;font-size:13px;background:var(--papel);border:1px solid var(--linea);border-radius:var(--radio);overflow:hidden}
+  .tabla th,.tabla td{text-align:left;padding:9px 10px;border-top:1px solid var(--linea)}
+  .tabla th{font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--tinta-3);background:#FAFAF9;border-top:0}
+  .tabla td.der,.tabla th.der{text-align:right}
+
+  /* Hoja inferior (confirmaciones) y esqueletos */
+  .velo{position:absolute;inset:0;background:rgba(28,25,23,.5);display:flex;align-items:flex-end;z-index:5}
+  .hoja{background:var(--papel);width:100%;border-radius:22px 22px 0 0;padding:22px 16px 24px;display:grid;gap:14px}
+  .agarre{width:40px;height:4px;border-radius:9px;background:var(--borde);margin:-10px auto 0}
+  .esqueleto{background:linear-gradient(90deg,#E7E5E4 0%,#F5F5F4 45%,#E7E5E4 90%);background-size:300% 100%;animation:brillo 1.4s ease-in-out infinite;border-radius:10px}
+  @keyframes brillo{from{background-position:100% 0}to{background-position:0 0}}
+  @media (prefers-reduced-motion:reduce){.esqueleto{animation:none}}
+  .vacio{display:grid;justify-items:center;text-align:center;gap:10px;padding:28px 12px;color:var(--tinta-2)}
+  .vacio .circulo{width:84px;height:84px;border-radius:50%;background:var(--naranja-suave);color:var(--naranja);display:grid;place-items:center}
+  .vacio h5{margin:0;font-size:17px;color:var(--tinta)}
+
+  /* Marca */
+  .logo{display:inline-flex;align-items:center;gap:10px;font-weight:800;font-size:24px;letter-spacing:-.03em;color:var(--tinta)}
+  .logo-marca{width:42px;height:42px;border-radius:13px;background:var(--naranja);color:#fff;display:grid;place-items:center}
+  .logo b{color:var(--naranja);font-weight:800}
+
+  /* Guía visual */
+  .guia{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px}
+  .guia > .tarjeta{padding:18px}
+  .guia h3{margin:0 0 14px;font-size:14px}
+  .muestras{display:grid;grid-template-columns:repeat(auto-fill,minmax(132px,1fr));gap:10px}
+  .muestra{border:1px solid var(--linea);border-radius:12px;overflow:hidden;font-size:12px;background:var(--papel)}
+  .muestra i{display:block;height:48px}
+  .muestra div{padding:7px 9px;line-height:1.35}
+  .muestra code{background:none;padding:0;font-size:11px;color:var(--tinta-3)}
+  .apilado{display:grid;gap:10px}
+
+  /* Vista de escritorio */
+  .navegador{background:var(--papel);border:1px solid var(--borde);border-radius:14px;overflow:hidden;box-shadow:0 30px 60px -34px rgba(15,23,42,.5)}
+  .navegador-barra{display:flex;align-items:center;gap:7px;padding:9px 14px;background:#E7E5E4;font:12px var(--mono);color:var(--tinta-2)}
+  .navegador-barra i{width:11px;height:11px;border-radius:50%;background:#A8A29E;display:inline-block}
+  .navegador-barra span{margin-left:12px;background:var(--papel);border-radius:8px;padding:3px 12px;flex:1;max-width:420px}
+  .nav-superior{display:flex;align-items:center;gap:6px;padding:0 28px;height:64px;background:var(--papel);border-bottom:1px solid var(--linea)}
+  .nav-superior .logo{font-size:19px;margin-right:auto}
+  .nav-superior .logo-marca{width:34px;height:34px;border-radius:10px}
+  .nav-superior a{display:inline-flex;align-items:center;gap:6px;font-size:14px;color:var(--tinta-2);text-decoration:none;padding:8px 12px;border-radius:10px}
+  .nav-superior a.activo{background:var(--naranja-fondo);color:var(--naranja);font-weight:700}
+  .escritorio-cuerpo{background:var(--app);padding:28px}
+  .escritorio-grid{max-width:980px;margin:0 auto;display:grid;grid-template-columns:1.25fr 1fr;gap:16px;align-items:start}
+  @media (max-width:760px){.escritorio-grid{grid-template-columns:1fr}.nav-superior a span{display:none}}
+
+  .checklist{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+  .checklist li{display:flex;gap:10px;align-items:flex-start}
+  .pie{margin-top:56px;padding-top:16px;border-top:1px solid var(--borde);font-size:13px;color:var(--tinta-3)}
+
+  /* Marcadores sobre elementos e interruptor apagado */
+  .con-m{position:relative}
+  .con-m > .m-abs{top:-9px;right:-9px}
+  .hoja.con-m > .m-abs,.app-pie.con-m > .m-abs{top:10px;right:10px}
+  .interruptor.no{background:var(--borde)}
+  .interruptor.no::after{right:auto;left:3px}
+  .bloque.apilar{grid-template-columns:1fr;gap:28px}
+  .notas.anchas ol{grid-template-columns:repeat(auto-fit,minmax(min(340px,100%),1fr));column-gap:32px}
+  @media (max-width:440px){.moviles > div{width:100%}}
+</style>
+</head>
+<body>
+<!-- Íconos: se dibujan una vez y se reutilizan con <use> -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-inicio" viewBox="0 0 24 24"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></symbol>
+  <symbol id="i-rutinas" viewBox="0 0 24 24"><path d="M6.5 6.5v11M17.5 6.5v11M3.5 9.5v5M20.5 9.5v5M6.5 12h11"/></symbol>
+  <symbol id="i-historial" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+  <symbol id="i-progreso" viewBox="0 0 24 24"><path d="M4 4v16h16"/><path d="M7 15l4-4 3 3 5-6"/></symbol>
+  <symbol id="i-perfil" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></symbol>
+  <symbol id="i-atras" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></symbol>
+  <symbol id="i-mas" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-trofeo" viewBox="0 0 24 24"><path d="M8 4h8v5a4 4 0 0 1-8 0z"/><path d="M8 6H5a3 3 0 0 0 3 4M16 6h3a3 3 0 0 1-3 4M12 13v4M8.5 20h7"/></symbol>
+  <symbol id="i-ojo" viewBox="0 0 24 24"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></symbol>
+  <symbol id="i-arriba" viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></symbol>
+  <symbol id="i-abajo" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
+  <symbol id="i-derecha" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="i-basura" viewBox="0 0 24 24"><path d="M4 7h16M9.5 7V4h5v3M6 7l1 13h10l1-13"/></symbol>
+  <symbol id="i-lapiz" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/></symbol>
+  <symbol id="i-buscar" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></symbol>
+  <symbol id="i-calendario" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></symbol>
+  <symbol id="i-alerta" viewBox="0 0 24 24"><path d="M12 3.5L22 20H2z"/><path d="M12 10v4.5M12 17.2v.3"/></symbol>
+  <symbol id="i-sin-senal" viewBox="0 0 24 24"><path d="M2 8.5a15 15 0 0 1 20 0M5 12a10 10 0 0 1 14 0M8.5 15.5a5 5 0 0 1 7 0M12 19h.01"/><path d="M3 3l18 18"/></symbol>
+  <symbol id="i-externo" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9M18 14v6H4V6h6"/></symbol>
+  <symbol id="i-balanza" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M8 9a5 5 0 0 1 8 0l-3 3"/></symbol>
+  <symbol id="i-candado" viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.2"/></symbol>
+</svg>
+
+<div class="doc">
+
+<header class="doc-cabecera">
+  <div>
+    <span class="logo"><span class="logo-marca"><svg class="ic"><use href="#i-rutinas"/></svg></span><span>Gym<b>Rutine</b></span></span>
+    <h1>Mockup de pantallas</h1>
+    <p>Cómo se vería GymRutine en el celular, pantalla por pantalla, con las reglas anotadas al lado. Los números azules del dibujo corresponden a las reglas de cada nota.</p>
+    <div class="meta"><span>Versión 1.2</span><span>2026-09-21</span><span>Entornos de Programación · entrega final 3 de octubre</span><span>React · Spring Boot · Node.js</span></div>
+  </div>
+</header>
+
+<nav class="indice" aria-label="Índice">
+  <ol>
+    <li><a href="#guia">Guía visual</a></li>
+    <li><a href="#p1">P1 Iniciar sesión</a></li>
+    <li><a href="#p2">P2 Crear cuenta</a></li>
+    <li><a href="#p3">P3 Inicio</a></li>
+    <li><a href="#p4">P4 Catálogo</a></li>
+    <li><a href="#p5">P5 Rutinas</a></li>
+    <li><a href="#p6">P6 Constructor</a></li>
+    <li><a href="#p7">P7 Entrenar</a></li>
+    <li><a href="#p8">P8 Resumen</a></li>
+    <li><a href="#p9">P9 Historial</a></li>
+    <li><a href="#p10">P10 Detalle</a></li>
+    <li><a href="#p11">P11 Progreso</a></li>
+    <li><a href="#p12">P12 Récords</a></li>
+    <li><a href="#p13">P13 Peso</a></li>
+    <li><a href="#p14">P14 Perfil</a></li>
+    <li><a href="#estados">Estados</a></li>
+    <li><a href="#escritorio">Escritorio</a></li>
+    <li><a href="#criterios">Criterios</a></li>
+  </ol>
+</nav>
+
+<div class="aviso-doc">
+  <b>Cómo leer este mockup</b>
+  <ul>
+    <li><b>Los colores, la tipografía y el logo son una propuesta</b> para la decisión pendiente D6. Si el equipo la aprueba, T2 copia de aquí las variables y las clases de <code>estilos.css</code>.</li>
+    <li><b>Lo que obliga son las reglas.</b> Aquí están resumidas junto a cada pantalla; la versión completa está en <a href="README.md">README.md</a>, junto al contrato y las historias.</li>
+    <li><b>Los datos son de ejemplo</b> y coinciden con los del contrato: la usuaria Ana, la rutina "Pecho y tríceps" y la sesión del lunes 14 de septiembre de 2026.</li>
+    <li>Todo está hecho con HTML y CSS, sin JavaScript: los botones no hacen nada.</li>
+  </ul>
+</div>
+
+<!-- ======================= GUÍA VISUAL ======================= -->
+<section class="seccion" id="guia">
+  <h2>Guía visual (propuesta para D6)</h2>
+  <p>Carbón y naranja: una combinación con energía de gimnasio, distinta del rojo de GymTracker. El naranja se reserva para la acción principal de cada pantalla, y el dorado solo para los récords, para que un récord siempre se note. Todos los textos cumplen el contraste AA sobre su fondo.</p>
+  <div class="guia">
+    <div class="tarjeta">
+      <h3>Colores</h3>
+      <div class="muestras">
+        <div class="muestra"><i style="background:#C2410C"></i><div><b>Naranja</b><br><code>#C2410C</code><br>Acción principal</div></div>
+        <div class="muestra"><i style="background:#1F2937"></i><div><b>Carbón</b><br><code>#1F2937</code><br>Filtros activos</div></div>
+        <div class="muestra"><i style="background:#1C1917"></i><div><b>Tinta</b><br><code>#1C1917</code><br>Texto</div></div>
+        <div class="muestra"><i style="background:#F5F5F4"></i><div><b>Fondo</b><br><code>#F5F5F4</code><br>Fondo de la app</div></div>
+        <div class="muestra"><i style="background:#FEF3C7"></i><div><b>Récord</b><br><code>#FEF3C7</code><br>Solo récords</div></div>
+        <div class="muestra"><i style="background:#15803D"></i><div><b>Verde</b><br><code>#15803D</code><br>Serie hecha</div></div>
+        <div class="muestra"><i style="background:#B91C1C"></i><div><b>Rojo</b><br><code>#B91C1C</code><br>Errores y eliminar</div></div>
+        <div class="muestra"><i style="background:#E0E7FF"></i><div><b>Objetivo</b><br><code>#E0E7FF</code><br>Etiqueta de objetivo</div></div>
+      </div>
+    </div>
+    <div class="tarjeta">
+      <h3>Tipografía y marca</h3>
+      <div class="apilado">
+        <span class="logo"><span class="logo-marca"><svg class="ic"><use href="#i-rutinas"/></svg></span><span>Gym<b>Rutine</b></span></span>
+        <div class="grande">Título 24 · negrita</div>
+        <div style="font-size:17px;font-weight:700">Barra de título 17 · negrita</div>
+        <div>Texto 15 · normal. Fuente del sistema: no se descarga nada y se ve nativa en Android e iPhone.</div>
+        <div class="texto-2">Texto secundario 13</div>
+        <div class="num" style="font-size:22px;font-weight:700">1.935,5 kg <span class="texto-3">números tabulares</span></div>
+      </div>
+    </div>
+    <div class="tarjeta">
+      <h3>Botones y etiquetas</h3>
+      <div class="apilado">
+        <a class="btn btn-primario btn-bloque">Acción principal</a>
+        <div class="fila"><a class="btn btn-secundario">Secundario</a><a class="btn btn-fantasma">Enlace</a><a class="btn btn-peligro">Eliminar</a></div>
+        <div class="chips"><span class="chip activo">Filtro activo</span><span class="chip">Filtro</span></div>
+        <div class="chips"><span class="etiqueta record"><svg class="ic sm"><use href="#i-trofeo"/></svg>Récord</span><span class="etiqueta propio">Propio</span><span class="etiqueta objetivo">Fuerza</span><span class="etiqueta gris">Ya está</span></div>
+        <p class="texto-3" style="margin:0">Mínimo 44 px de alto en todo lo que se toca.</p>
+      </div>
+    </div>
+    <div class="tarjeta">
+      <h3>Campos y avisos</h3>
+      <div class="apilado">
+        <div class="campo"><label>Normal</label><div class="entrada"><input value="ana@correo.com" readonly></div></div>
+        <div class="campo"><label>Con foco</label><div class="entrada foco"><input value="Pecho y tríceps" readonly></div></div>
+        <div class="campo"><label>Con error de la API (<code>campos</code>)</label><div class="entrada error"><input value="ana@correo" readonly></div><span class="error-texto">No tiene un formato válido</span></div>
+        <div class="aviso exito"><svg class="ic sm"><use href="#i-check"/></svg><span>Cambios guardados</span></div>
+        <div class="aviso error"><svg class="ic sm"><use href="#i-alerta"/></svg><span>Email o contraseña incorrectos</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= P1 ======================= -->
+<section class="seccion" id="p1">
+  <h2>P1 · Iniciar sesión</h2>
+  <div class="seccion-meta"><span><b>Ruta</b> <code>/login</code></span><span><b>Página</b> <code>PaginaLogin</code></span><span><b>Historia</b> H2</span><span><b>Responsable</b> Javier (T4)</span></div>
+  <div class="bloque">
+    <div class="movil">
+      <div class="movil-estado"><span>18:02</span><span class="isla"></span><span class="senal">5G ▮▮▮</span></div>
+      <div class="app">
+        <div class="app-cuerpo" style="padding:24px 20px;gap:16px">
+          <div style="display:grid;justify-items:center;gap:8px;margin:36px 0 18px">
+            <span class="logo-marca" style="width:68px;height:68px;border-radius:20px"><svg class="ic" style="width:36px;height:36px"><use href="#i-rutinas"/></svg></span>
+            <span class="logo" style="font-size:28px"><span>Gym<b>Rutine</b></span></span>
+            <span class="texto-2">Entrena con plan. Mide de verdad.</span>
+          </div>
+          <div class="campo"><label>Email <span class="m">1</span></label><div class="entrada"><input type="email" value="ana@correo.com" readonly></div></div>
+          <div class="campo"><label>Contraseña</label><div class="entrada foco"><input type="password" value="clave-segura-1" readonly><svg class="ic"><use href="#i-ojo"/></svg></div></div>
+          <div class="con-m"><a class="btn btn-primario btn-bloque">Iniciar sesión</a><span class="m m-abs">2</span></div>
+          <div class="con-m aviso error"><svg class="ic sm"><use href="#i-alerta"/></svg><span>Email o contraseña incorrectos</span><span class="m m-abs">3</span></div>
+          <p class="texto-2" style="text-align:center;margin:18px 0 0">¿No tienes cuenta? <a class="btn-fantasma" style="font-weight:700;text-decoration:none">Crear cuenta</a> <span class="m">5</span></p>
+        </div>
+      </div>
+    </div>
+    <aside class="notas">
+      <h3>Reglas</h3>
+      <ol>
+        <li><span class="m">1</span><span>Email y contraseña son obligatorios antes de enviar. El ojo muestra u oculta la contraseña.</span></li>
+        <li><span class="m">2</span><span>Mientras se envía, el botón queda deshabilitado para evitar dobles envíos.</span></li>
+        <li><span class="m">3</span><span>Si la API responde 401 <code>CREDENCIALES_INVALIDAS</code>, aparece un único mensaje. <b>Nunca</b> se dice si falló el email o la contraseña.</span></li>
+        <li><span class="m">4</span><span>Con éxito, <code>AuthContext</code> guarda el token y el usuario y se va a <code>/</code>. Si al abrir ya hay sesión, se va directo a <code>/</code>.</span></li>
+        <li><span class="m">5</span><span>"Crear cuenta" lleva a <code>/registro</code> (P2).</span></li>
+      </ol>
+      <div class="datos"><b>Datos:</b> <code>POST /auth/login</code></div>
+    </aside>
+  </div>
+</section>
+
+<!-- ======================= P2 ======================= -->
+<section class="seccion" id="p2">
+  <h2>P2 · Crear cuenta</h2>
+  <div class="seccion-meta"><span><b>Ruta</b> <code>/registro</code></span><span><b>Página</b> <code>PaginaRegistro</code></span><span><b>Historia</b> H1</span><span><b>Responsable</b> Javier (T4)</span></div>
+  <div class="bloque">
+    <div class="movil">
+      <div class="movil-estado"><span>18:04</span><span class="isla"></span><span class="senal">5G ▮▮▮</span></div>
+      <div class="app">
+        <div class="app-barra"><span class="icono-btn"><svg class="ic"><use href="#i-atras"/></svg></span><h4>Crear cuenta</h4></div>
+        <div class="app-cuerpo">
+          <div class="campo"><label>Nombre <span class="m">1</span></label><div class="entrada"><input value="Ana Gómez" readonly></div></div>
+          <div class="campo"><label>Email</label><div class="entrada error"><input value="ana@correo.com" readonly></div><span class="error-texto con-m">Ya existe una cuenta con este email. <a style="color:inherit;font-weight:700">Iniciar sesión</a> <span class="m">2</span></span></div>
+          <div class="campo"><label>Contraseña</label><div class="entrada"><input type="password" value="clave-segura-1" readonly><svg class="ic"><use href="#i-ojo"/></svg></div><span class="ayuda">Entre 8 y 72 caracteres</span></div>
+          <div class="campo"><label>¿Qué buscas en el gimnasio? <span class="m">3</span></label>
+            <div class="apilado">
+              <div class="opcion elegida"><span class="radio"></span><span><b>Fuerza</b><br><span class="texto-2">Pocas repeticiones con cargas altas</span></span></div>
+              <div class="opcion"><span class="radio"></span><span><b>Pérdida de peso</b><br><span class="texto-2">Repeticiones moderadas y descansos cortos</span></span></div>
+              <div class="opcion"><span class="radio"></span><span><b>Resistencia</b><br><span class="texto-2">Muchas repeticiones con cargas moderadas</span></span></div>
+            </div>
+          </div>
+          <div class="con-m"><a class="btn btn-primario btn-bloque">Crear cuenta</a><span class="m m-abs">4</span></div>
+        </div>
+      </div>
+    </div>
+    <aside class="notas">
+      <h3>Reglas</h3>
+      <ol>
+        <li><span class="m">1</span><span>Nombre de 2 a 80 caracteres, email con formato válido y contraseña de 8 a 72 caracteres. Los errores de <code>campos</code> aparecen debajo de cada campo.</span></li>
+        <li><span class="m">2</span><span>Si la API responde 409 <code>EMAIL_YA_REGISTRADO</code>, el mensaje va bajo el email, con enlace a <code>/login</code>.</span></li>
+        <li><span class="m">3</span><span>Los objetivos salen de <code>GET /referencias</code>, con su nombre y su descripción. <b>Ninguno viene marcado:</b> elegir es obligatorio.</span></li>
+        <li><span class="m">4</span><span>Con 201, la sesión queda iniciada (la API devuelve el token) y se va a <code>/</code>.</span></li>
+      </ol>
+      <div class="datos"><b>Datos:</b> <code>GET /referencias</code> · <code>POST /auth/registro</code></div>
+    </aside>
+  </div>
+</section>
+
+<!-- ======================= P3 ======================= -->
+<section class="seccion" id="p3">
+  <h2>P3 · Inicio</h2>
+  <div class="seccion-meta"><span><b>Ruta</b> <code>/</code></span><span><b>Página</b> <code>PaginaInicio</code></span><span><b>Resume</b> H11, H15, H19 y H22</span><span><b>Responsable</b> Rances (T11); antes, T2 deja accesos simples</span></div>
+  <div class="bloque">
+    <div class="movil">
+      <div class="movil-estado"><span>07:15</span><span class="isla"></span><span class="senal">5G ▮▮▮</span></div>
+      <div class="app">
+        <div class="app-barra" style="padding:10px 16px 14px"><span class="avatar">A</span><h4>Hola, Ana<small>Martes 15 de septiembre</small></h4><span class="etiqueta objetivo">Fuerza</span></div>
+        <div class="app-cuerpo">
+          <div class="con-m aviso alerta"><svg class="ic sm"><use href="#i-alerta"/></svg><span>Tienes un entrenamiento sin guardar de <b>Piernas</b>. <a style="color:inherit;font-weight:700">Continuar</a></span><span class="m m-abs">1</span></div>
+          <div class="titulo-bloque con-m">Entrenar hoy <span class="m">2</span></div>
+          <div class="lista">
+            <div class="lista-fila"><span class="miniatura"><svg class="ic"><use href="#i-rutinas"/></svg></span><div class="crece"><b>Pecho y tríceps</b><div class="texto-3">2 ejercicios · última vez lun 14 sep</div></div><a class="btn btn-primario btn-sm">Entrenar</a></div>
+            <div class="lista-fila"><span class="miniatura"><svg class="ic"><use href="#i-rutinas"/></svg></span><div class="crece"><b>Piernas</b><div class="texto-3">5 ejercicios · última vez vie 11 sep</div></div><a class="btn btn-primario btn-sm">Entrenar</a></div>
+            <div class="lista-fila"><span class="miniatura"><svg class="ic"><use href="#i-rutinas"/></svg></span><div class="crece"><b>Espalda y bíceps</b><div class="texto-3">4 ejercicios · última vez mar 8 sep</div></div><a class="btn btn-primario btn-sm">Entrenar</a></div>
+          </div>
+          <div class="titulo-bloque con-m">Última sesión <span class="m">3</span></div>
+          <div class="tarjeta">
+            <div class="entre"><div><h5>Pecho y tríceps</h5><div class="texto-3">lun 14 sep · 18:30</div></div><span class="etiqueta record"><svg class="ic sm"><use href="#i-trofeo"/></svg>1 récord</span></div>
+            <div class="fila num" style="margin-top:10px;gap:18px"><span><b>55</b> <span class="texto-3">min</span></span><span><b>7</b> <span class="texto-3">series</span></span><span><b>1.935</b> <span class="texto-3">kg</span></span></div>
+          </div>
+          <div class="titulo-bloque con-m">Récords recientes <span class="m">4</span></div>
+          <div class="lista num">
+            <div class="lista-fila"><div class="crece">Press de banca con barra<div class="texto-3">lun 14 sep</div></div><b>62,5 kg</b></div>
+            <div class="lista-fila"><div class="crece">Sentadilla con barra<div class="texto-3">vie 11 sep</div></div><b>90 kg</b></div>
+            <div class="lista-fila"><div class="crece">Prensa de piernas<div class="texto-3">vie 11 sep</div></div><b>180 kg</b></div>
+          </div>
+          <div class="tarjeta con-m"><div class="entre"><div><div class="texto-3">Peso corporal</div><div class="grande num">77,9 kg</div></div><span class="etiqueta gris">−0,5 kg desde el lun 7 sep</span></div><span class="m m-abs">5</span></div>
+        </div>
+        <nav class="nav-inferior">
+          <span class="activo"><svg class="ic"><use href="#i-inicio"/></svg>Inicio</span>
+          <span><svg class="ic"><use href="#i-rutinas"/></svg>Rutinas</span>
+          <span><svg class="ic"><use href="#i-historial"/></svg>Historial</span>
+          <span><svg class="ic"><use href="#i-progreso"/></svg>Progreso</span>
+          <span><svg class="ic"><use href="#i-perfil"/></svg>Perfil</span>
+        </nav>
+      </div>
+    </div>
+    <aside class="notas">
+      <h3>Reglas</h3>
+      <ol>
+        <li><span class="m">1</span><span><b>Solo si hay un borrador</b> de entrenamiento sin guardar (ver P7). "Continuar" lo retoma.</span></li>
+        <li><span class="m">2</span><span>Hasta 3 rutinas activas de <code>GET /rutinas</code>; "Entrenar" va a P7. Sin rutinas, el bloque muestra "Crea tu primera rutina" → P6.</span></li>
+        <li><span class="m">3</span><span>La primera sesión de <code>GET /sesiones</code>, con duración, series, volumen y récords. Tocarla lleva a P10.</span></li>
+        <li><span class="m">4</span><span>Los 3 récords más recientes por fecha, tomados de <code>GET /records</code>.</span></li>
+        <li><span class="m">5</span><span>La diferencia se calcula con los dos últimos registros de <code>GET /peso-corporal</code>. Si un bloque no tiene datos, muestra su invitación sin romper la pantalla.</span></li>
+      </ol>
+      <div class="datos"><b>Datos:</b> usuario de <code>AuthContext</code> · <code>GET /rutinas</code> · <code>GET /sesiones</code> · <code>GET /records</code> · <code>GET /peso-corporal</code></div>
+    </aside>
+  </div>
+</section>
+
+<!-- ======================= P4 ======================= -->
+<section class="seccion" id="p4">
+  <h2>P4 · Catálogo de ejercicios</h2>
+  <div class="seccion-meta"><span><b>Ruta</b> <code>/ejercicios</code></span><span><b>Página</b> <code>PaginaEjercicios</code></span><span><b>Historias</b> H5 a H9</span><span><b>Responsable</b> Javier (T5)</span></div>
+  <div class="moviles">
+    <div>
+      <div class="movil">
+        <div class="movil-estado"><span>18:20</span><span class="isla"></span><span class="senal">5G ▮▮▮</span></div>
+        <div class="app">
+          <div class="app-barra"><span class="icono-btn"><svg class="ic"><use href="#i-atras"/></svg></span><h4>Catálogo de ejercicios</h4><span class="icono-btn naranja"><svg class="ic"><use href="#i-mas"/></svg></span></div>
+          <div class="app-cuerpo">
+            <div class="entrada"><svg class="ic"><use href="#i-buscar"/></svg><input placeholder="Buscar por nombre" readonly></div>
+            <div class="entre con-m"><span class="texto-2">Solo recomendados para <b>Fuerza</b></span><span class="interruptor no"></span><span class="m m-abs">2</span></div>
+            <div class="chips con-m"><span class="chip activo">Todos</span><span class="chip">Barra</span><span class="chip">Mancuernas</span><span class="chip">Máquina</span><span class="chip">Polea</span><span class="chip">Peso corporal</span><span class="m m-abs">1</span></div>
+            <div class="lista">
+              <div class="lista-cab"><span>Pecho <span class="texto-3">6</span></span><svg class="ic sm"><use href="#i-abajo"/></svg></div>
+              <div class="lista-fila"><div class="crece">Aperturas con mancuernas</div><span class="etiqueta gris">Mancuernas</span></div>
+              <div class="lista-fila"><div class="crece">Cruce de poleas</div><span class="etiqueta gris">Polea</span></div>
+              <div class="lista-fila"><div class="crece">Flexiones de pecho</div><span class="etiqueta gris">Peso corporal</span></div>
+              <div class="lista-fila"><div class="crece">Press de banca con barra</div><span class="etiqueta gris">Barra</span></div>
+              <div class="lista-fila con-m"><div class="crece">Press en máquina Smith</div><span class="etiqueta propio">Propio</span><span class="etiqueta gris">Máquina</span><span class="m m-abs">4</span></div>
+              <div class="lista-fila"><div class="crece">Press inclinado con mancuernas</div><span class="etiqueta gris">Mancuernas</span></div>
+            </div>
+            <div class="lista">
+              <div class="lista-cab"><span>Espalda <span class="texto-3">6</span></span><svg class="ic sm"><use href="#i-derecha"/></svg></div>
+              <div class="lista-cab" style="border-top:1px solid var(--linea)"><span>Hombros <span class="texto-3">5</span></span><svg class="ic sm"><use href="#i-derecha"/></svg></div>
+              <div class="lista-cab" style="border-top:1px solid var(--linea)"><span>Bíceps <span class="texto-3">4</span></span><svg class="ic sm"><use href="#i-derecha"/></svg></div>
+            </div>
+          </div>
+          <nav class="nav-inferior">
+            <span><svg class="ic"><use href="#i-inicio"/></svg>Inicio</span>
+            <span class="activo"><svg class="ic"><use href="#i-rutinas"/></svg>Rutinas</span>
+            <span><svg class="ic"><use href="#i-historial"/></svg>Historial</span>
+            <span><svg class="ic"><use href="#i-progreso"/></svg>Progreso</span>
+            <span><svg class="ic"><use href="#i-perfil"/></svg>Perfil</span>
+          </nav>
+        </div>
+      </div>
+      <p class="rotulo">Lista con filtros</p>
+    </div>
+    <div>
+      <div class="movil">
+        <div class="movil-estado"><span>18:21</span><span class="isla"></span><span class="senal">5G ▮▮▮</span></div>
+        <div class="app corta">
+          <div class="app-barra"><span class="icono-btn"><svg class="ic"><use href="#i-atras"/></svg></span><h4>Press de banca con barra</h4></div>
+          <div class="app-cuerpo">
+            <div class="tarjeta" style="display:grid;place-items:center;height:150px;background:var(--naranja-fondo);border-color:var(--naranja-suave);color:var(--naranja)"><svg class="ic lg"><use href="#i-rutinas"/></svg></div>
+            <div class="chips"><span class="etiqueta gris">Pecho</span><span class="etiqueta gris">Barra</span><span class="etiqueta objetivo">Fuerza</span></div>
+            <div><b>Técnica</b><p class="texto-2" style="margin:4px 0 0">Baja la barra al pecho con control y empuja hasta extender los brazos.</p></div>
+            <div class="con-m"><a class="btn btn-secundario btn-bloque"><svg class="ic sm"><use href="#i-externo"/></svg>Ver técnica en YouTube</a><span class="m m-abs">3</span></div>
+            <div class="aviso info con-m"><svg class="ic sm"><use href="#i-candado"/></svg><span>Ejercicio del catálogo base: no se puede editar ni eliminar.</span><span class="m m-abs">4</span></div>
+          </div>
+        </div>
+      </div>
+      <p class="rotulo">Detalle de un ejercicio base</p>
+    </div>
+    <div>
+      <div class="movil">
+        <div class="movil-estado"><span>18:23</span><span class="isla"></span><span class="senal">5G ▮▮▮</span></div>
+        <div class="app corta">
+          <div class="app-barra"><span class="icono-btn"><svg class="ic"><use href="#i-atras"/></svg></span><h4>Editar ejercicio</h4><a class="btn btn-fantasma btn-sm">Guardar</a></div>
+          <div class="app-cuerpo">
+            <div class="campo"><label>Nombre</label><div class="entrada error"><input value="press de banca con barra" readonly></div><span class="error-texto con-m">Ya existe un ejercicio con este nombre <span class="m">5</span></span></div>
+            <div class="kpis">
+              <div class="campo"><label>Grupo muscular</label><div class="entrada"><input value="Pecho" readonly><svg class="ic sm"><use href="#i-abajo"/></svg></div></div>
+              <div class="campo"><label>Equipo</label><div class="entrada"><input value="Máquina" readonly><svg class="ic sm"><use href="#i-abajo"/></svg></div></div>
+            </div>
+            <div class="campo"><label>Recomendado para <span class="m">6</span></label>
+              <div class="apilado">
+                <div class="fila"><span class="casilla si"><svg class="ic sm"><use href="#i-check"/></svg></span>Fuerza</div>
+                <div class="fila"><span class="casilla si"><svg class="ic sm"><use href="#i-check"/></svg></span>Pérdida de peso</div>
+                <div class="fila"><span class="casilla"></span>Resistencia</div>
+              </div>
+            </div>
+            <div class="campo"><label>Descripción (opcional)</label><div class="entrada" style="align-items:flex-start"><textarea rows="2" readonly>Espalda apoyada y bajada controlada.</textarea></div><span class="ayuda" style="text-align:right">36 / 500</span></div>
+            <div class="con-m"><a class="btn btn-peligro btn-bloque"><svg class="ic sm"><use href="#i-basura"/></svg>Eliminar ejercicio</a><span class="m m-abs">7</span></div>
+          </div>
+        </div>
+      </div>
+      <p class="rotulo">Formulario de un ejercicio propio, con error 409</p>
+    </div>
+  </div>
+  <aside class="notas anchas" style="margin-top:32px">
+    <h3>Reglas</h3>
+    <ol>
+      <li><span class="m">1</span><span>Los chips de equipo se envían como parámetro <code>equipo</code>. Los grupos musculares se pliegan y muestran la cantidad de ejercicios del filtro actual, ordenados por nombre.</span></li>
+      <li><span class="m">2</span><span>El interruptor envía <code>objetivo</code> con el objetivo del perfil. La búsqueda por nombre se hace en el navegador, sin distinguir mayúsculas ni tildes.</span></li>
+      <li><span class="m">3</span><span>"Ver técnica en YouTube" abre <code>youtube.com/results?search_query=</code> con el nombre codificado, en una pestaña nueva.</span></li>
+      <li><span class="m">4</span><span>Los ejercicios propios llevan la etiqueta "Propio" y son los únicos con Editar y Eliminar (<code>propio: true</code>). Los del catálogo base son de solo lectura.</span></li>
+      <li><span class="m">5</span><span>409 <code>EJERCICIO_DUPLICADO</code>: el mensaje va bajo el nombre.</span></li>
+      <li><span class="m">6</span><span>Nombre de 3 a 80 caracteres, grupo y equipo obligatorios, <b>al menos un objetivo</b> y descripción de máximo 500 caracteres, con contador.</span></li>
+      <li><span class="m">7</span><span>Eliminar pide confirmación: "¿Eliminar este ejercicio? Tu historial se conserva." Es un borrado lógico.</span></li>
+    </ol>
+    <div class="datos"><b>Datos:</b> <code>GET /referencias</code> · <code>GET /ejercicios</code> · <code>GET /ejercicios/{id}</code> · <code>POST /ejercicios</code> · <code>PUT /ejercicios/{id}</code> · <code>DELETE /ejercicios/{id}</code></div>
+  </aside>
+</section>
+
+<!-- ======================= P5 ======================= -->
+<section class="seccion" id="p5">
+  <h2>P5 · Mis rutinas</h2>
+  <div class="seccion-meta"><span><b>Ruta</b> <code>/rutinas</code></span><span><b>Página</b> <code>PaginaRutinas</code></span><span><b>Historias</b> H11 y H13</span><span><b>Responsable</b> Javier (T6)</span></div>
+  <div class="bloque apilar">
+    <div class="moviles">
+      <div>
+        <div class="movil">
+          <div class="movil-estado"><span>18:24</span><span class="isla"></span><span class="senal">5G ▮▮▮</span></div>
+          <div class="app">
+            <div class="app-barra"><h4 style="padding-left:6px">Mis rutinas</h4><span class="icono-btn naranja con-m"><svg class="ic"><use href="#i-mas"/></svg><span class="m m-abs">3</span></span></div>
+            <div class="app-cuerpo">
+              <div class="tarjeta fila"><span class="miniatura"><svg class="ic"><use href="#i-buscar"/></svg></span><div class="crece"><b>Catálogo de ejercicios</b><div class="texto-3">40 ejercicios base y los tuyos</div></div><svg class="ic sm"><use href="#i-derecha"/></svg></div>
+              <div class="tarjeta con-m">
+                <div class="entre"><h5>Pecho y tríceps</h5><span class="etiqueta objetivo">Fuerza</span></div>
+                <div class="texto-3" style="margin:2px 0 12px">2 ejercicios · última vez lun 14 sep</div>
+                <div class="fila"><a class="btn btn-primario btn-sm crece">Entrenar</a><a class="btn btn-secundario btn-sm"><svg class="ic sm"><use href="#i-lapiz"/></svg>Editar</a><a class="btn btn-peligro btn-sm" aria-label="Eliminar"><svg class="ic sm"><use href="#i-basura"/></svg></a></div>
+                <span class="m m-abs">1</span>
+              </div>
+              <div class="tarjeta">
+                <div class="entre"><h5>Piernas</h5><span class="etiqueta objetivo">Fuerza</span></div>
+                <div class="texto-3" style="margin:2px 0 12px">5 ejercicios · última vez vie 11 sep</div>
+                <div class="fila"><a class="btn btn-primario btn-sm crece">Entrenar</a><a class="btn btn-secundario btn-sm"><svg class="ic sm"><use href="#i-lapiz"/></svg>Editar</a><a class="btn btn-peligro btn-sm" aria-label="Eliminar"><svg class="ic sm"><use href="#i-basura"/></svg></a></div>
+              </div>
+              <div class="tarjeta">
+                <div class="entre"><h5>Espalda y bíceps</h5><span class="etiqueta objetivo">Fuerza</span></div>
+                <div class="texto-3" style="margin:2px 0 12px">4 ejercicios · última vez mar 8 sep</div>
+                <div class="fila"><a class="btn btn-primario btn-sm crece">Entrenar</a><a class="btn btn-secundario btn-sm"><svg class="ic sm"><use href="#i-lapiz"/></svg>Editar</a><a class="btn btn-peligro btn-sm" aria-label="Eliminar"><svg class="ic sm"><use href="#i-basura"/></svg></a></div>
+              </div>
+              <div class="tarjeta con-m">
+                <div class="entre"><h5>Full body express</h5><span class="etiqueta objetivo">Resistencia</span></div>
+                <div class="texto-3" style="margin:2px 0 12px">6 ejercicios · aún no la entrenas</div>
+                <div class="fila"><a class="btn btn-primario btn-sm crece">Entrenar</a><a class="btn btn-secundario btn-sm"><svg class="ic sm"><use href="#i-lapiz"/></svg>Editar</a><a class="btn btn-peligro btn-sm" aria-label="Eliminar"><svg class="ic sm"><use href="#i-basura"/></svg></a></div>
+                <span class="m m-abs">2</span>
+              </div>
+            </div>
+            <nav class="nav-inferior">
+              <span><svg class="ic"><use href="#i-inicio"/></svg>Inicio</span>
+              <span class="activo"><svg class="ic"><use href="#i-rutinas"/></svg>Rutinas</span>
+              <span><svg class="ic"><use href="#i-historial"/></svg>Historial</span>
+              <span><svg class="ic"><use href="#i-progreso"/></svg>Progreso</span>
+              <span><svg class="ic"><use href="#i-perfil"/></svg>Perfil</span>
+            </nav>
+          </div>
+        </div>
+        <p class="rotulo">Lista de rutinas</p>
+      </div>
+      <div>
+        <div class="movil">
+          <div class="movil-estado"><span>18:25</span><span class="isla"></span><span class="senal">5G ▮▮▮</span></div>
+          <div class="app corta" style="min-height:430px">
+            <div class="app-barra"><h4 style="padding-left:6px">Mis rutinas</h4><span class="icono-btn naranja"><svg class="ic"><use href="#i-mas"/></svg></span></div>
+            <div class="app-cuerpo"><div class="tarjeta"><h5>Full body express</h5><div class="texto-3">6 ejercicios · aún no la entrenas</div></div></div>
+            <div class="velo">
+              <div class="hoja con-m">
+                <div class="agarre"></div>
+                <h5 style="margin:0;font-size:17px">¿Eliminar "Full body express"?</h5>
+                <p class="texto-2" style="margin:0">Ya no aparecerá en tus rutinas. Las sesiones que registraste con ella seguirán en tu historial.</p>
+                <div class="kpis"><a class="btn btn-secundario">Cancelar</a><a class="btn btn-peligro" style="background:var(--rojo);color:#fff;border-color:var(--rojo)">Eliminar</a></div>
+                <span class="m m-abs">4</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="rotulo">Confirmación al eliminar</p>
+      </div>
+    </div>
+    <aside class="notas anchas">
+      <h3>Reglas</h3>
+      <ol>
+        <li><span class="m">1</span><span>Cada tarjeta muestra nombre, objetivo (nombre visible), cantidad de ejercicios y la última vez que se entrenó (la sesión más reciente de esa rutina en <code>GET /sesiones</code>). "Entrenar" es la acción principal y lleva a P7.</span></li>
+        <li><span class="m">2</span><span>Si la rutina no aparece en el historial: "aún no la entrenas".</span></li>
+        <li><span class="m">3</span><span>El "+" lleva a <code>/rutinas/nueva</code>; "Editar", a <code>/rutinas/:id/editar</code> (P6).</span></li>
+        <li><span class="m">4</span><span>Eliminar siempre pide confirmación. Es un borrado lógico: las sesiones siguen en el historial con el nombre de la rutina.</span></li>
+        <li><span class="m">5</span><span>Sin rutinas, en lugar de la lista: "Aún no tienes rutinas" con "Crear mi primera rutina" (ver <a href="#estados">Estados</a>).</span></li>
+      </ol>
+      <div class="datos"><b>Datos:</b> <code>GET /rutinas</code> · <code>DELETE /rutinas/{id}</code> · <code>GET /sesiones</code> (servicio de entrenamiento)</div>
+    </aside>
+  </div>
+</section>
+
+<!-- ======================= P6 ======================= -->
+<section class="seccion" id="p6">
+  <h2>P6 · Constructor de rutina</h2>
+  <div class="seccion-meta"><span><b>Rutas</b> <code>/rutinas/nueva</code> · <code>/rutinas/:id/editar</code></span><span><b>Página</b> <code>PaginaRutinaFormulario</code></span><span><b>Historias</b> H10 y H12</span><span><b>Responsable</b> Javier (T6)</span></div>
+  <div class="bloque apilar">
+    <div class="moviles">
+      <div>
+        <div class="movil">
+          <div class="movil-estado"><span>18:26</span><span class="isla"></span><span class="senal">5G ▮▮▮</span></div>
+          <div class="app">
+            <div class="app-barra"><span class="icono-btn"><svg class="ic"><use href="#i-atras"/></svg></span><h4>Nueva rutina</h4></div>
+            <div class="app-cuerpo">
+              <div class="campo"><label>Nombre</label><div class="entrada foco"><input value="Pecho y tríceps" readonly></div></div>
+              <div class="campo"><label>Objetivo <span class="m">1</span></label><div class="chips"><span class="chip activo">Fuerza</span><span class="chip">Pérdida de peso</span><span class="chip">Resistencia</span></div></div>
+              <div class="titulo-bloque">Ejercicios (2)</div>
+              <div class="tarjeta con-m">
+                <div class="fila"><span class="etiqueta gris">1</span><b class="crece">Press de banca con barra</b><span class="icono-btn" style="width:30px;height:30px;color:var(--borde)"><svg class="ic sm"><use href="#i-arriba"/></svg></span><span class="icono-btn" style="width:30px;height:30px"><svg class="ic sm"><use href="#i-abajo"/></svg></span><span class="icono-btn" style="width:30px;height:30px;color:var(--rojo)"><svg class="ic sm"><use href="#i-x"/></svg></span></div>
+                <div class="kpis" style="margin-top:10px">
+                  <div class="campo"><label>Series</label><div class="entrada"><input value="4" inputmode="numeric" readonly></div></div>
+                  <div class="campo"><label>Repeticiones</label><div class="entrada"><input value="5" inputmode="numeric" readonly></div></div>
+                </div>
+                <span class="m m-abs">2</span>
+              </div>
+              <div class="tarjeta con-m">
+                <div class="fila"><span class="etiqueta gris">2</span><b class="crece">Extensión de tríceps en polea</b><span class="icono-btn" style="width:30px;height:30px"><svg class="ic sm"><use href="#i-arriba"/></svg></span><span class="icono-btn" style="width:30px;height:30px;color:var(--borde)"><svg class="ic sm"><use href="#i-abajo"/></svg></span><span class="icono-btn" style="width:30px;height:30px;color:var(--rojo)"><svg class="ic sm"><use href="#i-x"/></svg></span></div>
+                <div class="kpis" style="margin-top:10px">
+                  <div class="campo"><label>Series</label><div class="entrada"><input value="3" inputmode="numeric" readonly></div></div>
+                  <div class="campo"><label>Repeticiones</label><div class="entrada"><input value="10" inputmode="numeric" readonly></div></div>
+                </div>
+                <span class="m m-abs">3</span>
+              </div>
+              <a class="btn btn-secundario btn-bloque"><svg class="ic sm"><use href="#i-mas"/></svg>Agregar ejercicio</a>
+            </div>
+            <div class="app-pie con-m"><a class="btn btn-primario btn-bloque">Guardar rutina</a><span class="m m-abs">4</span></div>
+          </div>
+        </div>
+        <p class="rotulo">Constructor</p>
+      </div>
+      <div>
+        <div class="movil">
+          <div class="movil-estado"><span>18:27</span><span class="isla"></span><span class="senal">5G ▮▮▮</span></div>
+          <div class="app corta" style="min-height:560px">
+            <div class="app-barra"><span class="icono-btn"><svg class="ic"><use href="#i-x"/></svg></span><h4>Agregar ejercicio</h4></div>
+            <div class="app-cuerpo">
+              <div class="entrada"><svg class="ic"><use href="#i-buscar"/></svg><input placeholder="Buscar por nombre" readonly></div>
+              <div class="chips"><span class="chip">Todos</span><span class="chip activo">Pecho</span><span class="chip">Espalda</span><span class="chip">Hombros</span><span class="chip">…</span></div>
+              <div class="entre"><span class="texto-2">Solo recomendados para <b>Fuerza</b></span><span class="interruptor"></span></div>
+              <div class="lista">
+                <div class="lista-fila con-m" style="opacity:.55"><div class="crece">Press de banca con barra<div class="texto-3">Barra</div></div><span class="etiqueta gris">Ya está</span><span class="m m-abs" style="opacity:1">6</span></div>
+                <div class="lista-fila"><div class="crece">Press en máquina Smith <span class="etiqueta propio">Propio</span><div class="texto-3">Máquina</div></div><span class="icono-btn naranja"><svg class="ic"><use href="#i-mas"/></svg></span></div>
+                <div class="lista-fila"><div class="crece">Press inclinado con mancuernas<div class="texto-3">Mancuernas</div></div><span class="icono-btn naranja"><svg class="ic"><use href="#i-mas"/></svg></span></div>
+              </div>
+              <div class="aviso info"><svg class="ic sm"><use href="#i-info"/></svg><span>Se agrega con <b>4 × 5</b>, lo sugerido para Fuerza. Puedes cambiarlo después.</span></div>
+            </div>
+          </div>
+        </div>
+        <p class="rotulo">Selector de ejercicios</p>
+      </div>
+    </div>
+    <aside class="notas anchas">
+      <h3>Reglas</h3>
+      <ol>
+        <li><span class="m">1</span><span>Objetivo por defecto: el del perfil (al crear) o el de la rutina (al editar).</span></li>
+        <li><span class="m">2</span><span>Al agregar un ejercicio, series y repeticiones vienen con las sugeridas del objetivo (<code>seriesSugeridas</code> y <code>repeticionesSugeridas</code>). Cambiar el objetivo <b>no</b> modifica los ejercicios ya agregados.</span></li>
+        <li><span class="m">3</span><span>Las flechas cambian el orden (se apagan en los extremos) y la X quita el ejercicio. Se envía la lista en el orden visible.</span></li>
+        <li><span class="m">4</span><span>Antes de enviar: nombre de 3 a 80 caracteres, 1 a 15 ejercicios, series de 1 a 10 y repeticiones de 1 a 50. Con éxito → P5. Salir con cambios sin guardar pregunta "¿Salir sin guardar?".</span></li>
+        <li><span class="m">5</span><span>Al editar, un ejercicio eliminado del catálogo aparece con "Ya no está en el catálogo" y el aviso "Quítalo para poder guardar".</span></li>
+        <li><span class="m">6</span><span>En el selector, los ejercicios que ya están en la rutina aparecen apagados con "Ya está". Se filtra por grupo muscular y por recomendados.</span></li>
+      </ol>
+      <div class="datos"><b>Datos:</b> <code>GET /referencias</code> · <code>GET /ejercicios</code> · <code>GET /rutinas/{id}</code> (al editar) · <code>POST /rutinas</code> · <code>PUT /rutinas/{id}</code></div>
+    </aside>
+  </div>
+</section>
+
+<!-- ======================= P7 ======================= -->
+<section class="seccion" id="p7">
+  <h2>P7 · Entrenar ★</h2>
+  <p>La pantalla más importante: es la única que se usa <b>dentro del gimnasio</b>, de pie, con prisa y a veces sin señal.</p>
+  <div class="seccion-meta"><span><b>Ruta</b> <code>/rutinas/:id/entrenar</code></span><span><b>Página</b> <code>PaginaEntrenar</code></span><span><b>Historias</b> H14 y H18</span><span><b>Responsable</b> Santiago (T7)</span></div>
+  <div class="bloque apilar">
+    <div class="moviles">
+      <div>
+        <div class="movil">
+          <div class="movil-estado"><span>18:32</span><span class="isla"></span><span class="senal">5G ▮▮▯</span></div>
+          <div class="app">
+            <div class="app-barra con-m"><span class="icono-btn"><svg class="ic"><use href="#i-atras"/></svg></span><h4>Pecho y tríceps<small>Inicio: lun 14 sep, 18:30 · <a style="color:var(--naranja);font-weight:700">Cambiar</a></small></h4><span class="etiqueta gris num" style="font-size:13px"><svg class="ic sm"><use href="#i-historial"/></svg>02:14</span><span class="m m-abs">1</span></div>
+            <div class="app-cuerpo">
+              <div class="tarjeta fila num con-m" style="justify-content:space-around;padding:10px"><span><b>2</b> <span class="texto-3">ejercicios</span></span><span><b>5</b> <span class="texto-3">series</span></span><span><b>1.412,5</b> <span class="texto-3">kg</span></span><span class="m m-abs">2</span></div>
+              <div class="tarjeta">
+                <div class="entre"><h5>1. Press de banca con barra</h5></div>
+                <div class="chips" style="margin:6px 0 2px"><span class="etiqueta objetivo">Objetivo 4 × 5</span><span class="etiqueta record"><svg class="ic sm"><use href="#i-trofeo"/></svg>Tu récord: 60 kg</span></div>
+                <div class="texto-3 con-m" style="margin-bottom:8px">Valores de la última vez: jue 10 sep <span class="m">3</span></div>
+                <div class="series">
+                  <div class="serie serie-cab"><span>#</span><span>Peso (kg)</span><span>Reps</span><span style="text-align:center">Hecha</span></div>
+                  <div class="serie hecha"><span class="texto-2">1</span><div class="entrada"><input value="55" inputmode="decimal" readonly></div><div class="entrada"><input value="5" inputmode="numeric" readonly></div><span class="check"><svg class="ic sm"><use href="#i-check"/></svg></span></div>
+                  <div class="serie hecha"><span class="texto-2">2</span><div class="entrada"><input value="57,5" inputmode="decimal" readonly></div><div class="entrada"><input value="5" inputmode="numeric" readonly></div><span class="check"><svg class="ic sm"><use href="#i-check"/></svg></span></div>
+                  <div class="serie hecha"><span class="texto-2">3</span><div class="entrada"><input value="60" inputmode="decimal" readonly></div><div class="entrada"><input value="5" inputmode="numeric" readonly></div><span class="check"><svg class="ic sm"><use href="#i-check"/></svg></span></div>
+                  <div class="serie posible con-m"><span class="texto-2">4</span><div class="entrada"><input value="62,5" inputmode="decimal" readonly></div><div class="entrada"><input value="4" inputmode="numeric" readonly></div><span class="check"><svg class="ic sm"><use href="#i-trofeo"/></svg></span><span class="m m-abs">4</span></div>
+                  <div class="texto-3" style="color:var(--oro-tinta);padding-left:28px">Posible récord: supera tus 60 kg</div>
+                </div>
+                <div class="entre" style="margin-top:8px"><a class="btn btn-fantasma btn-sm"><svg class="ic sm"><use href="#i-mas"/></svg>Serie</a><a class="btn btn-fantasma btn-sm" style="color:var(--tinta-3)">Saltar</a></div>
+              </div>
+              <div class="tarjeta">
+                <h5>2. Extensión de tríceps en polea</h5>
+                <div class="chips" style="margin:6px 0 10px"><span class="etiqueta objetivo">Objetivo 3 × 10</span><span class="etiqueta record"><svg class="ic sm"><use href="#i-trofeo"/></svg>Tu récord: 27,5 kg</span></div>
+                <div class="series">
+                  <div class="serie serie-cab"><span>#</span><span>Peso (kg)</span><span>Reps</span><span style="text-align:center">Hecha</span></div>
+                  <div class="serie hecha"><span class="texto-2">1</span><div class="entrada"><input value="25" inputmode="decimal" readonly></div><div class="entrada"><input value="12" inputmode="numeric" readonly></div><span class="check"><svg class="ic sm"><use href="#i-check"/></svg></span></div>
+                  <div class="serie"><span class="texto-2">2</span><div class="entrada"><input value="27,5" inputmode="decimal" readonly></div><div class="entrada"><input value="10" inputmode="numeric" readonly></div><span class="check"><svg class="ic sm"><use href="#i-check"/></svg></span></div>
+                  <div class="serie con-m"><span class="texto-2">3</span><div class="entrada"><input value="27,5" inputmode="decimal" readonly></div><div class="entrada error"><input value="" inputmode="numeric" readonly></div><span class="check"><svg class="ic sm"><use href="#i-check"/></svg></span><span class="m m-abs">5</span></div>
+                  <div class="error-texto" style="padding-left:28px">Escribe las repeticiones (1 a 100) para marcarla</div>
+                </div>
+                <div class="entre" style="margin-top:8px"><a class="btn btn-fantasma btn-sm"><svg class="ic sm"><use href="#i-mas"/></svg>Serie</a><a class="btn btn-fantasma btn-sm" style="color:var(--tinta-3)">Saltar</a></div>
+              </div>
+            </div>
+            <div class="app-pie con-m"><a class="btn btn-primario btn-bloque">Terminar y guardar</a><span class="m m-abs">6</span></div>
+          </div>
+        </div>
+        <p class="rotulo">Entrenando (sin barra de navegación)</p>
+      </div>
+      <div>
+        <div class="movil">
+          <div class="movil-estado"><span>19:25</span><span class="isla"></span><span class="senal">5G ▯▯▯</span></div>
+          <div class="app" style="min-height:640px">
+            <div class="app-barra"><span class="icono-btn"><svg class="ic"><use href="#i-atras"/></svg></span><h4>Pecho y tríceps<small>Inicio: lun 14 sep, 18:30</small></h4></div>
+            <div class="app-cuerpo"><div class="esqueleto" style="height:60px"></div><div class="esqueleto" style="height:220px"></div></div>
+            <div class="velo">
+              <div class="hoja con-m">
+                <div class="agarre"></div>
+                <h5 style="margin:0;font-size:18px">¿Terminar la sesión?</h5>
+                <div class="kpis num">
+                  <div class="kpi"><small>Series</small><b>7</b></div>
+                  <div class="kpi"><small>Volumen</small><b>1.935 kg</b></div>
+                </div>
+                <div class="campo"><label>Duración (minutos)</label><div class="entrada"><input value="55" inputmode="numeric" readonly></div><span class="ayuda">Calculada desde que abriste la rutina. Puedes corregirla.</span></div>
+                <div class="aviso error"><svg class="ic sm"><use href="#i-sin-senal"/></svg><span><b>No se pudo guardar.</b> Tus datos siguen aquí: reintenta cuando tengas señal.</span></div>
+                <div class="kpis"><a class="btn btn-secundario">Seguir entrenando</a><a class="btn btn-primario">Reintentar</a></div>
+                <span class="m m-abs">7</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="rotulo">Confirmación, después de un intento sin señal</p>
+      </div>
+    </div>
+    <aside class="notas anchas">
+      <h3>Reglas</h3>
+      <ol>
+        <li><span class="m">1</span><span><b>Inicio</b> por defecto: el momento en que se abrió la pantalla; "Cambiar" permite otra fecha y hora no futura. El reloj cuenta el tiempo transcurrido. Mientras se entrena <b>no hay barra de navegación</b>, para no salir sin querer.</span></li>
+        <li><span class="m">2</span><span>Resumen en vivo: ejercicios, series marcadas y kg. Se actualiza con cada serie.</span></li>
+        <li><span class="m">3</span><span>Filas prellenadas con la última vez, serie a serie y en cualquier rutina (<code>ultimos-registros</code>). Tantas filas como <code>seriesObjetivo</code>, o como la última vez si fueron más. Si nunca se hizo: peso vacío y reps del objetivo.</span></li>
+        <li><span class="m">4</span><span><b>Solo se guardan las series marcadas.</b> Si una supera <code>recordKg</code>, se marca en dorado como "posible récord"; la confirmación real la da el servidor.</span></li>
+        <li><span class="m">5</span><span>Marcar una serie la valida (peso de 0 a 500 y reps de 1 a 100). Si no cumple, la fila se resalta y no se marca. "Saltar" deja el ejercicio sin enviar.</span></li>
+        <li><span class="m">6</span><span>Sin ninguna serie marcada, avisa "Marca al menos una serie hecha". Si hay, abre la confirmación. <b>Cada cambio se guarda como borrador</b> en <code>localStorage</code>; salir con series marcadas avisa que queda como borrador.</span></li>
+        <li><span class="m">7</span><span>La duración propuesta son los minutos transcurridos (mínimo 1), editable de 1 a 600. Si falla la conexión, nada se borra y el botón pasa a "Reintentar". Con 201 se borra el borrador y se muestra P8.</span></li>
+      </ol>
+      <div class="datos"><b>Datos:</b> <code>GET /rutinas/{id}</code> · <code>GET /sesiones/ultimos-registros?rutinaId=</code> · <code>POST /sesiones</code></div>
+    </aside>
+  </div>
+</section>
+
+<!-- ======================= P8 ======================= -->
+<section class="seccion" id="p8">
+  <h2>P8 · Resumen de la sesión</h2>
+  <div class="seccion-meta"><span><b>Ruta</b> <code>/rutinas/:id/entrenar</code>, al guardar</span><span><b>Página</b> <code>PaginaEntrenar</code></span><span><b>Historias</b> H14 y H18</span><span><b>Responsable</b> Santiago (T7)</span></div>
+  <div class="bloque">
+    <div class="movil">
+      <div class="movil-estado"><span>19:26</span><span class="isla"></span><span class="senal">5G ▮▮▮</span></div>
+      <div class="app">
+        <div class="app-cuerpo" style="padding-top:28px">
+          <div style="display:grid;justify-items:center;text-align:center;gap:6px">
+            <span class="vacio" style="padding:0"><span class="circulo"><svg class="ic lg"><use href="#i-check"/></svg></span></span>
+            <h4 style="margin:6px 0 0;font-size:22px">¡Sesión guardada!</h4>
+            <span class="texto-2">Pecho y tríceps · 55 min</span>
+          </div>
+          <div class="kpis num con-m">
+            <div class="kpi"><small>Volumen</small><b>1.935 kg</b></div>
+            <div class="kpi"><small>Ejercicios</small><b>2</b></div>
+            <div class="kpi"><small>Series</small><b>7</b></div>
+            <div class="kpi"><small>Repeticiones</small><b>50</b></div>
+            <span class="m m-abs">1</span>
+          </div>
+          <div class="tarjeta con-m" style="background:var(--oro-suave);border-color:#FDE68A">
+            <div class="fila" style="color:var(--oro-tinta)"><svg class="ic"><use href="#i-trofeo"/></svg><b style="font-size:16px">¡Nuevo récord!</b></div>
+            <div class="entre num" style="margin-top:8px"><span>Press de banca con barra</span><b>62,5 kg × 4</b></div>
+            <div class="texto-3" style="color:var(--oro-tinta);margin-top:2px">Tu marca anterior era 60 kg</div>
+            <span class="m m-abs">2</span>
+          </div>
+          <div class="kpis con-m" style="margin-top:6px"><a class="btn btn-secundario">Ver detalle</a><a class="btn btn-primario">Ir a inicio</a><span class="m m-abs">3</span></div>
+        </div>
+        <nav class="nav-inferior">
+          <span><svg class="ic"><use href="#i-inicio"/></svg>Inicio</span>
+          <span class="activo"><svg class="ic"><use href="#i-rutinas"/></svg>Rutinas</span>
+          <span><svg class="ic"><use href="#i-historial"/></svg>Historial</span>
+          <span><svg class="ic"><use href="#i-progreso"/></svg>Progreso</span>
+          <span><svg class="ic"><use href="#i-perfil"/></svg>Perfil</span>
+        </nav>
+      </div>
+    </div>
+    <aside class="notas">
+      <h3>Reglas</h3>
+      <ol>
+        <li><span class="m">1</span><span>Las tarjetas salen de <code>resumen</code> en la respuesta 201 de <code>POST /sesiones</code>. <b>No se hacen peticiones nuevas.</b></span></li>
+        <li><span class="m">2</span><span>"¡Nuevo récord!" lista las series con <code>esRecord: true</code>: ejercicio, peso y repeticiones. La marca anterior es el <code>recordKg</code> que se cargó al abrir P7. Sin récords, el bloque dice "Esta vez no hubo récords".</span></li>
+        <li><span class="m">3</span><span>"Ver detalle" → P10 (<code>/historial/:id</code>). "Ir a inicio" → P3.</span></li>
+      </ol>
+      <div class="datos"><b>Datos:</b> la respuesta de <code>POST /sesiones</code></div>
+    </aside>
+  </div>
+</section>
+
+<!-- ======================= P9 ======================= -->
+<section class="seccion" id="p9">
+  <h2>P9 · Historial</h2>
+  <div class="seccion-meta"><span><b>Ruta</b> <code>/historial</code></span><span><b>Página</b> <code>PaginaHistorial</code></span><span><b>Historia</b> H15</span><span><b>Responsable</b> Santiago (T7)</span></div>
+  <div class="bloque">
+    <div class="movil">
+      <div class="movil-estado"><span>07:20</span><span class="isla"></span><span class="senal">5G ▮▮▮</span></div>
+      <div class="app">
+        <div class="app-barra"><h4 style="padding-left:6px">Historial</h4></div>
+        <div class="app-cuerpo num">
+          <div class="tarjeta con-m">
+            <div class="texto-3" style="font-weight:700;letter-spacing:.04em">LUN 14 SEP · 18:30</div>
+            <div class="entre" style="margin:2px 0"><h5>Pecho y tríceps</h5><span class="etiqueta record"><svg class="ic sm"><use href="#i-trofeo"/></svg>1 récord</span></div>
+            <div class="texto-2">55 min · 7 series · 1.935 kg</div>
+            <span class="m m-abs">1</span>
+          </div>
+          <div class="tarjeta">
+            <div class="texto-3" style="font-weight:700;letter-spacing:.04em">VIE 11 SEP · 19:05</div>
+            <div class="entre" style="margin:2px 0"><h5>Piernas</h5><span class="etiqueta record"><svg class="ic sm"><use href="#i-trofeo"/></svg>5 récords</span></div>
+            <div class="texto-2">62 min · 18 series · 4.210 kg</div>
+          </div>
+          <div class="tarjeta con-m">
+            <div class="texto-3" style="font-weight:700;letter-spacing:.04em">JUE 10 SEP · 18:00</div>
+            <div class="entre" style="margin:2px 0"><h5>Pecho y tríceps</h5></div>
+            <div class="texto-2">51 min · 7 series · 1.957,5 kg</div>
+            <span class="m m-abs">2</span>
+          </div>
+          <div class="tarjeta">
+            <div class="texto-3" style="font-weight:700;letter-spacing:.04em">MAR 8 SEP · 18:20</div>
+            <div class="entre" style="margin:2px 0"><h5>Espalda y bíceps</h5><span class="etiqueta record"><svg class="ic sm"><use href="#i-trofeo"/></svg>4 récords</span></div>
+            <div class="texto-2">48 min · 15 series · 3.380 kg</div>
+          </div>
+          <div class="tarjeta">
+            <div class="texto-3" style="font-weight:700;letter-spacing:.04em">LUN 7 SEP · 18:10</div>
+            <div class="entre" style="margin:2px 0"><h5>Pecho y tríceps</h5><span class="etiqueta record"><svg class="ic sm"><use href="#i-trofeo"/></svg>2 récords</span></div>
+            <div class="texto-2">50 min · 7 series · 1.890 kg</div>
+          </div>
+        </div>
+        <nav class="nav-inferior">
+          <span><svg class="ic"><use href="#i-inicio"/></svg>Inicio</span>
+          <span><svg class="ic"><use href="#i-rutinas"/></svg>Rutinas</span>
+          <span class="activo"><svg class="ic"><use href="#i-historial"/></svg>Historial</span>
+          <span><svg class="ic"><use href="#i-progreso"/></svg>Progreso</span>
+          <span><svg class="ic"><use href="#i-perfil"/></svg>Perfil</span>
+        </nav>
+      </div>
+    </div>
+    <aside class="notas">
+      <h3>Reglas</h3>
+      <ol>
+        <li><span class="m">1</span><span>De la más reciente a la más antigua, en el orden en que llegan de <code>GET /sesiones</code>. Cada tarjeta muestra fecha y hora, rutina, duración, series y volumen. Tocarla lleva a P10.</span></li>
+        <li><span class="m">2</span><span>La etiqueta de récords aparece <b>solo si</b> <code>resumen.records &gt; 0</code>.</span></li>
+        <li><span class="m">3</span><span>Sin sesiones: "Aún no has registrado entrenamientos" con el botón "Entrenar una rutina" (ver <a href="#estados">Estados</a>).</span></li>
+      </ol>
+      <div class="datos"><b>Datos:</b> <code>GET /sesiones</code></div>
+    </aside>
+  </div>
+</section>
+
+<!-- ======================= P10 ======================= -->
+<section class="seccion" id="p10">
+  <h2>P10 · Detalle de sesión</h2>
+  <div class="seccion-meta"><span><b>Ruta</b> <code>/historial/:id</code></span><span><b>Página</b> <code>PaginaSesion</code></span><span><b>Historias</b> H16 y H17</span><span><b>Responsable</b> Santiago (T7)</span></div>
+  <div class="bloque">
+    <div class="movil">
+      <div class="movil-estado"><span>07:21</span><span class="isla"></span><span class="senal">5G ▮▮▮</span></div>
+      <div class="app">
+        <div class="app-barra"><span class="icono-btn"><svg class="ic"><use href="#i-atras"/></svg></span><h4>Pecho y tríceps<small>lun 14 sep · 18:30</small></h4></div>
+        <div class="app-cuerpo num">
+          <div class="tarjeta fila" style="justify-content:space-around;padding:10px"><span><b>55</b> <span class="texto-3">min</span></span><span><b>7</b> <span class="texto-3">series</span></span><span><b>50</b> <span class="texto-3">reps</span></span><span><b>1.935</b> <span class="texto-3">kg</span></span></div>
+          <div class="lista con-m">
+            <div class="lista-cab"><span>Press de banca con barra</span><span class="texto-3">1.112,5 kg</span></div>
+            <div class="lista-fila"><span class="texto-3" style="width:18px">1</span><span class="crece">55 kg × 5</span></div>
+            <div class="lista-fila"><span class="texto-3" style="width:18px">2</span><span class="crece">57,5 kg × 5</span></div>
+            <div class="lista-fila"><span class="texto-3" style="width:18px">3</span><span class="crece">60 kg × 5</span></div>
+            <div class="lista-fila" style="background:#FFFBEB"><span class="texto-3" style="width:18px">4</span><span class="crece"><b>62,5 kg × 4</b></span><span class="etiqueta record"><svg class="ic sm"><use href="#i-trofeo"/></svg>Récord</span></div>
+            <span class="m m-abs">1</span>
+          </div>
+          <div class="lista">
+            <div class="lista-cab"><span>Extensión de tríceps en polea</span><span class="texto-3">822,5 kg</span></div>
+            <div class="lista-fila"><span class="texto-3" style="width:18px">1</span><span class="crece">25 kg × 12</span></div>
+            <div class="lista-fila"><span class="texto-3" style="width:18px">2</span><span class="crece">27,5 kg × 10</span></div>
+            <div class="lista-fila"><span class="texto-3" style="width:18px">3</span><span class="crece">27,5 kg × 9</span></div>
+          </div>
+          <div class="con-m"><a class="btn btn-peligro btn-bloque"><svg class="ic sm"><use href="#i-basura"/></svg>Eliminar sesión</a><span class="m m-abs">2</span></div>
+        </div>
+        <nav class="nav-inferior">
+          <span><svg class="ic"><use href="#i-inicio"/></svg>Inicio</span>
+          <span><svg class="ic"><use href="#i-rutinas"/></svg>Rutinas</span>
+          <span class="activo"><svg class="ic"><use href="#i-historial"/></svg>Historial</span>
+          <span><svg class="ic"><use href="#i-progreso"/></svg>Progreso</span>
+          <span><svg class="ic"><use href="#i-perfil"/></svg>Perfil</span>
+        </nav>
+      </div>
+    </div>
+    <aside class="notas">
+      <h3>Reglas</h3>
+      <ol>
+        <li><span class="m">1</span><span>Los ejercicios van en su orden, cada uno con su volumen y sus series. Las series con <code>esRecord: true</code> se resaltan con la marca de récord. Si la rutina o un ejercicio se eliminaron después, se muestran igual, con su nombre.</span></li>
+        <li><span class="m">2</span><span>"Eliminar sesión" pide confirmación: "¿Eliminar esta sesión? Se recalcularán tus récords." Luego <code>DELETE</code> y vuelve a P9.</span></li>
+        <li><span class="m">3</span><span>Con 404, estado "no encontrado" y botón para volver al historial.</span></li>
+      </ol>
+      <div class="datos"><b>Datos:</b> <code>GET /sesiones/{id}</code> · <code>DELETE /sesiones/{id}</code></div>
+    </aside>
+  </div>
+</section>
+
+<!-- ======================= P11 ======================= -->
+<section class="seccion" id="p11">
+  <h2>P11 · Progreso por ejercicio</h2>
+  <div class="seccion-meta"><span><b>Ruta</b> <code>/progreso</code> (<code>?ejercicio=</code> opcional)</span><span><b>Página</b> <code>PaginaProgreso</code></span><span><b>Historia</b> H20</span><span><b>Responsable</b> Javier (T9)</span></div>
+  <div class="bloque">
+    <div class="movil">
+      <div class="movil-estado"><span>07:25</span><span class="isla"></span><span class="senal">5G ▮▮▮</span></div>
+      <div class="app">
+        <div class="app-barra"><h4 style="padding-left:6px">Progreso</h4></div>
+        <div class="app-cuerpo">
+          <div class="con-m"><div class="segmento"><span class="activo">Por ejercicio</span><span>Récords</span><span>Peso corporal</span></div><span class="m m-abs">1</span></div>
+          <div class="entrada con-m"><input value="Press de banca con barra" readonly><svg class="ic sm"><use href="#i-abajo"/></svg><span class="m m-abs">2</span></div>
+          <div class="chips"><span class="chip activo">Peso máximo</span><span class="chip">Volumen</span></div>
+          <div class="grafica con-m">
+            <svg viewBox="0 0 320 172" role="img" aria-label="Peso máximo por sesión en press de banca con barra">
+              <g stroke="#E7E5E4" stroke-width="1">
+                <line x1="38" y1="20" x2="312" y2="20"/><line x1="38" y1="50" x2="312" y2="50"/><line x1="38" y1="80" x2="312" y2="80"/><line x1="38" y1="110" x2="312" y2="110"/><line x1="38" y1="140" x2="312" y2="140"/>
+              </g>
+              <g font-family="system-ui,sans-serif" font-size="10" fill="#78716C" text-anchor="end">
+                <text x="32" y="24">65</text><text x="32" y="54">62,5</text><text x="32" y="84">60</text><text x="32" y="114">57,5</text><text x="32" y="144">55</text>
+              </g>
+              <polygon points="56,80 160,80 298,50 298,140 56,140" fill="#FFEDD5" opacity=".6"/>
+              <polyline points="56,80 160,80 298,50" fill="none" stroke="#C2410C" stroke-width="2.5" stroke-linejoin="round"/>
+              <circle cx="56" cy="80" r="6.5" fill="#EAB308" stroke="#713F12" stroke-width="1.5"/>
+              <circle cx="160" cy="80" r="5" fill="#fff" stroke="#C2410C" stroke-width="2.5"/>
+              <circle cx="298" cy="50" r="6.5" fill="#EAB308" stroke="#713F12" stroke-width="1.5"/>
+              <g font-family="system-ui,sans-serif" font-size="10.5" font-weight="700" fill="#1C1917" text-anchor="middle">
+                <text x="56" y="68">60</text><text x="160" y="68">60</text><text x="290" y="38">62,5</text>
+              </g>
+              <g font-family="system-ui,sans-serif" font-size="10" fill="#57534E" text-anchor="middle">
+                <text x="56" y="160">7 sep</text><text x="160" y="160">10 sep</text><text x="292" y="160">14 sep</text>
+              </g>
+            </svg>
+            <div class="fila texto-3" style="justify-content:center;gap:14px;padding:2px 0 6px"><span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#EAB308;vertical-align:middle"></span> Récord</span><span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;border:2px solid #C2410C;vertical-align:middle"></span> Sesión</span></div>
+            <span class="m m-abs">3</span>
+          </div>
+          <div class="con-m">
+            <table class="tabla num">
+              <thead><tr><th>Fecha</th><th class="der">Peso máx.</th><th class="der">Volumen</th><th class="der">Récord</th></tr></thead>
+              <tbody>
+                <tr><td>14 sep</td><td class="der">62,5 kg</td><td class="der">1.112,5 kg</td><td class="der"><span class="etiqueta record">Sí</span></td></tr>
+                <tr><td>10 sep</td><td class="der">60 kg</td><td class="der">1.162,5 kg</td><td class="der">—</td></tr>
+                <tr><td>7 sep</td><td class="der">60 kg</td><td class="der">1.100 kg</td><td class="der"><span class="etiqueta record">Sí</span></td></tr>
+              </tbody>
+            </table>
+            <span class="m m-abs">4</span>
+          </div>
+        </div>
+        <nav class="nav-inferior">
+          <span><svg class="ic"><use href="#i-inicio"/></svg>Inicio</span>
+          <span><svg class="ic"><use href="#i-rutinas"/></svg>Rutinas</span>
+          <span><svg class="ic"><use href="#i-historial"/></svg>Historial</span>
+          <span class="activo"><svg class="ic"><use href="#i-progreso"/></svg>Progreso</span>
+          <span><svg class="ic"><use href="#i-perfil"/></svg>Perfil</span>
+        </nav>
+      </div>
+    </div>
+    <aside class="notas">
+      <h3>Reglas</h3>
+      <ol>
+        <li><span class="m">1</span><span>Progreso reúne tres vistas: por ejercicio (<code>/progreso</code>), récords (<code>/progreso/records</code>) y peso corporal (<code>/progreso/peso</code>).</span></li>
+        <li><span class="m">2</span><span>El selector solo lista ejercicios con historial (<code>GET /progreso/ejercicios</code>). Si llega <code>?ejercicio=</code> (desde P12), ese viene elegido.</span></li>
+        <li><span class="m">3</span><span><code>GraficaLinea</code>: eje X = <code>fechaInicio</code>; eje Y = <code>pesoMaximoKg</code>, o <code>volumenKg</code> si se elige "Volumen". Los puntos con <code>esRecord</code> van en dorado. Cambiar entre peso y volumen no vuelve a pedir datos. Con un solo punto, se dibuja sin errores.</span></li>
+        <li><span class="m">4</span><span>La tabla muestra los mismos datos, de la sesión más reciente a la más antigua. <b>Se construye antes que la gráfica:</b> si la gráfica falla, la tabla sigue funcionando.</span></li>
+        <li><span class="m">5</span><span>Sin ejercicios con historial: "Registra tu primera sesión para ver tu progreso", con acceso a P5.</span></li>
+      </ol>
+      <div class="datos"><b>Datos:</b> <code>GET /progreso/ejercicios</code> · <code>GET /progreso/ejercicios/{id}</code></div>
+    </aside>
+  </div>
+</section>
+
+<!-- ======================= P12 ======================= -->
+<section class="seccion" id="p12">
+  <h2>P12 · Récords</h2>
+  <div class="seccion-meta"><span><b>Ruta</b> <code>/progreso/records</code></span><span><b>Página</b> <code>PaginaRecords</code></span><span><b>Historia</b> H19</span><span><b>Responsable</b> Rances (T8)</span></div>
+  <div class="bloque">
+    <div class="movil">
+      <div class="movil-estado"><span>07:26</span><span class="isla"></span><span class="senal">5G ▮▮▮</span></div>
+      <div class="app">
+        <div class="app-barra"><h4 style="padding-left:6px">Progreso</h4></div>
+        <div class="app-cuerpo num">
+          <div class="segmento"><span>Por ejercicio</span><span class="activo">Récords</span><span>Peso corporal</span></div>
+          <div class="titulo-bloque con-m">Pecho <span class="m">1</span></div>
+          <div class="lista">
+            <div class="lista-fila con-m"><span class="miniatura" style="background:var(--oro-suave);color:var(--oro-tinta)"><svg class="ic"><use href="#i-trofeo"/></svg></span><div class="crece">Press de banca con barra<div class="texto-3">lun 14 sep</div></div><b>62,5 kg × 4</b><svg class="ic sm" style="color:var(--tinta-3)"><use href="#i-derecha"/></svg><span class="m m-abs">2</span></div>
+          </div>
+          <div class="titulo-bloque">Espalda</div>
+          <div class="lista">
+            <div class="lista-fila"><span class="miniatura" style="background:var(--oro-suave);color:var(--oro-tinta)"><svg class="ic"><use href="#i-trofeo"/></svg></span><div class="crece">Jalón al pecho<div class="texto-3">mar 8 sep</div></div><b>55 kg × 10</b><svg class="ic sm" style="color:var(--tinta-3)"><use href="#i-derecha"/></svg></div>
+            <div class="lista-fila"><span class="miniatura" style="background:var(--oro-suave);color:var(--oro-tinta)"><svg class="ic"><use href="#i-trofeo"/></svg></span><div class="crece">Remo con barra<div class="texto-3">mar 8 sep</div></div><b>50 kg × 8</b><svg class="ic sm" style="color:var(--tinta-3)"><use href="#i-derecha"/></svg></div>
+          </div>
+          <div class="titulo-bloque">Bíceps</div>
+          <div class="lista">
+            <div class="lista-fila"><span class="miniatura" style="background:var(--oro-suave);color:var(--oro-tinta)"><svg class="ic"><use href="#i-trofeo"/></svg></span><div class="crece">Curl con barra<div class="texto-3">mar 8 sep</div></div><b>30 kg × 10</b><svg class="ic sm" style="color:var(--tinta-3)"><use href="#i-derecha"/></svg></div>
+            <div class="lista-fila"><span class="miniatura" style="background:var(--oro-suave);color:var(--oro-tinta)"><svg class="ic"><use href="#i-trofeo"/></svg></span><div class="crece">Curl martillo<div class="texto-3">mar 8 sep</div></div><b>14 kg × 10</b><svg class="ic sm" style="color:var(--tinta-3)"><use href="#i-derecha"/></svg></div>
+          </div>
+          <div class="titulo-bloque">Tríceps</div>
+          <div class="lista">
+            <div class="lista-fila"><span class="miniatura" style="background:var(--oro-suave);color:var(--oro-tinta)"><svg class="ic"><use href="#i-trofeo"/></svg></span><div class="crece">Extensión de tríceps en polea<div class="texto-3">lun 7 sep</div></div><b>27,5 kg × 8</b><svg class="ic sm" style="color:var(--tinta-3)"><use href="#i-derecha"/></svg></div>
+          </div>
+          <div class="titulo-bloque">Piernas</div>
+          <div class="lista">
+            <div class="lista-fila"><span class="miniatura" style="background:var(--oro-suave);color:var(--oro-tinta)"><svg class="ic"><use href="#i-trofeo"/></svg></span><div class="crece">Prensa de piernas<div class="texto-3">vie 11 sep</div></div><b>180 kg × 10</b><svg class="ic sm" style="color:var(--tinta-3)"><use href="#i-derecha"/></svg></div>
+            <div class="lista-fila"><span class="miniatura" style="background:var(--oro-suave);color:var(--oro-tinta)"><svg class="ic"><use href="#i-trofeo"/></svg></span><div class="crece">Sentadilla con barra<div class="texto-3">vie 11 sep</div></div><b>90 kg × 5</b><svg class="ic sm" style="color:var(--tinta-3)"><use href="#i-derecha"/></svg></div>
+          </div>
+        </div>
+        <nav class="nav-inferior">
+          <span><svg class="ic"><use href="#i-inicio"/></svg>Inicio</span>
+          <span><svg class="ic"><use href="#i-rutinas"/></svg>Rutinas</span>
+          <span><svg class="ic"><use href="#i-historial"/></svg>Historial</span>
+          <span class="activo"><svg class="ic"><use href="#i-progreso"/></svg>Progreso</span>
+          <span><svg class="ic"><use href="#i-perfil"/></svg>Perfil</span>
+        </nav>
+      </div>
+    </div>
+    <aside class="notas">
+      <h3>Reglas</h3>
+      <ol>
+        <li><span class="m">1</span><span>Agrupados por grupo muscular, en el orden en que llegan de <code>GET /records</code> (el mismo de <code>/referencias</code>), con el nombre visible del grupo.</span></li>
+        <li><span class="m">2</span><span>Cada récord muestra el peso, las repeticiones de esa serie y la fecha. Tocarlo lleva a P11 con <code>?ejercicio=</code>.</span></li>
+        <li><span class="m">3</span><span>Los ejercicios hechos solo con 0 kg no aparecen. Sin récords: "Aún no tienes récords. ¡Registra tu primera sesión!".</span></li>
+      </ol>
+      <div class="datos"><b>Datos:</b> <code>GET /records</code></div>
+    </aside>
+  </div>
+</section>
+
+<!-- ======================= P13 ======================= -->
+<section class="seccion" id="p13">
+  <h2>P13 · Peso corporal</h2>
+  <div class="seccion-meta"><span><b>Ruta</b> <code>/progreso/peso</code></span><span><b>Página</b> <code>PaginaPeso</code></span><span><b>Historias</b> H21 y H22</span><span><b>Responsable</b> Rances (T10)</span></div>
+  <div class="bloque">
+    <div class="movil">
+      <div class="movil-estado"><span>07:28</span><span class="isla"></span><span class="senal">5G ▮▮▮</span></div>
+      <div class="app">
+        <div class="app-barra"><h4 style="padding-left:6px">Progreso</h4></div>
+        <div class="app-cuerpo num">
+          <div class="segmento"><span>Por ejercicio</span><span>Récords</span><span class="activo">Peso corporal</span></div>
+          <div class="tarjeta con-m">
+            <div class="kpis">
+              <div class="campo"><label>Fecha</label><div class="entrada"><input value="15/09/2026" readonly><svg class="ic sm"><use href="#i-calendario"/></svg></div></div>
+              <div class="campo"><label>Peso (kg)</label><div class="entrada foco"><input value="77,6" inputmode="decimal" readonly></div></div>
+            </div>
+            <a class="btn btn-primario btn-bloque" style="margin-top:10px">Registrar</a>
+            <span class="m m-abs">1</span>
+          </div>
+          <div class="grafica con-m">
+            <svg viewBox="0 0 320 172" role="img" aria-label="Evolución del peso corporal">
+              <g stroke="#E7E5E4" stroke-width="1">
+                <line x1="38" y1="20" x2="312" y2="20"/><line x1="38" y1="50" x2="312" y2="50"/><line x1="38" y1="80" x2="312" y2="80"/><line x1="38" y1="110" x2="312" y2="110"/><line x1="38" y1="140" x2="312" y2="140"/>
+              </g>
+              <g font-family="system-ui,sans-serif" font-size="10" fill="#78716C" text-anchor="end">
+                <text x="32" y="24">78,5</text><text x="32" y="84">78</text><text x="32" y="144">77,5</text>
+              </g>
+              <polyline points="56,56 177,32 298,92" fill="none" stroke="#1F2937" stroke-width="2.5" stroke-linejoin="round"/>
+              <circle cx="56" cy="56" r="5" fill="#fff" stroke="#1F2937" stroke-width="2.5"/>
+              <circle cx="177" cy="32" r="5" fill="#fff" stroke="#1F2937" stroke-width="2.5"/>
+              <circle cx="298" cy="92" r="6" fill="#C2410C" stroke="#fff" stroke-width="2"/>
+              <g font-family="system-ui,sans-serif" font-size="10.5" font-weight="700" fill="#1C1917" text-anchor="middle">
+                <text x="56" y="44">78,2</text><text x="177" y="22">78,4</text><text x="290" y="80">77,9</text>
+              </g>
+              <g font-family="system-ui,sans-serif" font-size="10" fill="#57534E" text-anchor="middle">
+                <text x="56" y="160">31 ago</text><text x="177" y="160">7 sep</text><text x="292" y="160">14 sep</text>
+              </g>
+            </svg>
+            <span class="m m-abs">2</span>
+          </div>
+          <div class="lista con-m">
+            <div class="lista-fila"><div class="crece"><b>77,9 kg</b><div class="texto-3">lun 14 sep 2026</div></div><span class="etiqueta gris">−0,5</span><span class="icono-btn" style="color:var(--tinta-3)"><svg class="ic sm"><use href="#i-basura"/></svg></span></div>
+            <div class="lista-fila"><div class="crece"><b>78,4 kg</b><div class="texto-3">lun 7 sep 2026</div></div><span class="etiqueta gris">+0,2</span><span class="icono-btn" style="color:var(--tinta-3)"><svg class="ic sm"><use href="#i-basura"/></svg></span></div>
+            <div class="lista-fila"><div class="crece"><b>78,2 kg</b><div class="texto-3">lun 31 ago 2026</div></div><span class="etiqueta gris">—</span><span class="icono-btn" style="color:var(--tinta-3)"><svg class="ic sm"><use href="#i-basura"/></svg></span></div>
+            <span class="m m-abs">3</span>
+          </div>
+        </div>
+        <nav class="nav-inferior">
+          <span><svg class="ic"><use href="#i-inicio"/></svg>Inicio</span>
+          <span><svg class="ic"><use href="#i-rutinas"/></svg>Rutinas</span>
+          <span><svg class="ic"><use href="#i-historial"/></svg>Historial</span>
+          <span class="activo"><svg class="ic"><use href="#i-progreso"/></svg>Progreso</span>
+          <span><svg class="ic"><use href="#i-perfil"/></svg>Perfil</span>
+        </nav>
+      </div>
+    </div>
+    <aside class="notas">
+      <h3>Reglas</h3>
+      <ol>
+        <li><span class="m">1</span><span>Fecha por defecto: hoy; no se permite una fecha futura. Peso de 20 a 350 kg. Con 409 <code>PESO_YA_REGISTRADO</code>, bajo la fecha: "Ya registraste tu peso ese día".</span></li>
+        <li><span class="m">2</span><span><code>GraficaLinea</code> con los registros en orden cronológico, tal como llegan de la API. Es la primera gráfica del proyecto (sprint 3): aquí nace el componente que después reutiliza P11.</span></li>
+        <li><span class="m">3</span><span>La lista va de la más reciente a la más antigua, cada registro con su diferencia contra el anterior; el más antiguo muestra "—". La diferencia va en gris: subir o bajar de peso no es bueno ni malo por sí mismo, depende del objetivo. Eliminar pide confirmación: "¿Eliminar el registro del 14 sep?".</span></li>
+      </ol>
+      <div class="datos"><b>Datos:</b> <code>GET /peso-corporal</code> · <code>POST /peso-corporal</code> · <code>DELETE /peso-corporal/{id}</code></div>
+    </aside>
+  </div>
+</section>
+
+<!-- ======================= P14 ======================= -->
+<section class="seccion" id="p14">
+  <h2>P14 · Perfil</h2>
+  <div class="seccion-meta"><span><b>Ruta</b> <code>/perfil</code></span><span><b>Página</b> <code>PaginaPerfil</code></span><span><b>Historias</b> H3 y H4</span><span><b>Responsable</b> Rances (T4)</span></div>
+  <div class="bloque">
+    <div class="movil">
+      <div class="movil-estado"><span>07:30</span><span class="isla"></span><span class="senal">5G ▮▮▮</span></div>
+      <div class="app">
+        <div class="app-barra"><h4 style="padding-left:6px">Perfil</h4></div>
+        <div class="app-cuerpo">
+          <div class="tarjeta fila"><span class="avatar" style="width:52px;height:52px;font-size:20px">A</span><div class="crece"><h5>Ana Gómez</h5><div class="texto-3">Miembro desde septiembre de 2026</div></div></div>
+          <div class="campo"><label>Nombre</label><div class="entrada"><input value="Ana Gómez" readonly></div></div>
+          <div class="campo con-m"><label>Email</label><div class="entrada" style="background:#FAFAF9"><input value="ana@correo.com" readonly style="color:var(--tinta-3)"><svg class="ic sm"><use href="#i-candado"/></svg></div><span class="ayuda">No se puede cambiar</span><span class="m m-abs">1</span></div>
+          <div class="campo"><label>Objetivo <span class="m">2</span></label>
+            <div class="apilado">
+              <div class="opcion elegida"><span class="radio"></span><span><b>Fuerza</b><br><span class="texto-2">Pocas repeticiones con cargas altas</span></span></div>
+              <div class="opcion"><span class="radio"></span><span><b>Pérdida de peso</b><br><span class="texto-2">Repeticiones moderadas y descansos cortos</span></span></div>
+              <div class="opcion"><span class="radio"></span><span><b>Resistencia</b><br><span class="texto-2">Muchas repeticiones con cargas moderadas</span></span></div>
+            </div>
+            <span class="ayuda">Cambiarlo no modifica las rutinas que ya tienes.</span>
+          </div>
+          <a class="btn btn-primario btn-bloque">Guardar cambios</a>
+          <div class="con-m"><a class="btn btn-secundario btn-bloque">Cerrar sesión</a><span class="m m-abs">3</span></div>
+        </div>
+        <nav class="nav-inferior">
+          <span><svg class="ic"><use href="#i-inicio"/></svg>Inicio</span>
+          <span><svg class="ic"><use href="#i-rutinas"/></svg>Rutinas</span>
+          <span><svg class="ic"><use href="#i-historial"/></svg>Historial</span>
+          <span><svg class="ic"><use href="#i-progreso"/></svg>Progreso</span>
+          <span class="activo"><svg class="ic"><use href="#i-perfil"/></svg>Perfil</span>
+        </nav>
+      </div>
+    </div>
+    <aside class="notas">
+      <h3>Reglas</h3>
+      <ol>
+        <li><span class="m">1</span><span>Nombre de 2 a 80 caracteres. El email se muestra, pero no se edita.</span></li>
+        <li><span class="m">2</span><span>Los objetivos salen de <code>/referencias</code>. Al guardar, <code>actualizarUsuario</code> refresca <code>AuthContext</code>, para que P3 y P4 usen el objetivo nuevo. Las rutinas existentes conservan el suyo.</span></li>
+        <li><span class="m">3</span><span>"Cerrar sesión" → <code>POST /auth/logout</code> → se borran el token, el usuario y los borradores → <code>/login</code>. Si la petición falla por conexión, igual se borran los datos locales.</span></li>
+      </ol>
+      <div class="datos"><b>Datos:</b> <code>GET /usuarios/me</code> · <code>GET /referencias</code> · <code>PUT /usuarios/me</code> · <code>POST /auth/logout</code></div>
+    </aside>
+  </div>
+</section>
+
+<!-- ======================= ESTADOS ======================= -->
+<section class="seccion" id="estados">
+  <h2>Estados compartidos</h2>
+  <p>Todas las pantallas los muestran igual. T2 los construye como componentes (<code>Cargando</code>, <code>EstadoVacio</code>, <code>MensajeError</code> y <code>CampoFormulario</code>). Los errores de validación y los conflictos se ven en P2 y P4.</p>
+  <div class="moviles">
+    <div>
+      <div class="movil">
+        <div class="movil-estado"><span>18:24</span><span class="isla"></span><span class="senal">5G ▮▯▯</span></div>
+        <div class="app corta" style="min-height:520px">
+          <div class="app-barra"><h4 style="padding-left:6px">Mis rutinas</h4></div>
+          <div class="app-cuerpo">
+            <div class="esqueleto" style="height:64px"></div>
+            <div class="esqueleto" style="height:112px"></div>
+            <div class="esqueleto" style="height:112px"></div>
+            <div class="esqueleto" style="height:112px"></div>
+          </div>
+        </div>
+      </div>
+      <p class="rotulo"><b>Cargando:</b> bloques con la forma del contenido</p>
+    </div>
+    <div>
+      <div class="movil">
+        <div class="movil-estado"><span>18:24</span><span class="isla"></span><span class="senal">5G ▮▮▮</span></div>
+        <div class="app corta" style="min-height:520px">
+          <div class="app-barra"><h4 style="padding-left:6px">Mis rutinas</h4></div>
+          <div class="app-cuerpo">
+            <div class="vacio" style="margin-top:40px">
+              <span class="circulo"><svg class="ic lg"><use href="#i-rutinas"/></svg></span>
+              <h5>Aún no tienes rutinas</h5>
+              <span>Arma tu primera rutina con ejercicios del catálogo y empieza a medir tu progreso.</span>
+              <a class="btn btn-primario" style="margin-top:6px">Crear mi primera rutina</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="rotulo"><b>Lista vacía:</b> explica y ofrece la acción siguiente</p>
+    </div>
+    <div>
+      <div class="movil">
+        <div class="movil-estado"><span>18:40</span><span class="isla"></span><span class="senal">5G ▯▯▯</span></div>
+        <div class="app corta" style="min-height:520px">
+          <div class="app-barra"><h4 style="padding-left:6px">Historial</h4></div>
+          <div class="app-cuerpo">
+            <div class="vacio" style="margin-top:40px">
+              <span class="circulo" style="background:var(--rojo-suave);color:var(--rojo)"><svg class="ic lg"><use href="#i-sin-senal"/></svg></span>
+              <h5>No se pudo conectar con el servidor</h5>
+              <span>Revisa tu conexión e inténtalo de nuevo. Lo que hayas escrito no se pierde.</span>
+              <a class="btn btn-secundario" style="margin-top:6px">Reintentar</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="rotulo"><b>Sin conexión:</b> reintentar sin perder datos</p>
+    </div>
+    <div>
+      <div class="movil">
+        <div class="movil-estado"><span>09:02</span><span class="isla"></span><span class="senal">5G ▮▮▮</span></div>
+        <div class="app corta" style="min-height:520px">
+          <div class="app-cuerpo" style="padding:24px 20px">
+            <div class="aviso info"><svg class="ic sm"><use href="#i-candado"/></svg><span>Tu sesión terminó. Vuelve a iniciar sesión.</span></div>
+            <div style="display:grid;justify-items:center;gap:6px;margin:18px 0 8px"><span class="logo"><span>Gym<b>Rutine</b></span></span></div>
+            <div class="campo"><label>Email</label><div class="entrada"><input value="ana@correo.com" readonly></div></div>
+            <div class="campo"><label>Contraseña</label><div class="entrada"><input type="password" placeholder="Contraseña" readonly><svg class="ic"><use href="#i-ojo"/></svg></div></div>
+            <a class="btn btn-primario btn-bloque">Iniciar sesión</a>
+          </div>
+        </div>
+      </div>
+      <p class="rotulo"><b>401 No autenticado:</b> vuelve a <code>/login</code> con aviso</p>
+    </div>
+    <div>
+      <div class="movil">
+        <div class="movil-estado"><span>07:22</span><span class="isla"></span><span class="senal">5G ▮▮▮</span></div>
+        <div class="app corta" style="min-height:520px">
+          <div class="app-barra"><span class="icono-btn"><svg class="ic"><use href="#i-atras"/></svg></span><h4>Sesión</h4></div>
+          <div class="app-cuerpo">
+            <div class="vacio" style="margin-top:40px">
+              <span class="circulo" style="background:#E7E5E4;color:var(--tinta-2)"><svg class="ic lg"><use href="#i-buscar"/></svg></span>
+              <h5>No encontramos lo que buscas</h5>
+              <span>Puede que se haya eliminado o que el enlace no sea correcto.</span>
+              <a class="btn btn-secundario" style="margin-top:6px">Volver al historial</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="rotulo"><b>404 No encontrado:</b> mensaje y camino de vuelta</p>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= ESCRITORIO ======================= -->
+<section class="seccion" id="escritorio">
+  <h2>Vista de escritorio (desde 768 px)</h2>
+  <p>Las mismas pantallas y los mismos componentes. Cambian tres cosas: la navegación pasa arriba, el contenido se centra con un ancho máximo y los bloques se acomodan en dos columnas. Ejemplo: P3 Inicio.</p>
+  <div class="navegador">
+    <div class="navegador-barra"><i></i><i></i><i></i><span>localhost:5173/</span></div>
+    <div class="nav-superior">
+      <span class="logo"><span class="logo-marca"><svg class="ic sm"><use href="#i-rutinas"/></svg></span><span>Gym<b>Rutine</b></span></span>
+      <a class="activo"><svg class="ic sm"><use href="#i-inicio"/></svg><span>Inicio</span></a>
+      <a><svg class="ic sm"><use href="#i-rutinas"/></svg><span>Rutinas</span></a>
+      <a><svg class="ic sm"><use href="#i-historial"/></svg><span>Historial</span></a>
+      <a><svg class="ic sm"><use href="#i-progreso"/></svg><span>Progreso</span></a>
+      <a><svg class="ic sm"><use href="#i-perfil"/></svg><span>Perfil</span></a>
+    </div>
+    <div class="escritorio-cuerpo">
+      <div class="escritorio-grid num">
+        <div class="apilado" style="gap:14px">
+          <div class="entre"><div><div class="texto-3">Martes 15 de septiembre</div><div class="grande">Hola, Ana</div></div><span class="etiqueta objetivo">Objetivo: Fuerza</span></div>
+          <div class="titulo-bloque">Entrenar hoy</div>
+          <div class="lista">
+            <div class="lista-fila"><span class="miniatura"><svg class="ic"><use href="#i-rutinas"/></svg></span><div class="crece"><b>Pecho y tríceps</b><div class="texto-3">2 ejercicios · última vez lun 14 sep</div></div><a class="btn btn-primario btn-sm">Entrenar</a></div>
+            <div class="lista-fila"><span class="miniatura"><svg class="ic"><use href="#i-rutinas"/></svg></span><div class="crece"><b>Piernas</b><div class="texto-3">5 ejercicios · última vez vie 11 sep</div></div><a class="btn btn-primario btn-sm">Entrenar</a></div>
+            <div class="lista-fila"><span class="miniatura"><svg class="ic"><use href="#i-rutinas"/></svg></span><div class="crece"><b>Espalda y bíceps</b><div class="texto-3">4 ejercicios · última vez mar 8 sep</div></div><a class="btn btn-primario btn-sm">Entrenar</a></div>
+          </div>
+          <div class="titulo-bloque">Última sesión</div>
+          <div class="tarjeta">
+            <div class="entre"><div><h5>Pecho y tríceps</h5><div class="texto-3">lun 14 sep · 18:30</div></div><span class="etiqueta record"><svg class="ic sm"><use href="#i-trofeo"/></svg>1 récord</span></div>
+            <div class="fila" style="margin-top:10px;gap:22px"><span><b>55</b> <span class="texto-3">min</span></span><span><b>7</b> <span class="texto-3">series</span></span><span><b>1.935</b> <span class="texto-3">kg</span></span></div>
+          </div>
+        </div>
+        <div class="apilado" style="gap:14px">
+          <div class="titulo-bloque" style="margin-top:44px">Récords recientes</div>
+          <div class="lista">
+            <div class="lista-fila"><div class="crece">Press de banca con barra<div class="texto-3">lun 14 sep</div></div><b>62,5 kg</b></div>
+            <div class="lista-fila"><div class="crece">Sentadilla con barra<div class="texto-3">vie 11 sep</div></div><b>90 kg</b></div>
+            <div class="lista-fila"><div class="crece">Prensa de piernas<div class="texto-3">vie 11 sep</div></div><b>180 kg</b></div>
+          </div>
+          <div class="titulo-bloque">Peso corporal</div>
+          <div class="tarjeta"><div class="entre"><div class="grande">77,9 kg</div><span class="etiqueta gris">−0,5 kg desde el lun 7 sep</span></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= CRITERIOS ======================= -->
+<section class="seccion" id="criterios">
+  <h2>Criterios de entrega del frontend</h2>
+  <p>Una pantalla está lista para revisión cuando:</p>
+  <div class="tarjeta" style="max-width:760px;padding:20px">
+    <ul class="checklist">
+      <li><span class="casilla"></span><span>Consume los endpoints reales del contrato, sin datos inventados.</span></li>
+      <li><span class="casilla"></span><span>Cumple todas las reglas de su pantalla (aquí y en <a href="README.md">README.md</a>).</span></li>
+      <li><span class="casilla"></span><span>Se parece a este mockup, o a la identidad visual que se apruebe en D6.</span></li>
+      <li><span class="casilla"></span><span>Muestra los estados compartidos que le aplican: cargando, vacío, errores y sin conexión.</span></li>
+      <li><span class="casilla"></span><span>Se usa bien a 360 px de ancho y en escritorio, sin scroll horizontal.</span></li>
+      <li><span class="casilla"></span><span><code>npm run build</code> y <code>npm run lint</code> terminan sin errores, y no quedan errores en la consola del navegador.</span></li>
+      <li><span class="casilla"></span><span>Se probó en un celular real al menos una vez antes del cierre del sprint.</span></li>
+    </ul>
+  </div>
+</section>
+
+<footer class="pie">
+  GymRutine · Mockup de pantallas v1.2 · Última actualización: 2026-09-21 · Reglas en <a href="README.md">README.md</a> · Endpoints en <a href="../CONTRATO-API.md">CONTRATO-API.md</a>
+</footer>
+
+</div>
+</body>
+</html>

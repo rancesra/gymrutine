@@ -1,27 +1,27 @@
 # Modelo de datos — GymRutine
 
-**Versión:** 1.0
-**Fecha:** 2026-09-14
-**Motor:** MySQL 8.4 LTS · **Acceso a datos:** Spring Data JPA (Hibernate)
+**Versión:** 2.0
+**Fecha:** 2026-09-21
+**Bases de datos:** MySQL 8.4 LTS (servicio de cuentas, con Spring Data JPA) · MongoDB 8.0 (servicio de entrenamiento, con Mongoose)
 
-Este documento es la referencia del modelo: el diagrama entidad-relación, el diccionario de datos, las reglas que el esquema no puede garantizar por sí solo y el catálogo base de ejercicios. Las entidades JPA de la tarea T1 deben coincidir con lo que dice aquí. Si hay que cambiar el modelo, **se cambia primero este documento** y después el código.
+Este documento es la referencia del modelo: el diagrama entidad-relación de MySQL, el modelo de documentos de MongoDB, el diccionario de datos, las reglas que el esquema no garantiza solo y el catálogo base de ejercicios. Las entidades JPA y los esquemas de Mongoose deben coincidir con lo que dice aquí. Si hay que cambiar el modelo, **se cambia primero este documento** y después el código.
 
 ## 1. Resumen
 
-| Tabla | Qué guarda | Volumen típico |
-|---|---|---|
-| `usuario` | Cuentas: nombre, email, contraseña cifrada y objetivo | 1 por persona |
-| `token_acceso` | Tokens de inicio de sesión vigentes | 1 a 3 por usuario |
-| `ejercicio` | Catálogo base (sin dueño) y ejercicios propios de cada usuario | 40 base + pocos propios |
-| `ejercicio_objetivo` | Objetivos para los que se recomienda cada ejercicio | 1 a 3 por ejercicio |
-| `rutina` | Planes de entrenamiento de cada usuario | 2 a 6 por usuario |
-| `rutina_ejercicio` | Ejercicios de cada rutina, con series y repeticiones objetivo | 4 a 8 por rutina |
-| `sesion_entrenamiento` | Cada vez que el usuario ejecuta una rutina | 3 a 5 por semana |
-| `registro_ejercicio` | Cada ejercicio realizado dentro de una sesión | 4 a 8 por sesión |
-| `serie_realizada` | Cada serie real: peso, repeticiones y si fue récord | 3 a 5 por ejercicio |
-| `registro_peso` | Peso corporal por fecha | 1 a 2 por semana |
+Cada servicio es dueño de su base de datos ([ARQUITECTURA.md](ARQUITECTURA.md), DEC-02).
 
-## 2. Diagrama entidad-relación
+| Base | Tabla o colección | Qué guarda | Volumen típico |
+|---|---|---|---|
+| MySQL | `usuario` | Cuentas: nombre, email, contraseña cifrada y objetivo | 1 por persona |
+| MySQL | `token_acceso` | Tokens de inicio de sesión vigentes | 1 a 3 por usuario |
+| MySQL | `ejercicio` | Catálogo base (sin dueño) y ejercicios propios de cada usuario | 40 base + pocos propios |
+| MySQL | `ejercicio_objetivo` | Objetivos para los que se recomienda cada ejercicio | 1 a 3 por ejercicio |
+| MySQL | `rutina` | Planes de entrenamiento de cada usuario | 2 a 6 por usuario |
+| MySQL | `rutina_ejercicio` | Ejercicios de cada rutina, con series y repeticiones objetivo | 4 a 8 por rutina |
+| MongoDB | `sesiones` | Cada entrenamiento, con sus ejercicios y sus series dentro del mismo documento | 3 a 5 por semana |
+| MongoDB | `registrosPeso` | Peso corporal por fecha | 1 a 2 por semana |
+
+## 2. MySQL: diagrama entidad-relación
 
 ```mermaid
 erDiagram
@@ -31,11 +31,6 @@ erDiagram
     USUARIO ||--o{ RUTINA : "arma"
     RUTINA ||--|{ RUTINA_EJERCICIO : "contiene"
     EJERCICIO ||--o{ RUTINA_EJERCICIO : "aparece en"
-    RUTINA ||--o{ SESION_ENTRENAMIENTO : "se ejecuta en"
-    SESION_ENTRENAMIENTO ||--|{ REGISTRO_EJERCICIO : "incluye"
-    EJERCICIO ||--o{ REGISTRO_EJERCICIO : "se registra en"
-    REGISTRO_EJERCICIO ||--|{ SERIE_REALIZADA : "se compone de"
-    USUARIO ||--o{ REGISTRO_PESO : "registra"
 
     USUARIO {
         bigint id PK
@@ -81,37 +76,11 @@ erDiagram
         int series_objetivo
         int repeticiones_objetivo
     }
-    SESION_ENTRENAMIENTO {
-        bigint id PK
-        bigint rutina_id FK
-        datetime fecha_inicio
-        int duracion_minutos
-    }
-    REGISTRO_EJERCICIO {
-        bigint id PK
-        bigint sesion_id FK
-        bigint ejercicio_id FK
-        int orden
-    }
-    SERIE_REALIZADA {
-        bigint id PK
-        bigint registro_ejercicio_id FK
-        int numero
-        decimal peso_kg
-        int repeticiones
-        boolean es_record "lo calcula el sistema"
-    }
-    REGISTRO_PESO {
-        bigint id PK
-        bigint usuario_id FK
-        date fecha
-        decimal peso_kg
-    }
 ```
 
-**Cómo leer las líneas:** `||` exactamente uno · `|o` cero o uno · `|{` uno o más · `o{` cero o más. GitHub dibuja el diagrama automáticamente al abrir este archivo.
+**Cómo leer las líneas:** `||` exactamente uno · `|o` cero o uno · `|{` uno o más · `o{` cero o más. GitHub dibuja el diagrama al abrir este archivo.
 
-## 3. Relaciones y cardinalidades
+## 3. MySQL: relaciones y cardinalidades
 
 | Relación | Cardinalidad | Qué significa |
 |---|---|---|
@@ -121,13 +90,8 @@ erDiagram
 | usuario → rutina | 1 : 0..N | Las rutinas son privadas de cada usuario |
 | rutina → rutina_ejercicio | 1 : 1..15 | Una rutina tiene al menos un ejercicio y no lo repite |
 | ejercicio → rutina_ejercicio | 1 : 0..N | Un mismo ejercicio puede estar en varias rutinas |
-| rutina → sesion_entrenamiento | 1 : 0..N | Cada sesión ejecuta exactamente una rutina. El dueño de la sesión es el dueño de la rutina |
-| sesion_entrenamiento → registro_ejercicio | 1 : 1..15 | Solo se registran ejercicios de la rutina, sin repetir |
-| ejercicio → registro_ejercicio | 1 : 0..N | El registro apunta al ejercicio, no a la fila de la rutina (decisión DM-05) |
-| registro_ejercicio → serie_realizada | 1 : 1..20 | Un ejercicio registrado tiene al menos una serie |
-| usuario → registro_peso | 1 : 0..N | Como máximo un registro por fecha |
 
-## 4. Diccionario de datos
+## 4. MySQL: diccionario de datos
 
 **Convenciones:** tablas y columnas en `snake_case`; la clave primaria de cada tabla se llama `id` y es `BIGINT AUTO_INCREMENT`; las claves foráneas terminan en `_id`; los enumerados se guardan como texto; motor InnoDB con `utf8mb4`. Las columnas no admiten nulos salvo que se indique.
 
@@ -157,9 +121,9 @@ erDiagram
 | Columna | Tipo | Clave | Regla |
 |---|---|---|---|
 | id | BIGINT | PK | |
-| nombre | VARCHAR(80) | | 3 a 80 caracteres. No se repite entre el catálogo base y los ejercicios propios activos del usuario, sin distinguir mayúsculas (se valida en el servicio) |
-| grupo_muscular | VARCHAR(20) | | Valores en §5 |
-| equipo | VARCHAR(20) | | Valores en §5 |
+| nombre | VARCHAR(80) | | 3 a 80 caracteres. No se repite entre el catálogo base y los propios activos del usuario, sin distinguir mayúsculas (se valida en el servicio) |
+| grupo_muscular | VARCHAR(20) | | Valores en §6 |
+| equipo | VARCHAR(20) | | Valores en §6 |
 | descripcion | VARCHAR(500) | | **Admite nulo.** Indicaciones de técnica |
 | usuario_id | BIGINT | FK → usuario | **Admite nulo.** Nulo = catálogo base |
 | activo | BOOLEAN | | `true` al crearse; `false` al eliminarlo (borrado lógico) |
@@ -169,7 +133,7 @@ erDiagram
 | Columna | Tipo | Clave | Regla |
 |---|---|---|---|
 | ejercicio_id | BIGINT | PK, FK → ejercicio | |
-| objetivo | VARCHAR(20) | PK | Valores en §5 |
+| objetivo | VARCHAR(20) | PK | Valores en §6 |
 
 ### rutina
 
@@ -188,106 +152,199 @@ erDiagram
 |---|---|---|---|
 | id | BIGINT | PK | |
 | rutina_id | BIGINT | FK → rutina | |
-| ejercicio_id | BIGINT | FK → ejercicio | No se repite dentro de la misma rutina (se valida en el servicio, ver DM-10) |
+| ejercicio_id | BIGINT | FK → ejercicio | No se repite dentro de la misma rutina (se valida en el servicio, DM-10) |
 | orden | INT | | 1, 2, 3… según el orden en que llegan en la petición |
 | series_objetivo | INT | | 1 a 10 |
 | repeticiones_objetivo | INT | | 1 a 50 |
 
-### sesion_entrenamiento
+## 5. MongoDB: modelo de documentos
 
-| Columna | Tipo | Clave | Regla |
-|---|---|---|---|
-| id | BIGINT | PK | |
-| rutina_id | BIGINT | FK → rutina | Índice compuesto (`rutina_id`, `fecha_inicio`) |
-| fecha_inicio | DATETIME | | Hora local. No puede ser futura |
-| duracion_minutos | INT | | 1 a 600 |
+Base `gymrutine` en MongoDB, con dos colecciones. En MongoDB no hay tablas ni uniones: **lo que se lee junto se guarda junto**. Una sesión se guarda completa, con sus ejercicios y sus series dentro del mismo documento.
 
-### registro_ejercicio
+```mermaid
+classDiagram
+    direction LR
+    class Sesion {
+        ObjectId _id
+        Number usuarioId
+        RutinaCopia rutina
+        String fechaInicio
+        Number duracionMinutos
+        RegistroEjercicio registros
+    }
+    class RutinaCopia {
+        Number id
+        String nombre
+    }
+    class RegistroEjercicio {
+        Number orden
+        EjercicioCopia ejercicio
+        Serie series
+    }
+    class EjercicioCopia {
+        Number id
+        String nombre
+        String grupoMuscular
+    }
+    class Serie {
+        Number numero
+        Number pesoKg
+        Number repeticiones
+        Boolean esRecord
+    }
+    class RegistroPeso {
+        ObjectId _id
+        Number usuarioId
+        String fecha
+        Number pesoKg
+    }
+    Sesion *-- "1" RutinaCopia
+    Sesion *-- "1..15" RegistroEjercicio : registros
+    RegistroEjercicio *-- "1" EjercicioCopia
+    RegistroEjercicio *-- "1..20" Serie : series
+```
 
-| Columna | Tipo | Clave | Regla |
-|---|---|---|---|
-| id | BIGINT | PK | |
-| sesion_id | BIGINT | FK → sesion_entrenamiento | UK (`sesion_id`, `ejercicio_id`) |
-| ejercicio_id | BIGINT | FK → ejercicio | Debe pertenecer a la rutina de la sesión y estar activo |
-| orden | INT | | Lo asigna el servidor |
+`*--` es composición: el registro y sus series viven **dentro** del documento de la sesión, no en otra colección.
 
-### serie_realizada
+### Colección `sesiones`
 
-| Columna | Tipo | Clave | Regla |
-|---|---|---|---|
-| id | BIGINT | PK | |
-| registro_ejercicio_id | BIGINT | FK → registro_ejercicio | UK (`registro_ejercicio_id`, `numero`) |
-| numero | INT | | 1, 2, 3… Lo asigna el servidor |
-| peso_kg | DECIMAL(5,2) | | 0 a 500. `0` = sin carga externa (por ejemplo, dominadas sin lastre) |
-| repeticiones | INT | | 1 a 100 |
-| es_record | BOOLEAN | | La calcula el sistema con la regla R6. El cliente nunca la envía |
+Ejemplo (la sesión del lunes 14 de septiembre, la misma del contrato):
 
-### registro_peso
+```json
+{
+  "_id": { "$oid": "66f1c0a2e4b0a1b2c3d4e5f6" },
+  "usuarioId": 7,
+  "rutina": { "id": 3, "nombre": "Pecho y tríceps" },
+  "fechaInicio": "2026-09-14T18:30:00",
+  "duracionMinutos": 55,
+  "registros": [
+    {
+      "orden": 1,
+      "ejercicio": { "id": 1, "nombre": "Press de banca con barra", "grupoMuscular": "PECHO" },
+      "series": [
+        { "numero": 1, "pesoKg": 55, "repeticiones": 5, "esRecord": false },
+        { "numero": 2, "pesoKg": 57.5, "repeticiones": 5, "esRecord": false },
+        { "numero": 3, "pesoKg": 60, "repeticiones": 5, "esRecord": false },
+        { "numero": 4, "pesoKg": 62.5, "repeticiones": 4, "esRecord": true }
+      ]
+    },
+    {
+      "orden": 2,
+      "ejercicio": { "id": 23, "nombre": "Extensión de tríceps en polea", "grupoMuscular": "TRICEPS" },
+      "series": [
+        { "numero": 1, "pesoKg": 25, "repeticiones": 12, "esRecord": false },
+        { "numero": 2, "pesoKg": 27.5, "repeticiones": 10, "esRecord": false },
+        { "numero": 3, "pesoKg": 27.5, "repeticiones": 9, "esRecord": false }
+      ]
+    }
+  ]
+}
+```
 
-| Columna | Tipo | Clave | Regla |
-|---|---|---|---|
-| id | BIGINT | PK | |
-| usuario_id | BIGINT | FK → usuario | UK (`usuario_id`, `fecha`) |
-| fecha | DATE | | No puede ser futura |
-| peso_kg | DECIMAL(5,2) | | 20 a 350 |
+| Campo | Tipo | Regla |
+|---|---|---|
+| `_id` | ObjectId | Lo genera MongoDB. En la API se expone como `id`, en texto |
+| `usuarioId` | Number | Id del usuario en MySQL. Sale del token, nunca del cuerpo |
+| `rutina.id` | Number | Id de la rutina en MySQL |
+| `rutina.nombre` | String | **Copia** del nombre al momento de registrar (DM-09) |
+| `fechaInicio` | String | `AAAA-MM-DDTHH:mm:ss`, hora local. No puede ser futura (DM-11) |
+| `duracionMinutos` | Number | Entero de 1 a 600 |
+| `registros` | Array | 1 a 15 elementos |
+| `registros[].orden` | Number | 1, 2, 3… Lo asigna el servidor |
+| `registros[].ejercicio.id` | Number | Id del ejercicio en MySQL. Está en la rutina, está activo y no se repite en la sesión |
+| `registros[].ejercicio.nombre` · `.grupoMuscular` | String | **Copia** del nombre y del código del grupo muscular |
+| `registros[].series` | Array | 1 a 20 elementos |
+| `series[].numero` | Number | 1, 2, 3… Lo asigna el servidor |
+| `series[].pesoKg` | Number | 0 a 500, máximo 2 decimales. `0` = sin carga externa |
+| `series[].repeticiones` | Number | Entero de 1 a 100 |
+| `series[].esRecord` | Boolean | Lo calcula el sistema con la regla R6 (§7.1). El cliente nunca lo envía |
 
-## 5. Enumeraciones
+**Índices:**
 
-Se guardan como texto con el código. El nombre visible y las sugerencias los entrega la API en `GET /referencias` (ver [contrato](CONTRATO-API.md) §4), para que el frontend nunca escriba estos textos a mano.
+| Índice | Para qué |
+|---|---|
+| `{ usuarioId: 1, fechaInicio: -1 }` | Historial del usuario, de la más reciente a la más antigua |
+| `{ usuarioId: 1, "registros.ejercicio.id": 1 }` | Récords, progreso y "última vez" de un ejercicio |
 
-### Objetivo
+### Colección `registrosPeso`
 
-| Código | Nombre visible | Series sugeridas | Repeticiones sugeridas | Idea |
+```json
+{ "_id": { "$oid": "66f1c3b8e4b0a1b2c3d4e601" }, "usuarioId": 7, "fecha": "2026-09-14", "pesoKg": 77.9 }
+```
+
+| Campo | Tipo | Regla |
+|---|---|---|
+| `_id` | ObjectId | En la API se expone como `id`, en texto |
+| `usuarioId` | Number | Id del usuario en MySQL. Sale del token |
+| `fecha` | String | `AAAA-MM-DD`. No puede ser futura |
+| `pesoKg` | Number | 20 a 350, máximo 2 decimales |
+
+**Índice único** `{ usuarioId: 1, fecha: 1 }`: como máximo un registro por usuario y fecha. Si se repite, MongoDB responde con el código `11000` y la API lo convierte en 409 `PESO_YA_REGISTRADO`.
+
+## 6. Enumeraciones
+
+Se guardan como texto con el código, en MySQL y en MongoDB. El nombre visible y las sugerencias los entrega `GET /referencias` ([contrato](CONTRATO-API.md) §4), para que el frontend nunca escriba estos textos a mano.
+
+| Código de objetivo | Nombre visible | Series sugeridas | Repeticiones sugeridas | Idea |
 |---|---|---|---|---|
 | `FUERZA` | Fuerza | 4 | 5 | Pocas repeticiones con cargas altas |
 | `PERDIDA_PESO` | Pérdida de peso | 3 | 12 | Repeticiones moderadas y descansos cortos |
 | `RESISTENCIA` | Resistencia | 3 | 15 | Muchas repeticiones con cargas moderadas |
 
-Las sugerencias son **valores iniciales** al agregar un ejercicio a una rutina: el usuario puede cambiarlos. Así se concreta "rutinas alineadas al objetivo" sin prometer una prescripción médica.
+**Grupo muscular:** `PECHO` Pecho · `ESPALDA` Espalda · `HOMBROS` Hombros · `BICEPS` Bíceps · `TRICEPS` Tríceps · `PIERNAS` Piernas · `GLUTEOS` Glúteos · `ABDOMEN` Abdomen
 
-### Grupo muscular
+**Equipo:** `BARRA` Barra · `MANCUERNAS` Mancuernas · `MAQUINA` Máquina · `POLEA` Polea · `PESO_CORPORAL` Peso corporal · `OTRO` Otro
 
-`PECHO` Pecho · `ESPALDA` Espalda · `HOMBROS` Hombros · `BICEPS` Bíceps · `TRICEPS` Tríceps · `PIERNAS` Piernas · `GLUTEOS` Glúteos · `ABDOMEN` Abdomen
+### Referencias entre las dos bases
 
-### Equipo
+Entre MySQL y MongoDB **no hay claves foráneas**: son referencias lógicas por id. Cada una se protege así:
 
-`BARRA` Barra · `MANCUERNAS` Mancuernas · `MAQUINA` Máquina · `POLEA` Polea · `PESO_CORPORAL` Peso corporal · `OTRO` Otro
+| Campo en MongoDB | Apunta a (MySQL) | Cómo se garantiza |
+|---|---|---|
+| `usuarioId` (las dos colecciones) | `usuario.id` | Sale del token que valida el servicio de cuentas |
+| `sesiones.rutina.id` | `rutina.id` | Al registrar, el servicio de entrenamiento pide la rutina al de cuentas con el token del usuario (ARQUITECTURA DEC-16) |
+| `sesiones.registros[].ejercicio.id` | `ejercicio.id` | Al registrar, el ejercicio debe estar en esa rutina y activo |
 
-## 6. Reglas de negocio e integridad
+Como después la rutina o el ejercicio pueden renombrarse o eliminarse, la sesión guarda una copia de sus nombres (DM-09).
+
+## 7. Reglas de negocio e integridad
 
 Reglas que el esquema no garantiza solo y que implementan los servicios. Cada una tiene su criterio de aceptación en las [historias](HISTORIAS.md).
 
-| # | Regla |
-|---|---|
-| R1 | **Visibilidad de ejercicios.** Un usuario ve los ejercicios base y sus propios ejercicios. Un ejercicio propio de otro usuario se trata como inexistente (404) |
-| R2 | **Solo los propios se modifican.** Editar o eliminar un ejercicio base responde 403 |
-| R3 | **Borrado lógico** en `ejercicio` y `rutina`. Lo eliminado desaparece de los listados y no se puede usar en rutinas ni sesiones nuevas, pero se sigue mostrando en el historial con su nombre |
-| R4 | **Consistencia de la sesión.** La rutina es del usuario y está activa; cada ejercicio registrado pertenece a esa rutina, está activo y no se repite; hay al menos un ejercicio con al menos una serie. `orden` y `numero` los asigna el servidor |
-| R5 | **Las sesiones no se editan.** Para corregir una sesión, se elimina y se registra de nuevo. Así el recálculo de récords tiene un solo camino |
-| R6 | **Récords personales** — ver §6.1 |
-| R7 | **Volumen.** Volumen de una serie = `peso_kg × repeticiones`. El volumen de un ejercicio y el de una sesión son sumas. No se guardan: se calculan al consultar |
-| R8 | **Peso corporal.** Como máximo un registro por usuario y fecha |
-| R9 | **Tokens.** Vencen a los 7 días. Cerrar sesión borra el token. Al iniciar sesión se borran los tokens vencidos de ese usuario |
-| R10 | **Pertenencia.** Todo recurso de otro usuario (rutina, sesión, registro de peso, ejercicio propio) responde como si no existiera: 404 |
+| # | Regla | Servicio |
+|---|---|---|
+| R1 | **Visibilidad de ejercicios.** Un usuario ve los ejercicios base y sus propios ejercicios. Un ejercicio propio de otro usuario se trata como inexistente (404) | Cuentas |
+| R2 | **Solo los propios se modifican.** Editar o eliminar un ejercicio base responde 403 | Cuentas |
+| R3 | **Borrado lógico** en `ejercicio` y `rutina`. Lo eliminado desaparece de los listados y no se puede usar en rutinas ni sesiones nuevas, pero se sigue viendo en el historial | Cuentas |
+| R4 | **Consistencia de la sesión.** La rutina es del usuario y está activa; cada ejercicio registrado está en esa rutina, activo y sin repetir; hay al menos un ejercicio con al menos una serie. `orden` y `numero` los asigna el servidor | Entrenamiento, preguntando al de cuentas |
+| R5 | **Las sesiones no se editan.** Para corregir una, se elimina y se registra de nuevo. Así el recálculo de récords tiene un solo camino | Entrenamiento |
+| R6 | **Récords personales:** ver §7.1 | Entrenamiento |
+| R7 | **Volumen.** Volumen de una serie = `pesoKg × repeticiones`. El de un ejercicio y el de una sesión son sumas, redondeadas a 2 decimales. No se guardan: se calculan al consultar | Entrenamiento |
+| R8 | **Peso corporal.** Como máximo un registro por usuario y fecha (índice único) | Entrenamiento |
+| R9 | **Tokens.** Vencen a los 7 días. Cerrar sesión borra el token. Al iniciar sesión se borran los tokens vencidos de ese usuario | Cuentas |
+| R10 | **Pertenencia.** Todo recurso de otro usuario responde como si no existiera: 404. En MongoDB, toda consulta lleva el `usuarioId` del token | Los dos |
 
-### 6.1 Regla de récords personales (R6)
+### 7.1 Regla de récords personales (R6)
 
 **Definición (decisión D2):** una serie es récord personal si su peso **supera** el máximo que el usuario había levantado en ese ejercicio en sus sesiones anteriores.
 
-**Algoritmo `recalcularRecords(usuario, ejercicio)`:**
+**Algoritmo `recalcularRecords(usuarioId, ejercicioId)`** (en `backend-node/src/servicios/records.js`):
 
-1. Tomar todas las series de ese usuario en ese ejercicio, agrupadas por sesión, con las sesiones en orden cronológico: por `fecha_inicio` y, a igual fecha, por `id`.
+1. Tomar las sesiones del usuario que tienen ese ejercicio, en orden cronológico: por `fechaInicio` y, a igual fecha, por `_id`.
 2. Empezar con `maximoPrevio = 0`.
 3. Para cada sesión, en ese orden:
-   - `maximoSesion` = el mayor `peso_kg` de sus series en ese ejercicio.
-   - Si `maximoSesion > maximoPrevio`: se marca como récord **la primera serie** (la de menor `numero`) que tiene ese peso, y `maximoPrevio` pasa a ser `maximoSesion`.
-   - Las demás series quedan con `es_record = false`.
+   - `maximoSesion` = el mayor `pesoKg` de sus series en ese ejercicio.
+   - Si `maximoSesion > maximoPrevio`: se marca como récord **la primera serie** (menor `numero`) que tiene ese peso, y `maximoPrevio` pasa a ser `maximoSesion`.
+   - Las demás series de ese ejercicio quedan con `esRecord: false`.
+4. Guardar solo las sesiones que cambiaron.
 
-**Cuándo se ejecuta:** después de guardar una sesión y después de eliminarla, para cada ejercicio de esa sesión, **dentro de la misma transacción**.
+**Cuándo se ejecuta:** después de guardar una sesión y después de eliminarla, para cada ejercicio de esa sesión.
 
-**Por qué se recalcula todo el historial del ejercicio** y no se compara solo contra el récord actual: una sesión puede registrarse con fecha pasada o eliminarse, y en los dos casos cambian los récords de sesiones posteriores. Con los volúmenes de este proyecto (decenas o pocos cientos de series por ejercicio) el recálculo es instantáneo.
+**Por qué se recalcula todo el historial del ejercicio** y no se compara solo contra el récord actual: una sesión puede registrarse con fecha pasada o eliminarse, y en los dos casos cambian los récords de sesiones posteriores. Además, así el recálculo es **idempotente**: MongoDB en local no tiene transacciones entre documentos, y si algo falla a mitad, la siguiente escritura deja todo correcto (ARQUITECTURA DEC-18).
 
-**Casos que deben tener prueba unitaria:**
+**El cálculo es una función pura** (`calcularRecords`): recibe las sesiones ordenadas y devuelve qué series son récord, sin tocar la base de datos. Así se prueba con `node --test`.
+
+**Casos que deben tener prueba:**
 
 | Caso | Resultado esperado |
 |---|---|
@@ -311,15 +368,25 @@ Reglas que el esquema no garantiza solo y que implementan los servicios. Cada un
 - Si se **elimina S3**, el máximo vuelve a 45 y S4 (40 kg) sigue sin ser récord.
 - Si después se **registra una sesión con fecha 06-sep** y una serie de 52,5 × 3, esa sesión pasa a ser récord y **S3 deja de serlo** (50 < 52,5).
 
-## 7. Normalización
+## 8. Normalización y desnormalización
 
-- **1FN:** todos los atributos son atómicos. Los objetivos de un ejercicio (multivaluados) van en su propia tabla, `ejercicio_objetivo`. Las series van en `serie_realizada`, en lugar de un texto como `"60x10, 65x8"`.
-- **2FN:** las tablas con clave primaria simple no pueden tener dependencias parciales. `ejercicio_objetivo`, la única con clave compuesta, no tiene más atributos.
-- **3FN:** `sesion_entrenamiento` **no guarda `usuario_id`**: el usuario se obtiene de la rutina. Guardarlo sería una dependencia transitiva (`sesión → rutina → usuario`) que podría quedar inconsistente.
-- **Excepción deliberada:** `serie_realizada.es_record` es un dato derivado, porque se puede calcular con el historial. Se guarda para no recalcular en cada lectura del historial y porque la funcionalidad pide *marcar* el récord. Su consistencia la garantiza R6: se recalcula en cada escritura.
-- **Lo que no se guarda:** volúmenes, totales de la sesión y récord vigente por ejercicio. Todo eso se calcula al consultar.
+**MySQL, en tercera forma normal:**
 
-## 8. Modelo de dominio (clases JPA)
+- **1FN:** atributos atómicos. Los objetivos de un ejercicio (multivaluados) van en su propia tabla, `ejercicio_objetivo`.
+- **2FN:** las tablas con clave simple no tienen dependencias parciales; `ejercicio_objetivo`, la única con clave compuesta, no tiene más atributos.
+- **3FN:** ninguna columna depende de otra que no sea la clave.
+
+**MongoDB, desnormalizado a propósito:** los documentos se diseñan según cómo se leen, no según formas normales.
+
+| Qué se repite | Por qué |
+|---|---|
+| `usuarioId` en cada sesión y registro de peso | No hay uniones entre bases: sin él no se podría filtrar por dueño |
+| Nombre de la rutina y de cada ejercicio dentro de la sesión | El historial se ve igual aunque después se renombren o se eliminen, y sin llamar al otro servicio (DM-09) |
+| `esRecord` en cada serie | Es un dato derivado. Se guarda para no recalcularlo en cada lectura del historial; su consistencia la garantiza R6 |
+
+**Lo que no se guarda:** volúmenes, totales de la sesión y récord vigente por ejercicio. Se calculan al consultar.
+
+## 9. Modelo de dominio del servicio de cuentas (clases JPA)
 
 ```mermaid
 classDiagram
@@ -367,30 +434,6 @@ classDiagram
         int seriesObjetivo
         int repeticionesObjetivo
     }
-    class SesionEntrenamiento {
-        Long id
-        LocalDateTime fechaInicio
-        int duracionMinutos
-        volumenTotal() BigDecimal
-    }
-    class RegistroEjercicio {
-        Long id
-        int orden
-        volumen() BigDecimal
-    }
-    class SerieRealizada {
-        Long id
-        int numero
-        BigDecimal pesoKg
-        int repeticiones
-        boolean esRecord
-        marcarRecord(boolean)
-    }
-    class RegistroPeso {
-        Long id
-        LocalDate fecha
-        BigDecimal pesoKg
-    }
     class Objetivo {
         <<enumeration>>
         FUERZA
@@ -400,18 +443,9 @@ classDiagram
     Usuario "1" <-- "0..*" TokenAcceso
     Usuario "0..1" <-- "0..*" Ejercicio : propietario
     Usuario "1" <-- "0..*" Rutina
-    Usuario "1" <-- "0..*" RegistroPeso
     Rutina "1" *-- "1..*" RutinaEjercicio
     RutinaEjercicio "0..*" --> "1" Ejercicio
-    SesionEntrenamiento "0..*" --> "1" Rutina
-    SesionEntrenamiento "1" *-- "1..*" RegistroEjercicio
-    RegistroEjercicio "0..*" --> "1" Ejercicio
-    RegistroEjercicio "1" *-- "1..*" SerieRealizada
 ```
-
-`*--` es composición: las filas hijas no existen sin su padre y se guardan y borran con él.
-
-### Correspondencia entidad ↔ tabla
 
 | Entidad | Tabla | Relaciones JPA |
 |---|---|---|
@@ -420,21 +454,16 @@ classDiagram
 | `Ejercicio` | `ejercicio` | `@ManyToOne` opcional → `Usuario` · `@ElementCollection` de `Objetivo` en `ejercicio_objetivo` |
 | `Rutina` | `rutina` | `@ManyToOne` → `Usuario` · `@OneToMany` → `RutinaEjercicio` (cascada y `orphanRemoval`, ordenada por `orden`) |
 | `RutinaEjercicio` | `rutina_ejercicio` | `@ManyToOne` → `Rutina` y → `Ejercicio` |
-| `SesionEntrenamiento` | `sesion_entrenamiento` | `@ManyToOne` → `Rutina` · `@OneToMany` → `RegistroEjercicio` (cascada y `orphanRemoval`) |
-| `RegistroEjercicio` | `registro_ejercicio` | `@ManyToOne` → `SesionEntrenamiento` (columna `sesion_id`) y → `Ejercicio` · `@OneToMany` → `SerieRealizada` (cascada y `orphanRemoval`) |
-| `SerieRealizada` | `serie_realizada` | `@ManyToOne` → `RegistroEjercicio` |
-| `RegistroPeso` | `registro_peso` | `@ManyToOne` → `Usuario` |
 
-**Convenciones de mapeo:**
+- Hibernate convierte `camelCase` en `snake_case` solo (`fechaRegistro` → `fecha_registro`), así que casi ninguna columna necesita nombre explícito.
+- Enumerados con `@Enumerated(EnumType.STRING)`, **nunca** `ORDINAL`: reordenar el enum cambiaría el significado de los datos guardados.
+- Relaciones `@ManyToOne` con carga perezosa (`LAZY`); las entidades se convierten a DTO dentro del servicio.
 
-- Hibernate convierte `camelCase` en `snake_case` automáticamente (`fechaInicio` → `fecha_inicio`, `SesionEntrenamiento` → `sesion_entrenamiento`), así que casi ninguna columna necesita nombre explícito. La excepción es `sesion_id` en `registro_ejercicio`.
-- Enumerados con `@Enumerated(EnumType.STRING)`. **Nunca `ORDINAL`:** reordenar el enum cambiaría el significado de los datos guardados.
-- Pesos con `BigDecimal` (se comparan con `compareTo`, no con `equals`); fechas con `LocalDateTime` y `LocalDate`.
-- Relaciones `@ManyToOne` con carga perezosa (`LAZY`). Las entidades se convierten a DTO dentro del servicio, antes de salir de la transacción.
+Los esquemas de Mongoose del servicio de entrenamiento siguen exactamente las tablas de campos de §5.
 
-## 9. Catálogo base (datos iniciales)
+## 10. Catálogo base (datos iniciales)
 
-Se carga al arrancar la aplicación de forma **idempotente**: se inserta cada ejercicio base solo si no existe ya uno base con ese nombre. Arrancar varias veces no crea duplicados, y agregar un ejercicio nuevo a esta lista no obliga a borrar la base de datos.
+Lo carga el servicio de cuentas al arrancar, de forma **idempotente**: cada ejercicio base se inserta solo si no existe ya uno base con ese nombre. Arrancar varias veces no crea duplicados, y agregar un ejercicio a esta lista no obliga a borrar la base de datos.
 
 Objetivos: **F** = Fuerza · **P** = Pérdida de peso · **R** = Resistencia. Son orientativos.
 
@@ -481,31 +510,34 @@ Objetivos: **F** = Fuerza · **P** = Pérdida de peso · **R** = Resistencia. So
 | 39 | Rueda abdominal | Abdomen | Otro | R |
 | 40 | Giros rusos con disco | Abdomen | Otro | P, R |
 
-No hay ejercicios que se midan por tiempo o distancia (plancha, cinta, bicicleta): el registro de esta versión es por peso y repeticiones. Ver "Fuera de alcance" en el [contrato](CONTRATO-API.md) §12.
+No hay ejercicios que se midan por tiempo o distancia (plancha, cinta, bicicleta): el registro es por peso y repeticiones.
 
-## 10. Decisiones del modelo
+## 11. Decisiones del modelo
 
 | # | Decisión | Alternativas descartadas | Por qué |
 |---|---|---|---|
-| DM-01 | **Registrar por serie** (D2) | Una fila por ejercicio con peso, series y reps | Las series cambian de peso dentro del mismo ejercicio (40, 45, 50 kg). Con una sola fila no se puede saber qué se levantó realmente, y el récord y el volumen serían inexactos |
-| DM-02 | **Récord = peso máximo estricto, máximo uno por ejercicio por sesión, recalculado** (D2) | Comparar solo contra el récord actual · récord por peso × reps · 1RM estimado | Comparar solo contra el actual falla con sesiones de fecha pasada y con eliminaciones. El peso máximo es la definición más fácil de explicar y coincide con la gráfica de progreso. El 1RM queda como extensión |
-| DM-03 | **Guardar `es_record`** aunque sea derivado | Calcularlo en cada consulta | El historial y el detalle se leen mucho más de lo que se escriben. Además deja visible en el modelo el concepto central de la app. La consistencia la da el recálculo (R6) |
-| DM-04 | **Catálogo base de solo lectura + ejercicios propios por usuario** | Catálogo global que cualquiera edita · rol administrador | Con usuarios reales, un catálogo global editable permite que cualquiera borre "Press de banca" a todos. El rol administrador está fuera de alcance. Una columna `usuario_id` nula resuelve las dos cosas |
-| DM-05 | **`registro_ejercicio` apunta a `ejercicio`**, no a `rutina_ejercicio` | Referenciar la fila de la rutina | Editar o eliminar una rutina no debe alterar el historial. Además permite prellenar con "la última vez" aunque haya sido en otra rutina |
-| DM-06 | **Borrado lógico** en `ejercicio` y `rutina`; **físico** en `sesion_entrenamiento` y `registro_peso` | Todo físico · todo lógico | Ejercicios y rutinas son referenciados por el historial y no pueden desaparecer. Sesiones y registros de peso no los referencia nada, y borrarlos de verdad es lo que el usuario espera al corregir un error |
-| DM-07 | **Enumerados como texto** (`@Enumerated(STRING)`) | Tablas de catálogo · `ORDINAL` | Son listas fijas que no se administran desde la app: una tabla agregaría joins y un CRUD que nadie usa. `ORDINAL` se rompe al reordenar |
-| DM-08 | **Sin `usuario_id` en la sesión** | Guardarlo "por comodidad" | Cumple 3FN y evita que la sesión diga un dueño y la rutina otro |
-| DM-09 | **Pesos en `DECIMAL(5,2)` / `BigDecimal`** | `DOUBLE` · enteros | `double` produce errores de redondeo al sumar volúmenes. Los discos de 1,25 kg necesitan decimales |
+| DM-01 | **Registrar por serie** (D2) | Una fila por ejercicio con peso, series y reps | Las series cambian de peso dentro del mismo ejercicio (40, 45, 50 kg). Con un solo dato no se sabría qué se levantó realmente, y el récord y el volumen serían inexactos |
+| DM-02 | **Récord = peso máximo estricto, máximo uno por ejercicio por sesión, recalculado** (D2) | Comparar solo contra el récord actual · récord por peso × reps · 1RM estimado | Comparar solo contra el actual falla con sesiones de fecha pasada y con eliminaciones. El peso máximo es la definición más fácil de explicar y coincide con la gráfica de progreso |
+| DM-03 | **Guardar `esRecord`** aunque sea derivado | Calcularlo en cada consulta | El historial se lee mucho más de lo que se escribe, y deja visible en los datos el concepto central de la app. La consistencia la da el recálculo (R6) |
+| DM-04 | **Catálogo base de solo lectura + ejercicios propios por usuario** | Catálogo global que cualquiera edita · rol administrador | Con usuarios reales, un catálogo editable por todos permite que cualquiera borre "Press de banca" a los demás. Una columna `usuario_id` nula resuelve las dos cosas |
+| DM-05 | **Cada registro de la sesión apunta al ejercicio**, no a la fila de la rutina | Referenciar `rutina_ejercicio` | Editar o eliminar una rutina no debe alterar el historial. Además permite prellenar con "la última vez" aunque haya sido en otra rutina |
+| DM-06 | **Borrado lógico** en ejercicio y rutina; **físico** en sesión y registro de peso | Todo físico · todo lógico | Ejercicios y rutinas aparecen en el historial y no pueden desaparecer. Sesiones y pesos no los referencia nada, y borrarlos de verdad es lo que el usuario espera al corregir un error |
+| DM-07 | **Enumerados como texto** | Tablas de catálogo · `ORDINAL` | Son listas fijas que no se administran desde la app. `ORDINAL` se rompe al reordenar |
+| DM-08 | **Las sesiones en MongoDB, como un documento anidado** | Tres tablas en MySQL (sesión, registro y serie) | Una sesión se escribe una vez, completa, y se lee completa. Como documento no necesita uniones entre tablas, y su forma es la misma que la del JSON del contrato |
+| DM-09 | **Copia de nombres en la sesión** (ARQUITECTURA DEC-15) | Guardar solo los ids | El historial debe verse igual aunque la rutina o el ejercicio se renombren o se eliminen, y sin llamar al servicio de cuentas por cada sesión |
 | DM-10 | **"No repetir ejercicios en una rutina" se valida en el servicio**, sin restricción única en la base de datos | UK (`rutina_id`, `ejercicio_id`) | Al editar, Hibernate reemplaza la lista y puede insertar las filas nuevas antes de borrar las viejas, lo que dispararía la restricción aunque el resultado final sea válido |
+| DM-11 | **Fechas de MongoDB como texto ISO en hora local** (`2026-09-14T18:30:00`) | El tipo `Date` de MongoDB | `Date` se guarda en UTC y obliga a convertir zonas horarias, un error clásico. El texto ISO es igual al del contrato y se ordena bien como texto |
+| DM-12 | **Pesos como `Number` con máximo 2 decimales**, y volúmenes redondeados a 2 decimales | `Decimal128` | `Decimal128` complica el JSON y las cuentas en JavaScript. Los pesos del gimnasio (múltiplos de 0,25 kg) se representan bien, y el redondeo evita errores como `0,1 + 0,2` en los volúmenes |
 
-## 11. Documentos relacionados
+## 12. Documentos relacionados
 
-- [CONTRATO-API.md](CONTRATO-API.md): cómo se exponen estos datos por la API
-- [ARQUITECTURA.md](ARQUITECTURA.md): capas, autenticación y decisiones técnicas
+- [CONTRATO-API.md](CONTRATO-API.md): cómo exponen estos datos las dos APIs
+- [ARQUITECTURA.md](ARQUITECTURA.md): servicios, comunicación entre ellos y decisiones técnicas
 - [HISTORIAS.md](HISTORIAS.md): criterios de aceptación de cada regla
 
-## 12. Historial de cambios
+## 13. Historial de cambios
 
 | Fecha | Cambio |
 |---|---|
 | 2026-09-14 | v1.0: versión inicial con las decisiones D2 (registro por serie, récord por peso), D3 (peso corporal) y D4 (login con email y contraseña) |
+| 2026-09-21 | v2.0: el modelo se reparte entre dos bases. MySQL queda con 6 tablas (cuentas, catálogo y rutinas); las sesiones y el peso corporal pasan a MongoDB como las colecciones `sesiones` y `registrosPeso`. Nuevas decisiones DM-08, DM-09, DM-11 y DM-12 |

@@ -28,5 +28,6 @@ Thumbs.db
 *.log
 logs/
 
-# Node (por si el frontend usa alguna herramienta)
+# Frontend (Node.js y Vite)
 node_modules/
+dist/

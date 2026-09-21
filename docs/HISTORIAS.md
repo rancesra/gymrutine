@@ -1,7 +1,7 @@
 # Historias de usuario — GymRutine
 
-**Versión:** 1.0
-**Fecha:** 2026-09-14
+**Versión:** 1.1
+**Fecha:** 2026-09-21
 **Formato:** Como [rol], quiero [funcionalidad], para [beneficio], con criterios Dado / Cuando / Entonces
 
 Este es el **Product Backlog** del proyecto. Cada historia tiene sus criterios de aceptación: una historia está terminada cuando cumple todos sus criterios y la [definición de terminado](../PLAN-DE-TRABAJO.md#definición-de-terminado).
@@ -64,11 +64,11 @@ flowchart LR
 
 | Épica | Historias | Responsable | Sprint en que se termina |
 |---|---|---|---|
-| A. Cuenta y perfil | H1 · H2 · H3 · H4 | Rances | 2 |
+| A. Cuenta y perfil | H1 · H2 · H3 · H4 | Rances (API y perfil) y Javier (login y registro) | H1–H3 en el 1 (entrega del 22 de septiembre); H4 en el 2 |
 | B. Catálogo de ejercicios | H5 · H6 · H7 · H8 · H9 | Javier | 2 |
 | C. Rutinas | H10 · H11 · H12 · H13 | Javier | 3 |
 | D. Entrenamiento | H14 · H15 · H16 · H17 | Santiago | 3 |
-| E. Récords y progreso | H18 · H19 (Santiago) · H20 (Javier) | Santiago y Javier | H18 en 3; H19 y H20 en 4 |
+| E. Récords y progreso | H18 · H19 · H20 | Santiago (API); Rances y Javier (pantallas) | H18 en el 3; H19 y H20 en el 4 |
 | F. Peso corporal | H21 · H22 | Rances | 3 |
 
 El detalle de qué se hace en cada sprint y en qué orden está en el [plan de trabajo](../PLAN-DE-TRABAJO.md).
@@ -79,7 +79,7 @@ El detalle de qué se hace en cada sprint y en qué orden está en el [plan de t
 
 ### H1 — Crear cuenta
 
-**Prioridad:** Alta · **Sprint:** 2 · **Responsable:** Rances · **Endpoints:** `GET /referencias`, `POST /auth/registro`
+**Prioridad:** Alta · **Sprint:** 1 · **Responsable:** Rances (API) y Javier (pantalla) · **Endpoints:** `GET /referencias`, `POST /auth/registro`
 
 **Como** visitante, **quiero** crear una cuenta con mi nombre, email, contraseña y objetivo, **para** guardar mis rutinas y mi progreso.
 
@@ -92,7 +92,7 @@ El detalle de qué se hace en cada sprint y en qué orden está en el [plan de t
 
 ### H2 — Iniciar sesión
 
-**Prioridad:** Alta · **Sprint:** 2 · **Responsable:** Rances · **Endpoints:** `POST /auth/login`
+**Prioridad:** Alta · **Sprint:** 1 · **Responsable:** Rances (API) y Javier (pantalla) · **Endpoints:** `POST /auth/login`
 
 **Como** visitante con cuenta, **quiero** iniciar sesión con mi email y contraseña, **para** entrar a mis datos desde cualquier dispositivo.
 
@@ -104,7 +104,7 @@ El detalle de qué se hace en cada sprint y en qué orden está en el [plan de t
 
 ### H3 — Cerrar sesión
 
-**Prioridad:** Alta · **Sprint:** 2 · **Responsable:** Rances · **Endpoints:** `POST /auth/logout`
+**Prioridad:** Alta · **Sprint:** 1 · **Responsable:** Rances (API) y Javier (pantalla) · **Endpoints:** `POST /auth/logout`
 
 **Como** usuario, **quiero** cerrar sesión, **para** que nadie use mi cuenta en un dispositivo compartido.
 
@@ -256,7 +256,7 @@ El detalle de qué se hace en cada sprint y en qué orden está en el [plan de t
 
 ### H14 — Registrar una sesión de entrenamiento
 
-**Prioridad:** Alta · **Sprint:** 3 · **Responsable:** Santiago · **Endpoints:** `GET /rutinas/{id}`, `GET /rutinas/{id}/ultimos-registros`, `POST /sesiones`
+**Prioridad:** Alta · **Sprint:** 3 · **Responsable:** Santiago · **Endpoints:** `GET /rutinas/{id}`, `GET /sesiones/ultimos-registros?rutinaId=`, `POST /sesiones`
 
 **Como** usuario, **quiero** registrar cada serie que realmente hice, con su peso y repeticiones, mientras ejecuto una rutina, **para** tener un registro exacto de mi entrenamiento.
 
@@ -311,7 +311,7 @@ El detalle de qué se hace en cada sprint y en qué orden está en el [plan de t
 
 ### H18 — Detección automática de récords personales
 
-**Prioridad:** Alta · **Sprint:** 3 · **Responsable:** Santiago · **Endpoints:** `POST /sesiones`, `DELETE /sesiones/{id}` · **Regla:** [MODELO-DATOS.md](MODELO-DATOS.md) §6.1
+**Prioridad:** Alta · **Sprint:** 3 · **Responsable:** Santiago · **Endpoints:** `POST /sesiones`, `DELETE /sesiones/{id}` · **Regla:** [MODELO-DATOS.md](MODELO-DATOS.md) §7.1
 
 **Como** usuario, **quiero** que el sistema detecte solo cuándo supero mi mejor marca en un ejercicio, **para** saber que estoy progresando sin revisar el historial a mano.
 
@@ -326,7 +326,7 @@ El detalle de qué se hace en cada sprint y en qué orden está en el [plan de t
 
 ### H19 — Ver mis récords personales
 
-**Prioridad:** Media · **Sprint:** 4 · **Responsable:** Santiago · **Endpoints:** `GET /records`
+**Prioridad:** Media · **Sprint:** 4 · **Responsable:** Santiago (API) y Rances (pantalla) · **Endpoints:** `GET /records`
 
 **Como** usuario, **quiero** ver mis mejores marcas, **para** tener presente qué debo superar.
 
@@ -339,7 +339,7 @@ El detalle de qué se hace en cada sprint y en qué orden está en el [plan de t
 
 ### H20 — Ver el progreso de un ejercicio
 
-**Prioridad:** Alta · **Sprint:** 4 · **Responsable:** Javier · **Endpoints:** `GET /progreso/ejercicios`, `GET /progreso/ejercicios/{id}`
+**Prioridad:** Alta · **Sprint:** 4 · **Responsable:** Santiago (API) y Javier (pantalla) · **Endpoints:** `GET /progreso/ejercicios`, `GET /progreso/ejercicios/{id}`
 
 **Como** usuario, **quiero** ver en una gráfica cómo evoluciona el peso que levanto en un ejercicio, **para** comprobar si realmente estoy progresando.
 
@@ -382,14 +382,14 @@ El detalle de qué se hace en cada sprint y en qué orden está en el [plan de t
 
 ## Priorización por sprint
 
-| Sprint | Peso en la nota | Historias que se terminan | Qué más se entrega |
+| Sprint | Fechas | Historias que se terminan | Qué más se entrega |
 |---|---|---|---|
-| 1 | 5 % | — | Documentación inicial, base del backend (con la API de autenticación), base del frontend y algoritmo de récords con pruebas |
-| 2 | 5 % | H1–H9 | API de rutinas y API de sesiones listas para las pantallas del sprint 3 |
-| 3 | 10 % | H10–H18, H21, H22 | Es el sprint con más funcionalidad visible |
-| 4 | 10 % | H19, H20 | Datos de demostración, pulido en celular, documentación final y sustentación |
+| 1 | lun 21 – mar 22 sep | H1–H3 | Las bases de los tres proyectos y las dos bases de datos. **Entrega 1: login y base de datos** |
+| 2 | mié 23 – sáb 26 sep | H4–H9 | API de rutinas, de sesiones y de peso corporal; algoritmo de récords con pruebas |
+| 3 | dom 27 – mié 30 sep | H10–H18, H21, H22 | El sprint con más funcionalidad visible |
+| 4 | jue 1 – sáb 3 oct | H19, H20 | Inicio, datos de demostración, pulido en celular y **entrega final (3 de octubre)** |
 
-**Por qué este orden:** los sprints 1 y 2 valen menos y dejan lista la base de la que depende todo. Los sprints 3 y 4 valen el doble y concentran lo que se ve. El sprint 4 tiene pocas historias a propósito: deja margen para lo que se atrase y para preparar la demostración.
+**Por qué este orden:** el login y las bases de datos se entregan primero porque todo depende de ellos. El sprint 3 concentra lo que se ve. El sprint 4 tiene pocas historias a propósito: deja margen para lo que se atrase y para preparar la demostración. Qué es imprescindible y qué es "si da el tiempo" está en el [plan de trabajo](../PLAN-DE-TRABAJO.md#prioridades-para-llegar-al-3-de-octubre).
 
 ## Fuera del backlog (trabajo futuro)
 
@@ -408,3 +408,4 @@ El detalle de qué se hace en cada sprint y en qué orden está en el [plan de t
 | Fecha | Cambio |
 |---|---|
 | 2026-09-14 | v1.0: versión inicial con 22 historias en 6 épicas |
+| 2026-09-21 | v1.1: calendario hasta la entrega final del 3 de octubre, nuevos responsables y ruta de los últimos registros en el servicio de entrenamiento. Los criterios de aceptación no cambian |
