@@ -405,7 +405,7 @@ Cada proyecto vive en su carpeta (`backend-spring/`, `backend-node/` y `frontend
   | Packaging / Configuration / Java | Jar / YAML / 21 |
   | Dependencies | Spring Web, Spring Data JPA, MySQL Driver, Validation |
 
-- **`application.yml`:** `jdbc:mysql://localhost:3306/gymrutine` con el usuario `gymrutine` / `gymrutine`, `ddl-auto: update` y `open-in-view: false`.
+- **`application.yaml`** (así lo nombra start.spring.io al elegir YAML): `jdbc:mysql://127.0.0.1:3306/gymrutine` con el usuario `gymrutine` / `gymrutine`, `ddl-auto: update` y `open-in-view: false`.
 - **Enumerados con sus datos visibles:** cada `Objetivo` lleva nombre, descripción, series y repeticiones sugeridas. `GET /referencias` los recorre.
 - **Carga del catálogo base idempotente:** cada ejercicio se inserta solo si no existe uno base con ese nombre.
 - **Pieza compartida:** `EjercicioResumenResponse` (`id`, `nombre`, `grupoMuscular`, `equipo`, `activo`), que usan catálogo y rutinas.

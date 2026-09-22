@@ -1,0 +1,18 @@
+# Configuración del servicio de cuentas y rutinas (ARQUITECTURA §4 y §9)
+spring:
+  application:
+    name: gymrutine
+  datasource:
+    # 127.0.0.1 y no localhost: siempre por IPv4 (ver ARQUITECTURA §9)
+    url: jdbc:mysql://127.0.0.1:3306/gymrutine
+    username: gymrutine
+    password: gymrutine
+  jpa:
+    hibernate:
+      # Hibernate crea y actualiza las tablas a partir de las entidades (DEC-10)
+      ddl-auto: update
+    # La conexión a la base se cierra al terminar el servicio, no al terminar la vista
+    open-in-view: false
+
+server:
+  port: 8080
