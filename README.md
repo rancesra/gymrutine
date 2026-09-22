@@ -97,7 +97,7 @@ Son cinco piezas. Las dos bases de datos arrancan solas con el computador; las o
 - [x] Diseño de la base de datos ([MODELO-DATOS.md](docs/MODELO-DATOS.md))
 - [x] Repositorio con Git
 - [x] Proyecto en [Jira](https://gymrutine-uis.atlassian.net/browse/GR) con el backlog y los sprints
-- [ ] T1 Base del servicio de cuentas (Spring Boot + MySQL)
+- [x] T1 Base del servicio de cuentas (Spring Boot + MySQL)
 - [ ] T2 Base del frontend (React)
 - [x] T3 Base del servicio de entrenamiento (Node + MongoDB)
 - [ ] H1 — Crear cuenta
