@@ -1,7 +1,7 @@
 # Arquitectura — GymRutine
 
-**Versión:** 2.2
-**Fecha:** 2026-09-21
+**Versión:** 2.3
+**Fecha:** 2026-09-22
 
 ## 1. Vista general
 
@@ -41,7 +41,7 @@ Versiones verificadas en las fuentes oficiales el **2026-09-21**. Se fijan para 
 | Java (JDK Temurin) | 21 LTS | Servicio de cuentas | Sí |
 | Spring Boot (Web, Data JPA, Validation) | 4.1.1 | Servicio de cuentas | Sí (temario §7) |
 | Maven, con Maven Wrapper | el que trae el proyecto | Construcción del servicio de cuentas | Sí (§7.5) |
-| spring-security-crypto | la de Spring Boot | **Solo** cifrar contraseñas con BCrypt | **No:** excepción justificada (DEC-07) |
+| spring-security-crypto | la de Spring Boot | **Solo** cifrar contraseñas con BCrypt | **No:** excepción aprobada por el profesor (DEC-07) |
 | MySQL Community Server + Workbench | 8.4 LTS | Base del servicio de cuentas | Sí (§6) |
 | Node.js | 24 LTS | Servicio de entrenamiento y herramientas del frontend | Sí (§8) |
 | Express | 5.2 | Rutas del servicio de entrenamiento | Sí (§8.6) |
@@ -318,7 +318,7 @@ Son **cinco piezas**: las dos bases de datos arrancan solas con el computador y 
 | DEC-04 | **Spring Boot 4.1.1 con Java 21** y **Node.js 24 LTS** | Java 25 · Node 22 | Son las versiones estables vigentes. Java 21 es el JDK que el equipo ya instaló para teambsoft; Node 24 trae de fábrica lo que en otras versiones exige librerías (DEC-17) |
 | DEC-05 | **Maven con Maven Wrapper** | Gradle | Maven está en el temario (§7.5). start.spring.io propone Gradle por defecto: hay que cambiarlo al generar el proyecto |
 | DEC-06 | **Token aleatorio guardado en MySQL**, validado por un interceptor en Spring; **Node lo valida preguntándole a Spring** (D4) | Spring Security completo · JWT compartido entre los dos servicios · sesión con cookie | Spring Security no está en el temario. Un JWT compartido exige una librería y un secreto en los dos servicios, y no se puede revocar antes de que venza. Con el token en una tabla, cerrar sesión lo invalida en los dos servicios al instante y hay una sola fuente de verdad |
-| DEC-07 | **Contraseñas con BCrypt usando solo `spring-security-crypto`** | Guardarlas en texto · programar el cifrado a mano | Guardarlas en texto es inaceptable y programar el cifrado a mano es propenso a errores. Es una dependencia pequeña que no activa Spring Security: se usa para cifrar y para comparar |
+| DEC-07 | **Contraseñas con BCrypt usando solo `spring-security-crypto`** | Guardarlas en texto · programar el cifrado a mano | Guardarlas en texto es inaceptable y programar el cifrado a mano es propenso a errores. Es una dependencia pequeña que no activa Spring Security: se usa para cifrar y para comparar. Aprobada por el profesor (D8) |
 | DEC-08 | **Chart.js dentro de un componente propio** (`GraficaLinea`) | Dibujar con `<canvas>` a mano · adaptadores de Chart.js para React | Dibujar ejes y escalas a mano no es evaluable. Chart.js solo visualiza; un componente propio evita sumar otra librería. Cada gráfica muestra también sus datos en una tabla |
 | DEC-09 | **React con Vite** (D10) | JavaScript sin framework · Create React App · Next.js | React está en el temario (§10). Con 14 pantallas que comparten piezas, los componentes evitan repetir código. Create React App dejó de ser la opción recomendada por React en 2025; Vite es la herramienta vigente y el equipo ya la usó. Next.js agrega un servidor que no hace falta |
 | DEC-10 | **Esquema de MySQL generado por Hibernate** (`ddl-auto: update`) e **índices de MongoDB creados por Mongoose** al arrancar | Scripts de migración (Flyway o Liquibase) | Las herramientas de migración no se ven en clase. Riesgo: `update` no borra ni renombra columnas, así que al cambiar el modelo cada integrante recrea su base local ([guía de inicio](../GUIA-INICIO.md) §8) |
@@ -347,3 +347,4 @@ Son **cinco piezas**: las dos bases de datos arrancan solas con el computador y 
 | 2026-09-21 | v2.0: el proyecto une los dos cortes y pasa a **dos servicios**: cuentas y rutinas (Spring Boot + MySQL) y entrenamiento (Node.js 24 + Express 5 + Mongoose 9 + MongoDB 8.0). Autenticación entre servicios, proxy hacia los dos y decisiones DEC-01, DEC-02, DEC-06 y DEC-14 a DEC-18 |
 | 2026-09-21 | v2.1: la sesión de React se divide en `contexto.js`, `AuthProvider.jsx` y `useAuth.js`; Oxlint en el stack; React Router 8.4; conexiones entre programas por `127.0.0.1`; API falsa del servicio de cuentas para desarrollo |
 | 2026-09-21 | v2.2: Jira reemplaza a GitHub Projects como tablero, como pide el curso. Corregir una sesión (`PUT /sesiones/{id}`) sigue el mismo camino de recálculo que registrarla o eliminarla |
+| 2026-09-22 | v2.3: el profesor aprobó `spring-security-crypto` (DEC-07, D8) |
