@@ -1056,8 +1056,8 @@ git push
 ```
 
 - En `git status` deben aparecer solo archivos de `frontend/`. Si aparece `node_modules/` o `dist/`, no sigas y pregunta: el `.gitignore` debería excluirlos.
-- Luego abre el pull request en GitHub (**Compare & pull request**, base `main`). El título empieza con la clave de tu tarjeta de T2 en Jira, por ejemplo `GR-14 T2 y T4: base del frontend, login y registro`. Pide la revisión de Rances y, en "Cómo probarlo", pega los pasos de la sección 6.
-- En Jira, pasa tus tarjetas (T2, H1, H2 y H3) a **En revisión**; cuando se una el PR, a **Listo** ([guía de Jira](JIRA.md) §7).
+- Luego abre el pull request en GitHub (**Compare & pull request**, base `main`). El título empieza con la clave de tu tarjeta de T2 en Jira: `GR-45 T2 y T4: base del frontend, login y registro`. Pide la revisión de Rances y, en "Cómo probarlo", pega los pasos de la sección 6.
+- En Jira, pasa tus tarjetas (`GR-45` T2 y `GR-8` a `GR-10`, H1 a H3) a **En revisión**; cuando se una el PR, a **Listo** ([guía de Jira](JIRA.md) §7).
 - En el mismo PR, marca en el README la casilla de T2. Las de H1 a H3 se marcan cuando también esté la API de Rances.
 
 ## 9. Mientras esperas la revisión

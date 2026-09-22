@@ -18,7 +18,7 @@ Como el curso ya dio todas las clases, el proyecto deja de ir por cortes: se con
 
 | Entrega | Qué pide el profesor | Cómo lo cumplimos |
 |---|---|---|
-| **Sprint 2 · miércoles 23 de septiembre** | Crear una cuenta en Jira y, desde esta semana, mantener ahí los avances | Proyecto `GymRutine` en Jira con el backlog completo y los tres sprints ([guía de Jira](docs/guias/JIRA.md)) |
+| **Sprint 2 · miércoles 23 de septiembre** | Crear una cuenta en Jira y, desde esta semana, mantener ahí los avances | Proyecto `GymRutine` en [Jira](https://gymrutine-uis.atlassian.net/browse/GR) con el backlog completo y los tres sprints ([guía de Jira](docs/guias/JIRA.md)) |
 | **Sprint 2 · miércoles 23 de septiembre** | Diseño de la base de datos | [MODELO-DATOS.md](docs/MODELO-DATOS.md): diagrama entidad-relación de MySQL, modelo de documentos de MongoDB y reglas |
 | **Sprint 2 · miércoles 23 de septiembre** | Repositorio con Git | Este repositorio, con ramas por tarea y pull requests revisados |
 | **Sprints 3 y 4 · viernes 9 de octubre** | Sustentar el proyecto mostrando el desarrollo del login | Historias H1 a H3: la API de Rances y las pantallas de Javier |
@@ -293,7 +293,7 @@ Usamos Scrum, la metodología del curso (temario §4), con los sprints del curso
 **Artefactos:**
 
 - **Jira es el tablero del equipo** ([guía de Jira](docs/guias/JIRA.md)). El Product Backlog son las 24 historias de [HISTORIAS.md](docs/HISTORIAS.md), cada una en su épica, más las tareas técnicas de este plan. Cada sprint de Jira coincide con uno de este plan. Columnas: **Por hacer → En curso → En revisión → Listo**. Los errores se registran como *Bug*.
-- **Trazabilidad:** el título de cada pull request empieza con la clave de Jira de lo que resuelve (`GR-35 T6 API de rutinas`). La tarjeta pasa a *En revisión* al abrir el PR y a *Listo* al unirlo. Al cerrar cada sprint se guardan capturas del tablero y del informe del sprint para [EVIDENCIAS.md](EVIDENCIAS.md).
+- **Trazabilidad:** el título de cada pull request empieza con la clave de Jira de lo que resuelve (`GR-34 T6: API de rutinas`). La tarjeta pasa a *En revisión* al abrir el PR y a *Listo* al unirlo. Al cerrar cada sprint se guardan capturas del tablero y del informe del sprint para [EVIDENCIAS.md](EVIDENCIAS.md).
 - **Incremento:** `main` al cierre de cada sprint, marcado con la etiqueta `sprint-N`.
 
 ### Retrospectivas

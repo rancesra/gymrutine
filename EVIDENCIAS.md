@@ -1,7 +1,7 @@
 # Evidencias de participación y trazabilidad — GymRutine
 
 **Entornos de Programación (24542)** · Universidad Industrial de Santander · **Entrega final: viernes 9 de octubre de 2026**
-**Repositorio:** https://github.com/rancesra/gymrutine · **Jira:** proyecto `GR` (el enlace se agrega al crearlo)
+**Repositorio:** https://github.com/rancesra/gymrutine · **Jira:** [gymrutine-uis.atlassian.net](https://gymrutine-uis.atlassian.net/browse/GR), espacio `GymRutine`, clave `GR`
 
 El curso pide adjuntar en el repositorio las **evidencias de participación de cada integrante en el software** y la **trazabilidad del avance del proyecto en Jira**. Este documento las reúne.
 
@@ -59,34 +59,34 @@ Además, `backlog.png`: el backlog con las épicas, al inicio del proyecto.
 
 ### 3.2 De la historia al código
 
-Cada historia tiene su tarjeta en Jira. El título de cada pull request empieza con la clave de esa tarjeta ([guía de git](GUIA-GIT.md) §5), así que se puede seguir cualquier historia desde Jira hasta el código.
+Cada historia tiene su tarjeta en Jira; la clave abre la tarjeta (hay que tener acceso al sitio). El título de cada pull request empieza con la clave de esa tarjeta ([guía de git](GUIA-GIT.md) §5), así que se puede seguir cualquier historia desde Jira hasta el código.
 
 | Historia | Responsable | Tarjeta de Jira | Pull request | Terminada en el sprint |
 |---|---|---|---|---|
-| H1 — Crear cuenta | Rances (API) y Javier (pantalla) | | | |
-| H2 — Iniciar sesión | Rances (API) y Javier (pantalla) | | | |
-| H3 — Cerrar sesión | Rances (API) y Javier (pantalla) | | | |
-| H4 — Ver y editar mi perfil | Rances | | | |
-| H5 — Explorar el catálogo de ejercicios | Javier | | | |
-| H6 — Ver el detalle de un ejercicio | Javier | | | |
-| H7 — Crear un ejercicio propio | Javier | | | |
-| H8 — Editar un ejercicio propio | Javier | | | |
-| H9 — Eliminar un ejercicio propio | Javier | | | |
-| H10 — Crear una rutina | Javier | | | |
-| H11 — Ver mis rutinas | Javier | | | |
-| H12 — Editar una rutina | Javier | | | |
-| H13 — Eliminar una rutina | Javier | | | |
-| H14 — Registrar una sesión de entrenamiento | Santiago | | | |
-| H15 — Ver el historial de sesiones | Santiago | | | |
-| H16 — Ver el detalle de una sesión | Santiago | | | |
-| H17 — Eliminar una sesión | Santiago | | | |
-| H18 — Detección automática de récords personales | Santiago | | | |
-| H19 — Ver mis récords personales | Santiago (API) y Rances (pantalla) | | | |
-| H20 — Ver el progreso de un ejercicio | Santiago (API) y Javier (pantalla) | | | |
-| H21 — Registrar mi peso corporal | Rances | | | |
-| H22 — Ver la evolución de mi peso corporal | Rances | | | |
-| H23 — Editar una sesión | Santiago | | | |
-| H24 — Corregir un registro de peso | Rances | | | |
+| H1 — Crear cuenta | Rances (API) y Javier (pantalla) | [GR-8](https://gymrutine-uis.atlassian.net/browse/GR-8) | | |
+| H2 — Iniciar sesión | Rances (API) y Javier (pantalla) | [GR-9](https://gymrutine-uis.atlassian.net/browse/GR-9) | | |
+| H3 — Cerrar sesión | Rances (API) y Javier (pantalla) | [GR-10](https://gymrutine-uis.atlassian.net/browse/GR-10) | | |
+| H4 — Ver y editar mi perfil | Rances | [GR-11](https://gymrutine-uis.atlassian.net/browse/GR-11) | | |
+| H5 — Explorar el catálogo de ejercicios | Javier | [GR-12](https://gymrutine-uis.atlassian.net/browse/GR-12) | | |
+| H6 — Ver el detalle de un ejercicio | Javier | [GR-13](https://gymrutine-uis.atlassian.net/browse/GR-13) | | |
+| H7 — Crear un ejercicio propio | Javier | [GR-14](https://gymrutine-uis.atlassian.net/browse/GR-14) | | |
+| H8 — Editar un ejercicio propio | Javier | [GR-15](https://gymrutine-uis.atlassian.net/browse/GR-15) | | |
+| H9 — Eliminar un ejercicio propio | Javier | [GR-16](https://gymrutine-uis.atlassian.net/browse/GR-16) | | |
+| H10 — Crear una rutina | Javier | [GR-17](https://gymrutine-uis.atlassian.net/browse/GR-17) | | |
+| H11 — Ver mis rutinas | Javier | [GR-18](https://gymrutine-uis.atlassian.net/browse/GR-18) | | |
+| H12 — Editar una rutina | Javier | [GR-19](https://gymrutine-uis.atlassian.net/browse/GR-19) | | |
+| H13 — Eliminar una rutina | Javier | [GR-20](https://gymrutine-uis.atlassian.net/browse/GR-20) | | |
+| H14 — Registrar una sesión de entrenamiento | Santiago | [GR-21](https://gymrutine-uis.atlassian.net/browse/GR-21) | | |
+| H15 — Ver el historial de sesiones | Santiago | [GR-22](https://gymrutine-uis.atlassian.net/browse/GR-22) | | |
+| H16 — Ver el detalle de una sesión | Santiago | [GR-23](https://gymrutine-uis.atlassian.net/browse/GR-23) | | |
+| H17 — Eliminar una sesión | Santiago | [GR-24](https://gymrutine-uis.atlassian.net/browse/GR-24) | | |
+| H18 — Detección automática de récords personales | Santiago | [GR-25](https://gymrutine-uis.atlassian.net/browse/GR-25) | | |
+| H19 — Ver mis récords personales | Santiago (API) y Rances (pantalla) | [GR-26](https://gymrutine-uis.atlassian.net/browse/GR-26) | | |
+| H20 — Ver el progreso de un ejercicio | Santiago (API) y Javier (pantalla) | [GR-27](https://gymrutine-uis.atlassian.net/browse/GR-27) | | |
+| H21 — Registrar mi peso corporal | Rances | [GR-28](https://gymrutine-uis.atlassian.net/browse/GR-28) | | |
+| H22 — Ver la evolución de mi peso corporal | Rances | [GR-29](https://gymrutine-uis.atlassian.net/browse/GR-29) | | |
+| H23 — Editar una sesión | Santiago | [GR-30](https://gymrutine-uis.atlassian.net/browse/GR-30) | | |
+| H24 — Corregir un registro de peso | Rances | [GR-31](https://gymrutine-uis.atlassian.net/browse/GR-31) | | |
 
 ## 4. Capturas de la aplicación
 

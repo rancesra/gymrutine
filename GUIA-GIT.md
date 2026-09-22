@@ -176,7 +176,7 @@ git push
 
 1. Entra a https://github.com/rancesra/gymrutine. Arriba aparece un aviso con tu rama y el botón **Compare & pull request**. Si no aparece, ve a la pestaña **Pull requests → New pull request**.
 2. Revisa que diga **base: `main` ← compare: `tu-rama`**.
-3. **Título:** la clave de la tarjeta de Jira, la tarea y qué entrega. Por ejemplo, `GR-35 T6: API de rutinas`. La clave une el PR con su tarjeta: es la trazabilidad que pide el curso ([guía de Jira](docs/guias/JIRA.md)).
+3. **Título:** la clave de la tarjeta de Jira, la tarea y qué entrega. Por ejemplo, `GR-34 T6: API de rutinas`. La clave une el PR con su tarjeta: es la trazabilidad que pide el curso ([guía de Jira](docs/guias/JIRA.md)).
 4. **Descripción:** usa esta plantilla.
 
    ```markdown
@@ -188,7 +188,7 @@ git push
    2. ...
 
    ## Jira
-   GR-35 (T6 API de rutinas), GR-19 (H10 Crear una rutina)
+   GR-34 (T6 API de rutinas), GR-17 (H10 Crear una rutina)
    ```
 
    Al abrir el PR, pasa sus tarjetas a **En revisión** en Jira; al unirlo, a **Listo**.

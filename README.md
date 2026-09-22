@@ -55,7 +55,7 @@ graph LR
 | [Reglas de las pantallas](docs/mockup/README.md) | Ruta, datos, validaciones y estados de cada pantalla |
 | [Guía de inicio](GUIA-INICIO.md) | Instalar las herramientas, crear las bases de datos y arrancar todo (Windows y macOS) |
 | [Guía de git](GUIA-GIT.md) | Ramas, pull requests, conflictos y protección de `main` |
-| [Guía de Jira](docs/guias/JIRA.md) | Crear el proyecto, importar el backlog y llevar los sprints en Jira |
+| [Guía de Jira](docs/guias/JIRA.md) | Crear el proyecto, importar el backlog y llevar los sprints en Jira. El tablero está en [gymrutine-uis.atlassian.net](https://gymrutine-uis.atlassian.net/browse/GR) |
 | [Guía de T2](docs/guias/T2-FRONTEND.md) | Paso a paso de la base del frontend y las pantallas de acceso, con el código probado (Javier) |
 | [Guía de T3](docs/guias/T3-NODE.md) | Paso a paso de la base del servicio de entrenamiento, con el código probado (Santiago) |
 | [Backlog para Jira](docs/guias/jira-backlog.csv) | Las 24 historias y las tareas del plan, listas para importar en Jira |
@@ -96,7 +96,7 @@ Son cinco piezas. Las dos bases de datos arrancan solas con el computador; las o
 - [x] Documentación: plan, informe, historias, modelo de datos, arquitectura, contrato, mockup en HTML y guías
 - [x] Diseño de la base de datos ([MODELO-DATOS.md](docs/MODELO-DATOS.md))
 - [x] Repositorio con Git
-- [ ] Proyecto en Jira con el backlog y los sprints
+- [x] Proyecto en [Jira](https://gymrutine-uis.atlassian.net/browse/GR) con el backlog y los sprints
 - [ ] T1 Base del servicio de cuentas (Spring Boot + MySQL)
 - [ ] T2 Base del frontend (React)
 - [ ] T3 Base del servicio de entrenamiento (Node + MongoDB)

@@ -549,8 +549,8 @@ git push
 ```
 
 - En `git status` deben aparecer `package.json`, `package-lock.json`, `.env.ejemplo` y `src/`. **Si aparece `.env` o `node_modules/`, no sigas y pregunta:** el `.env` es tuyo y no se sube.
-- Luego abre el pull request en GitHub (**Compare & pull request**, base `main`). El título empieza con la clave de tu tarjeta de T3 en Jira, por ejemplo `GR-15 T3: base del servicio de entrenamiento`. Pide la revisión de Rances y, en "Cómo probarlo", pega las pruebas del paso 6.
-- En Jira, pasa tu tarjeta de T3 a **En revisión**; cuando se una el PR, a **Listo** ([guía de Jira](JIRA.md) §7).
+- Luego abre el pull request en GitHub (**Compare & pull request**, base `main`). El título empieza con la clave de tu tarjeta de T3 en Jira: `GR-46 T3: base del servicio de entrenamiento`. Pide la revisión de Rances y, en "Cómo probarlo", pega las pruebas del paso 6.
+- En Jira, pasa tu tarjeta de T3 (`GR-46`) a **En revisión**; cuando se una el PR, a **Listo** ([guía de Jira](JIRA.md) §7).
 - En el mismo PR, marca en el README la casilla de T3.
 
 ## 9. Lo que sigue: sprint 3
