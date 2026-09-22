@@ -99,7 +99,7 @@ Son cinco piezas. Las dos bases de datos arrancan solas con el computador; las o
 - [x] Proyecto en [Jira](https://gymrutine-uis.atlassian.net/browse/GR) con el backlog y los sprints
 - [ ] T1 Base del servicio de cuentas (Spring Boot + MySQL)
 - [ ] T2 Base del frontend (React)
-- [ ] T3 Base del servicio de entrenamiento (Node + MongoDB)
+- [x] T3 Base del servicio de entrenamiento (Node + MongoDB)
 - [ ] H1 — Crear cuenta
 - [ ] H2 — Iniciar sesión
 - [ ] H3 — Cerrar sesión
