@@ -4,7 +4,7 @@
 **Entregas:** sprint 2 el 23 de septiembre de 2026 (Jira, diseño de la base de datos y repositorio) · **proyecto final el 9 de octubre de 2026** (login, un CRUD por integrante y evidencias)
 **Equipo:** Rances Ramírez (Product Owner y coordinador) · Javier · Santiago
 **Repositorio:** https://github.com/rancesra/gymrutine
-**Versión:** 3.1 · **Fecha:** 2026-09-21
+**Versión:** 3.2 · **Fecha:** 2026-09-22
 
 Este documento presenta el proyecto: qué problema resuelve, para quién, qué incluye y qué no, y qué decisiones se tomaron. El detalle técnico está en los documentos de la sección 14.
 
@@ -175,7 +175,7 @@ El diagrama entidad-relación, el diccionario de datos y la regla exacta de réc
 - **Chart.js 4.5.1** para las gráficas. Solo visualiza y no tiene lógica de negocio. Dibujar gráficas a mano no es evaluable.
 - **spring-security-crypto**, solo para cifrar contraseñas con BCrypt. Guardarlas en texto es inaceptable, y programar el cifrado a mano es propenso a errores. No activa Spring Security.
 
-Quedan por confirmar con el profesor, junto con React Router (decisión D8).
+El profesor ya aprobó spring-security-crypto. Chart.js queda por confirmar, junto con React Router (decisión D8).
 
 ### Un solo proyecto para todo el curso
 
@@ -259,7 +259,7 @@ El curso ya dio todas las clases, así que el proyecto **deja de ir por cortes**
 | ID | Decisión | Por qué importa | Fecha límite |
 |---|---|---|---|
 | D6 | Identidad visual: aprobar la propuesta del [mockup HTML](mockup/mockup.html) (colores, tipografía y logo) o usar el template que se vea en clase (§10.2) | Define los estilos de la base del frontend | Antes de cerrar T2 (sprint 2) |
-| D8 | Confirmar con el profesor las tres piezas que no están en el temario: React Router, Chart.js y spring-security-crypto | Si no se aprueba alguna, cambian la navegación, las gráficas o el cifrado de contraseñas | Entrega del 23 de septiembre |
+| D8 | Confirmar con el profesor las dos piezas que faltan de las que no están en el temario: React Router y Chart.js (spring-security-crypto ya está aprobado) | Si no se aprueba alguna, cambian la navegación o las gráficas | Entrega del 23 de septiembre |
 | D9 | Confirmar los roles de Scrum (Product Owner y rotación de Scrum Master) | Queda registrado en el plan | En la planeación del sprint 2 |
 
 ## 14. Documentos del proyecto
@@ -288,3 +288,4 @@ El curso ya dio todas las clases, así que el proyecto **deja de ir por cortes**
 | 2026-09-15 | v2.1: frontend con React (D10); mockup en HTML con una propuesta visual para D6; D8 incluye confirmar React en este corte; MySQL referenciado al temario (§6) |
 | 2026-09-21 | v3.0: el proyecto une los cortes y se entrega completo el 3 de octubre (D7). Arquitectura de dos servicios con Node.js y MongoDB para el entrenamiento (D11) y nuevo reparto (D12) |
 | 2026-09-21 | v3.1: fechas del curso: sprint 2 el 23 de septiembre (Jira, diseño de la base de datos y repositorio) y final el 9 de octubre (D7). Un CRUD por integrante (D13): editar sesiones y registros de peso. Jira como tablero en lugar de GitHub Projects (D14) |
+| 2026-09-22 | v3.2: el profesor aprobó spring-security-crypto; en D8 quedan React Router y Chart.js |

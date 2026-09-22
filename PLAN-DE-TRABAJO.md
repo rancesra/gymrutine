@@ -506,7 +506,7 @@ Cada proyecto vive en su carpeta (`backend-spring/`, `backend-node/` y `frontend
 - **`spring-security-crypto`** agregado a mano en el `pom.xml`, sin versión (la maneja Spring Boot). Solo se usa `BCryptPasswordEncoder`; **no** se agrega `spring-boot-starter-security`.
 - **Email normalizado** (sin espacios y en minúsculas) antes de buscar o guardar. **Contraseña** de 8 a 72 caracteres y máximo 72 bytes.
 - **Token:** `UUID.randomUUID()`, que vence a los 7 días. Al iniciar sesión se borran los tokens vencidos de ese usuario.
-- **Interceptor:** protege `/api/**` excepto `/api/auth/registro`, `/api/auth/login` y `/api/referencias`. Lee `Authorization: Bearer <token>`, busca un token vigente y guarda el id del usuario en el atributo de la petición `usuarioId`. Los controllers lo reciben con `@RequestAttribute("usuarioId") Long usuarioId`.
+- **Interceptor:** protege `/api/**` excepto `/api/auth/registro`, `/api/auth/login` y `/api/referencias`. Lee `Authorization: Bearer <token>`, busca un token vigente y guarda el id del usuario en el atributo de la petición `usuarioId` (y el token en `token`, para cerrar sesión). Los controllers lo reciben con `@RequestAttribute("usuarioId") Long usuarioId`.
 - **`GET /api/usuarios/me` es también la puerta del servicio de entrenamiento:** Node lo llama en cada petición para validar el token, así que debe responder rápido y no cargar más datos de los necesarios.
 
 **Cómo verificar**
