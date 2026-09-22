@@ -1,10 +1,12 @@
 # Historias de usuario — GymRutine
 
-**Versión:** 1.1
+**Versión:** 1.2
 **Fecha:** 2026-09-21
 **Formato:** Como [rol], quiero [funcionalidad], para [beneficio], con criterios Dado / Cuando / Entonces
 
 Este es el **Product Backlog** del proyecto. Cada historia tiene sus criterios de aceptación: una historia está terminada cuando cumple todos sus criterios y la [definición de terminado](../PLAN-DE-TRABAJO.md#definición-de-terminado).
+
+Las 24 historias están también en **Jira**, cada una en su épica y en su sprint ([guía de Jira](guias/JIRA.md)). Allí se sigue el avance; este documento guarda el texto acordado de cada historia.
 
 **Roles:**
 
@@ -38,6 +40,7 @@ flowchart LR
         direction TB
         CU8([Registrar sesión de entrenamiento])
         CU10([Consultar historial de sesiones])
+        CU16([Editar sesión])
         CU11([Eliminar sesión])
     end
     subgraph G5["Progreso"]
@@ -46,6 +49,7 @@ flowchart LR
         CU13([Ver progreso por ejercicio])
         CU14([Registrar peso corporal])
         CU15([Ver evolución del peso])
+        CU17([Corregir registro de peso])
     end
     CU9([Detectar récords personales])
 
@@ -55,21 +59,30 @@ flowchart LR
     U --- G4
     U --- G5
     CU8 -. incluye .-> CU9
+    CU16 -. incluye .-> CU9
     CU11 -. incluye .-> CU9
 ```
 
-**Cómo leerlo:** una línea de un actor hacia un grupo significa que ese actor participa en todos los casos de uso del grupo. Registrar y eliminar una sesión **incluyen** la detección de récords: el usuario no la ejecuta por separado, sino que ocurre siempre que se registra o elimina una sesión.
+**Cómo leerlo:** una línea de un actor hacia un grupo significa que ese actor participa en todos los casos de uso del grupo. Registrar, editar y eliminar una sesión **incluyen** la detección de récords: el usuario no la ejecuta por separado, sino que ocurre siempre que se registra, edita o elimina una sesión.
 
 ## Mapa del backlog
 
 | Épica | Historias | Responsable | Sprint en que se termina |
 |---|---|---|---|
-| A. Cuenta y perfil | H1 · H2 · H3 · H4 | Rances (API y perfil) y Javier (login y registro) | H1–H3 en el 1 (entrega del 22 de septiembre); H4 en el 2 |
-| B. Catálogo de ejercicios | H5 · H6 · H7 · H8 · H9 | Javier | 2 |
-| C. Rutinas | H10 · H11 · H12 · H13 | Javier | 3 |
-| D. Entrenamiento | H14 · H15 · H16 · H17 | Santiago | 3 |
-| E. Récords y progreso | H18 · H19 · H20 | Santiago (API); Rances y Javier (pantallas) | H18 en el 3; H19 y H20 en el 4 |
-| F. Peso corporal | H21 · H22 | Rances | 3 |
+| A. Cuenta y perfil | H1 · H2 · H3 · H4 | Rances (API y perfil) y Javier (login y registro) | H1–H3 en el 2 (entrega del 23 de septiembre); H4 en el 3 |
+| B. Catálogo de ejercicios | H5 · H6 · H7 · H8 · H9 | Javier | 3 |
+| C. Rutinas: **CRUD de Javier** | H10 · H11 · H12 · H13 | Javier | 4 |
+| D. Entrenamiento: **CRUD de Santiago** | H14 · H15 · H16 · H17 · H23 | Santiago | 4 |
+| E. Récords y progreso | H18 · H19 · H20 | Santiago (API); Rances y Javier (pantallas) | 4 |
+| F. Peso corporal: **CRUD de Rances** | H21 · H22 · H24 | Rances | 3 |
+
+**Un CRUD por integrante,** como pide el curso para la entrega final:
+
+| Integrante | CRUD | Crear | Leer | Editar | Eliminar |
+|---|---|---|---|---|---|
+| Javier | Rutinas | H10 | H11 | H12 | H13 |
+| Rances | Peso corporal | H21 | H22 | H24 | H22 |
+| Santiago | Sesiones de entrenamiento | H14 | H15 y H16 | H23 | H17 |
 
 El detalle de qué se hace en cada sprint y en qué orden está en el [plan de trabajo](../PLAN-DE-TRABAJO.md).
 
@@ -79,7 +92,7 @@ El detalle de qué se hace en cada sprint y en qué orden está en el [plan de t
 
 ### H1 — Crear cuenta
 
-**Prioridad:** Alta · **Sprint:** 1 · **Responsable:** Rances (API) y Javier (pantalla) · **Endpoints:** `GET /referencias`, `POST /auth/registro`
+**Prioridad:** Alta · **Sprint:** 2 · **Responsable:** Rances (API) y Javier (pantalla) · **Endpoints:** `GET /referencias`, `POST /auth/registro`
 
 **Como** visitante, **quiero** crear una cuenta con mi nombre, email, contraseña y objetivo, **para** guardar mis rutinas y mi progreso.
 
@@ -92,7 +105,7 @@ El detalle de qué se hace en cada sprint y en qué orden está en el [plan de t
 
 ### H2 — Iniciar sesión
 
-**Prioridad:** Alta · **Sprint:** 1 · **Responsable:** Rances (API) y Javier (pantalla) · **Endpoints:** `POST /auth/login`
+**Prioridad:** Alta · **Sprint:** 2 · **Responsable:** Rances (API) y Javier (pantalla) · **Endpoints:** `POST /auth/login`
 
 **Como** visitante con cuenta, **quiero** iniciar sesión con mi email y contraseña, **para** entrar a mis datos desde cualquier dispositivo.
 
@@ -104,7 +117,7 @@ El detalle de qué se hace en cada sprint y en qué orden está en el [plan de t
 
 ### H3 — Cerrar sesión
 
-**Prioridad:** Alta · **Sprint:** 1 · **Responsable:** Rances (API) y Javier (pantalla) · **Endpoints:** `POST /auth/logout`
+**Prioridad:** Alta · **Sprint:** 2 · **Responsable:** Rances (API) y Javier (pantalla) · **Endpoints:** `POST /auth/logout`
 
 **Como** usuario, **quiero** cerrar sesión, **para** que nadie use mi cuenta en un dispositivo compartido.
 
@@ -115,7 +128,7 @@ El detalle de qué se hace en cada sprint y en qué orden está en el [plan de t
 
 ### H4 — Ver y editar mi perfil
 
-**Prioridad:** Media · **Sprint:** 2 · **Responsable:** Rances · **Endpoints:** `GET /usuarios/me`, `PUT /usuarios/me`
+**Prioridad:** Media · **Sprint:** 3 · **Responsable:** Rances · **Endpoints:** `GET /usuarios/me`, `PUT /usuarios/me`
 
 **Como** usuario, **quiero** ver mi perfil y cambiar mi nombre y mi objetivo, **para** que las sugerencias se ajusten a lo que busco ahora.
 
@@ -132,7 +145,7 @@ El detalle de qué se hace en cada sprint y en qué orden está en el [plan de t
 
 ### H5 — Explorar el catálogo de ejercicios
 
-**Prioridad:** Alta · **Sprint:** 2 · **Responsable:** Javier · **Endpoints:** `GET /referencias`, `GET /ejercicios`
+**Prioridad:** Alta · **Sprint:** 3 · **Responsable:** Javier · **Endpoints:** `GET /referencias`, `GET /ejercicios`
 
 **Como** usuario, **quiero** explorar los ejercicios por grupo muscular y por equipo, y ver los recomendados para mi objetivo, **para** elegir qué incluir en mis rutinas.
 
@@ -146,7 +159,7 @@ El detalle de qué se hace en cada sprint y en qué orden está en el [plan de t
 
 ### H6 — Ver el detalle de un ejercicio
 
-**Prioridad:** Media · **Sprint:** 2 · **Responsable:** Javier · **Endpoints:** `GET /ejercicios/{id}`
+**Prioridad:** Media · **Sprint:** 3 · **Responsable:** Javier · **Endpoints:** `GET /ejercicios/{id}`
 
 **Como** usuario, **quiero** ver el detalle de un ejercicio, **para** saber cómo se hace antes de agregarlo a una rutina.
 
@@ -158,7 +171,7 @@ El detalle de qué se hace en cada sprint y en qué orden está en el [plan de t
 
 ### H7 — Crear un ejercicio propio
 
-**Prioridad:** Media · **Sprint:** 2 · **Responsable:** Javier · **Endpoints:** `POST /ejercicios`
+**Prioridad:** Media · **Sprint:** 3 · **Responsable:** Javier · **Endpoints:** `POST /ejercicios`
 
 **Como** usuario, **quiero** crear un ejercicio que no está en el catálogo, **para** usarlo en mis rutinas.
 
@@ -170,7 +183,7 @@ El detalle de qué se hace en cada sprint y en qué orden está en el [plan de t
 
 ### H8 — Editar un ejercicio propio
 
-**Prioridad:** Baja · **Sprint:** 2 · **Responsable:** Javier · **Endpoints:** `PUT /ejercicios/{id}`
+**Prioridad:** Baja · **Sprint:** 3 · **Responsable:** Javier · **Endpoints:** `PUT /ejercicios/{id}`
 
 **Como** usuario, **quiero** corregir los datos de un ejercicio que creé, **para** mantenerlo bien descrito.
 
@@ -182,7 +195,7 @@ El detalle de qué se hace en cada sprint y en qué orden está en el [plan de t
 
 ### H9 — Eliminar un ejercicio propio
 
-**Prioridad:** Baja · **Sprint:** 2 · **Responsable:** Javier · **Endpoints:** `DELETE /ejercicios/{id}`
+**Prioridad:** Baja · **Sprint:** 3 · **Responsable:** Javier · **Endpoints:** `DELETE /ejercicios/{id}`
 
 **Como** usuario, **quiero** eliminar un ejercicio que creé y ya no uso, **para** mantener limpio mi catálogo.
 
@@ -199,7 +212,7 @@ El detalle de qué se hace en cada sprint y en qué orden está en el [plan de t
 
 ### H10 — Crear una rutina
 
-**Prioridad:** Alta · **Sprint:** 3 · **Responsable:** Javier · **Endpoints:** `GET /referencias`, `GET /ejercicios`, `POST /rutinas`
+**Prioridad:** Alta · **Sprint:** 4 · **Responsable:** Javier · **Endpoints:** `GET /referencias`, `GET /ejercicios`, `POST /rutinas`
 
 **Como** usuario, **quiero** armar una rutina con ejercicios del catálogo y sus series y repeticiones objetivo, **para** entrenar con un plan alineado a mi objetivo.
 
@@ -214,7 +227,7 @@ El detalle de qué se hace en cada sprint y en qué orden está en el [plan de t
 
 ### H11 — Ver mis rutinas
 
-**Prioridad:** Alta · **Sprint:** 3 · **Responsable:** Javier · **Endpoints:** `GET /rutinas`, `GET /rutinas/{id}`
+**Prioridad:** Alta · **Sprint:** 4 · **Responsable:** Javier · **Endpoints:** `GET /rutinas`, `GET /rutinas/{id}`
 
 **Como** usuario, **quiero** ver mis rutinas y el detalle de cada una, **para** elegir cuál entrenar hoy.
 
@@ -227,7 +240,7 @@ El detalle de qué se hace en cada sprint y en qué orden está en el [plan de t
 
 ### H12 — Editar una rutina
 
-**Prioridad:** Media · **Sprint:** 3 · **Responsable:** Javier · **Endpoints:** `GET /rutinas/{id}`, `PUT /rutinas/{id}`
+**Prioridad:** Alta · **Sprint:** 4 · **Responsable:** Javier · **Endpoints:** `GET /rutinas/{id}`, `PUT /rutinas/{id}`
 
 **Como** usuario, **quiero** cambiar una rutina, **para** ajustarla cuando progreso o cambio de plan.
 
@@ -240,7 +253,7 @@ El detalle de qué se hace en cada sprint y en qué orden está en el [plan de t
 
 ### H13 — Eliminar una rutina
 
-**Prioridad:** Media · **Sprint:** 3 · **Responsable:** Javier · **Endpoints:** `DELETE /rutinas/{id}`
+**Prioridad:** Alta · **Sprint:** 4 · **Responsable:** Javier · **Endpoints:** `DELETE /rutinas/{id}`
 
 **Como** usuario, **quiero** eliminar una rutina que ya no uso, **para** tener a mano solo las que entreno.
 
@@ -256,7 +269,7 @@ El detalle de qué se hace en cada sprint y en qué orden está en el [plan de t
 
 ### H14 — Registrar una sesión de entrenamiento
 
-**Prioridad:** Alta · **Sprint:** 3 · **Responsable:** Santiago · **Endpoints:** `GET /rutinas/{id}`, `GET /sesiones/ultimos-registros?rutinaId=`, `POST /sesiones`
+**Prioridad:** Alta · **Sprint:** 4 · **Responsable:** Santiago · **Endpoints:** `GET /rutinas/{id}`, `GET /sesiones/ultimos-registros?rutinaId=`, `POST /sesiones`
 
 **Como** usuario, **quiero** registrar cada serie que realmente hice, con su peso y repeticiones, mientras ejecuto una rutina, **para** tener un registro exacto de mi entrenamiento.
 
@@ -273,7 +286,7 @@ El detalle de qué se hace en cada sprint y en qué orden está en el [plan de t
 
 ### H15 — Ver el historial de sesiones
 
-**Prioridad:** Alta · **Sprint:** 3 · **Responsable:** Santiago · **Endpoints:** `GET /sesiones`
+**Prioridad:** Alta · **Sprint:** 4 · **Responsable:** Santiago · **Endpoints:** `GET /sesiones`
 
 **Como** usuario, **quiero** ver mis sesiones anteriores, **para** saber cuánto y cuándo he entrenado.
 
@@ -284,7 +297,7 @@ El detalle de qué se hace en cada sprint y en qué orden está en el [plan de t
 
 ### H16 — Ver el detalle de una sesión
 
-**Prioridad:** Media · **Sprint:** 3 · **Responsable:** Santiago · **Endpoints:** `GET /sesiones/{id}`
+**Prioridad:** Alta · **Sprint:** 4 · **Responsable:** Santiago · **Endpoints:** `GET /sesiones/{id}`
 
 **Como** usuario, **quiero** ver el detalle de una sesión, **para** revisar exactamente qué hice ese día.
 
@@ -296,7 +309,7 @@ El detalle de qué se hace en cada sprint y en qué orden está en el [plan de t
 
 ### H17 — Eliminar una sesión
 
-**Prioridad:** Media · **Sprint:** 3 · **Responsable:** Santiago · **Endpoints:** `DELETE /sesiones/{id}`
+**Prioridad:** Alta · **Sprint:** 4 · **Responsable:** Santiago · **Endpoints:** `DELETE /sesiones/{id}`
 
 **Como** usuario, **quiero** eliminar una sesión que registré mal, **para** que un error de digitación no altere mi progreso ni mis récords.
 
@@ -305,23 +318,38 @@ El detalle de qué se hace en cada sprint y en qué orden está en el [plan de t
 - **Entonces** la sesión desaparece del historial, del progreso y de los récords
 - **Y** los récords de sus ejercicios se recalculan, y otra sesión puede pasar a ser récord
 
+### H23 — Editar una sesión
+
+**Prioridad:** Alta · **Sprint:** 4 · **Responsable:** Santiago · **Endpoints:** `GET /sesiones/{id}`, `PUT /sesiones/{id}`
+
+**Como** usuario, **quiero** corregir una sesión que ya registré, **para** arreglar un peso o unas repeticiones mal digitadas sin tener que registrarla de nuevo.
+
+- **Dado** que la sesión es mía
+- **Cuando** abro su detalle, elijo editar y cambio la fecha y hora de inicio, la duración, o el peso y las repeticiones de sus series
+- **Entonces** la sesión queda corregida y veo el detalle actualizado
+- **Y** puedo agregar o quitar series, pero cada ejercicio conserva al menos una
+- **Y** no puedo agregar ni quitar ejercicios: la sesión conserva los que tenía, aunque la rutina o un ejercicio se hayan eliminado después
+- **Y** se aplican las reglas de H14: de 0 a 500 kg, de 1 a 100 repeticiones, de 1 a 20 series por ejercicio y una fecha que no sea futura (400 `VALIDACION_FALLIDA`)
+- **Y** al guardar se recalculan los récords de sus ejercicios, y otra sesión puede ganar o perder un récord
+- **Y** si la sesión no existe o es de otro usuario, veo "no encontrada" (404 `SESION_NO_ENCONTRADA`)
+
 ---
 
 ## Épica E — Récords y progreso
 
 ### H18 — Detección automática de récords personales
 
-**Prioridad:** Alta · **Sprint:** 3 · **Responsable:** Santiago · **Endpoints:** `POST /sesiones`, `DELETE /sesiones/{id}` · **Regla:** [MODELO-DATOS.md](MODELO-DATOS.md) §7.1
+**Prioridad:** Alta · **Sprint:** 4 · **Responsable:** Santiago · **Endpoints:** `POST /sesiones`, `PUT /sesiones/{id}`, `DELETE /sesiones/{id}` · **Regla:** [MODELO-DATOS.md](MODELO-DATOS.md) §7.1
 
 **Como** usuario, **quiero** que el sistema detecte solo cuándo supero mi mejor marca en un ejercicio, **para** saber que estoy progresando sin revisar el historial a mano.
 
-- **Dado** que registro o elimino una sesión
+- **Dado** que registro, edito o elimino una sesión
 - **Cuando** el sistema recalcula los récords de sus ejercicios
 - **Entonces** una serie es récord si su peso supera el máximo que había levantado antes en ese ejercicio, según la fecha de las sesiones
 - **Y** la primera vez que hago un ejercicio con más de 0 kg cuenta como récord
 - **Y** igualar el récord no es récord, y una serie con 0 kg nunca lo es
 - **Y** en cada sesión hay como máximo un récord por ejercicio: la primera serie con el peso más alto
-- **Y** si registro una sesión con fecha pasada, los récords de las sesiones posteriores se ajustan
+- **Y** si registro una sesión con fecha pasada, o le cambio la fecha o el peso al editarla, los récords de las sesiones posteriores se ajustan
 - **Y** al terminar de guardar veo "¡Nuevo récord!" en los ejercicios donde lo logré
 
 ### H19 — Ver mis récords personales
@@ -356,7 +384,7 @@ El detalle de qué se hace en cada sprint y en qué orden está en el [plan de t
 
 ### H21 — Registrar mi peso corporal
 
-**Prioridad:** Media · **Sprint:** 3 · **Responsable:** Rances · **Endpoints:** `POST /peso-corporal`
+**Prioridad:** Alta · **Sprint:** 3 · **Responsable:** Rances · **Endpoints:** `POST /peso-corporal`
 
 **Como** usuario, **quiero** registrar mi peso corporal, **para** medir mi progreso aunque mi objetivo no sea levantar más peso.
 
@@ -367,7 +395,7 @@ El detalle de qué se hace en cada sprint y en qué orden está en el [plan de t
 
 ### H22 — Ver la evolución de mi peso corporal
 
-**Prioridad:** Media · **Sprint:** 3 · **Responsable:** Rances · **Endpoints:** `GET /peso-corporal`, `DELETE /peso-corporal/{id}`
+**Prioridad:** Alta · **Sprint:** 3 · **Responsable:** Rances · **Endpoints:** `GET /peso-corporal`, `DELETE /peso-corporal/{id}`
 
 **Como** usuario, **quiero** ver cómo cambia mi peso en el tiempo, **para** saber si voy hacia mi objetivo.
 
@@ -378,18 +406,32 @@ El detalle de qué se hace en cada sprint y en qué orden está en el [plan de t
 - **Y** con un solo registro, la gráfica muestra el punto sin errores
 - **Y** si no tengo registros, veo una invitación a registrar el primero
 
+### H24 — Corregir un registro de peso
+
+**Prioridad:** Alta · **Sprint:** 3 · **Responsable:** Rances · **Endpoints:** `PUT /peso-corporal/{id}`
+
+**Como** usuario, **quiero** corregir un registro de peso, **para** arreglar un error sin tener que borrarlo y registrarlo de nuevo.
+
+- **Dado** que el registro es mío
+- **Cuando** elijo editarlo, cambio su peso o su fecha y guardo
+- **Entonces** el registro queda corregido y la gráfica y la lista se actualizan
+- **Y** se aplican las reglas de H21: entre 20 y 350 kg y una fecha que no sea futura (400 `VALIDACION_FALLIDA`)
+- **Y** si ya tengo otro registro en la fecha nueva, veo un aviso (409 `PESO_YA_REGISTRADO`)
+- **Y** si el registro no existe o es de otro usuario, veo "no encontrado" (404 `REGISTRO_PESO_NO_ENCONTRADO`)
+
 ---
 
 ## Priorización por sprint
 
 | Sprint | Fechas | Historias que se terminan | Qué más se entrega |
 |---|---|---|---|
-| 1 | lun 21 – mar 22 sep | H1–H3 | Las bases de los tres proyectos y las dos bases de datos. **Entrega 1: login y base de datos** |
-| 2 | mié 23 – sáb 26 sep | H4–H9 | API de rutinas, de sesiones y de peso corporal; algoritmo de récords con pruebas |
-| 3 | dom 27 – mié 30 sep | H10–H18, H21, H22 | El sprint con más funcionalidad visible |
-| 4 | jue 1 – sáb 3 oct | H19, H20 | Inicio, datos de demostración, pulido en celular y **entrega final (3 de octubre)** |
+| 2 | lun 21 – mié 23 sep | H1–H3 | Jira con el backlog, diseño de la base de datos, repositorio y las bases de los tres proyectos. **Entrega del sprint 2 (23 de septiembre)** |
+| 3 | jue 24 – mar 29 sep | H4–H9, H21, H22, H24 | Las APIs de catálogo, rutinas, sesiones, récords y peso corporal; algoritmo de récords con pruebas |
+| 4 | mié 30 sep – vie 9 oct | H10–H20, H23 | Las pantallas de punta a punta, inicio, datos de demostración, evidencias y **entrega final (9 de octubre)** |
 
-**Por qué este orden:** el login y las bases de datos se entregan primero porque todo depende de ellos. El sprint 3 concentra lo que se ve. El sprint 4 tiene pocas historias a propósito: deja margen para lo que se atrase y para preparar la demostración. Qué es imprescindible y qué es "si da el tiempo" está en el [plan de trabajo](../PLAN-DE-TRABAJO.md#prioridades-para-llegar-al-3-de-octubre).
+**La numeración sigue la del curso:** el sprint 2 se entrega el 23 de septiembre y los sprints 3 y 4, el 9 de octubre.
+
+**Por qué este orden:** el login y las bases de datos van primero porque todo depende de ellos. En el sprint 3 se hacen las APIs, que los compañeros necesitan para sus pantallas. El sprint 4 junta las pantallas y deja del 6 al 8 de octubre sin funcionalidades nuevas, para corregir, reunir las evidencias y ensayar. Qué es imprescindible y qué es "si da el tiempo" está en el [plan de trabajo](../PLAN-DE-TRABAJO.md#prioridades-para-llegar-al-9-de-octubre).
 
 ## Fuera del backlog (trabajo futuro)
 
@@ -409,3 +451,4 @@ El detalle de qué se hace en cada sprint y en qué orden está en el [plan de t
 |---|---|
 | 2026-09-14 | v1.0: versión inicial con 22 historias en 6 épicas |
 | 2026-09-21 | v1.1: calendario hasta la entrega final del 3 de octubre, nuevos responsables y ruta de los últimos registros en el servicio de entrenamiento. Los criterios de aceptación no cambian |
+| 2026-09-21 | v1.2: fechas del curso (sprint 2 el 23 de septiembre; final el 9 de octubre) y sprints renumerados. Un CRUD por integrante: nuevas historias **H23** (editar una sesión) y **H24** (corregir un registro de peso); H18 recalcula también al editar. Las historias de los tres CRUD pasan a prioridad alta. El backlog vive también en Jira |

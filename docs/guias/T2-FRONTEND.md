@@ -1,8 +1,8 @@
 # Guía de T2 — Base del frontend y pantallas de acceso
 
-**Para:** Javier · **Tareas:** T2 (base del frontend) y las pantallas de T4 que te tocan: P1 iniciar sesión, P2 crear cuenta y cerrar sesión desde el perfil · **Rama:** `t2-base-react` · **Entrega 1:** martes 22 de septiembre
+**Para:** Javier · **Tareas:** T2 (base del frontend) y las pantallas de T4 que te tocan: P1 iniciar sesión, P2 crear cuenta y cerrar sesión desde el perfil · **Rama:** `t2-base-react` · **Entrega:** la del sprint 2, el miércoles 23 de septiembre
 
-Al terminar tendrás el frontend de React funcionando: las 14 rutas del mockup con su navegación, el cliente de la API, la sesión y las pantallas para crear una cuenta, iniciar sesión y cerrarla. Es el punto 4 de la demostración de la entrega 1 ([plan de trabajo](../../PLAN-DE-TRABAJO.md#entrega-1--martes-22-de-septiembre-login-y-base-de-datos)).
+Al terminar tendrás el frontend de React funcionando: las 14 rutas del mockup con su navegación, el cliente de la API, la sesión y las pantallas para crear una cuenta, iniciar sesión y cerrarla. En la presentación del miércoles 23 muestras el repositorio (punto 3) y el login funcionando (punto 5) ([plan de trabajo](../../PLAN-DE-TRABAJO.md#entrega-del-sprint-2--miércoles-23-de-septiembre)).
 
 **Todo el código de esta guía ya se probó** de punta a punta: login, registro, errores, sin conexión y vista de celular. Si copias cada archivo tal cual, funciona.
 
@@ -12,7 +12,7 @@ Los comandos son para **PowerShell**, en la terminal de VS Code. En macOS son lo
 
 ## 1. Antes de empezar
 
-1. Necesitas **Git, Node.js 24 y VS Code** ([guía de inicio](../../GUIA-INICIO.md) §1). Para esta tarea todavía no hacen falta MySQL ni MongoDB.
+1. Necesitas **Git, Node.js 24 y VS Code** ([guía de inicio](../../GUIA-INICIO.md) §1), y haber aceptado las invitaciones de GitHub y de Jira (§0). Para esta tarea todavía no hacen falta MySQL ni MongoDB.
 2. Comprueba Node.js y npm:
 
    ```powershell
@@ -1037,7 +1037,7 @@ Cuando Rances avise en el grupo que T1 y la API de T4 están en `main`:
 3. Arranca el servicio de cuentas ([guía de inicio](../../GUIA-INICIO.md) §5.1) **en lugar de** la API falsa: los dos usan el puerto 8080, así que no pueden estar encendidos a la vez.
 4. Repite las pruebas del paso 6. La usuaria Ana no existe en la base real: primero crea una cuenta.
 
-Si no alcanzas a instalar MySQL hoy, esta prueba se hace mañana temprano en el computador de Rances, al unir los pull requests (cronograma del plan).
+Si no alcanzas a instalar MySQL, esta prueba se hace el miércoles temprano en el computador de Rances, al unir los pull requests (cronograma del plan).
 
 ## 8. Subir tu trabajo
 
@@ -1056,14 +1056,16 @@ git push
 ```
 
 - En `git status` deben aparecer solo archivos de `frontend/`. Si aparece `node_modules/` o `dist/`, no sigas y pregunta: el `.gitignore` debería excluirlos.
-- Luego abre el pull request en GitHub (**Compare & pull request**, base `main`) con el título `T2 y T4: base del frontend, login y registro` y pide la revisión de Rances. En "Cómo probarlo", pega los pasos de la sección 6.
+- Luego abre el pull request en GitHub (**Compare & pull request**, base `main`). El título empieza con la clave de tu tarjeta de T2 en Jira, por ejemplo `GR-14 T2 y T4: base del frontend, login y registro`. Pide la revisión de Rances y, en "Cómo probarlo", pega los pasos de la sección 6.
+- En Jira, pasa tus tarjetas (T2, H1, H2 y H3) a **En revisión**; cuando se una el PR, a **Listo** ([guía de Jira](JIRA.md) §7).
 - En el mismo PR, marca en el README la casilla de T2. Las de H1 a H3 se marcan cuando también esté la API de Rances.
 
 ## 9. Mientras esperas la revisión
 
 - **Deja listo tu computador para el sprint 2.** Tus siguientes tareas son APIs en Spring Boot (T5 catálogo y T6 rutinas): instala el JDK 21, MySQL y Workbench, y crea la base ([guía de inicio](../../GUIA-INICIO.md) §1.2, §1.5, §1.6 y §3).
 - **Lee lo que viene:** el [contrato](../CONTRATO-API.md) §5 (ejercicios) y §6 (rutinas), las reglas R1 y R2 del [modelo de datos](../MODELO-DATOS.md) y las pantallas P4 a P6 del [mockup](../mockup/README.md).
-- **Tu orden en el sprint 2:** primero la API de catálogo (T5), después la API de rutinas (T6) y al final la pantalla de catálogo (P4). Santiago necesita tu API de rutinas para registrar sesiones; ver [¿Quién espera a quién?](../../PLAN-DE-TRABAJO.md#quién-espera-a-quién).
+- **Tu orden en el sprint 3, desde el jueves 24:** primero la API de catálogo (T5), después la API de rutinas (T6), que debe estar en `main` el domingo 27, y al final la pantalla de catálogo (P4). Santiago necesita tu API de rutinas para registrar sesiones; ver [¿Quién espera a quién?](../../PLAN-DE-TRABAJO.md#quién-espera-a-quién).
+- **Tu CRUD para la entrega final es el de rutinas** (T6: crear, ver, editar y eliminar), de la base de datos a la pantalla. Ver [Un CRUD por integrante](../../PLAN-DE-TRABAJO.md#un-crud-por-integrante).
 
 ## 10. Si algo falla
 

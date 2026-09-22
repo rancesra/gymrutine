@@ -1,0 +1,339 @@
+Issue ID,Issue Type,Summary,Parent,Priority,Labels,Labels,Labels,Epic Name,Description
+1,Epic,A. Cuenta y perfil,,Medium,epica-a,,,A. Cuenta y perfil,"Historias H1 a H4: crear cuenta, iniciar y cerrar sesión, y perfil. API: Rances. Pantallas de acceso: Javier. Perfil: Rances."
+2,Epic,B. Catálogo de ejercicios,,Medium,epica-b,,,B. Catálogo de ejercicios,Historias H5 a H9: catálogo base y ejercicios propios. Responsable: Javier.
+3,Epic,C. Rutinas (CRUD de Javier),,Medium,epica-c,,,C. Rutinas (CRUD de Javier),"Historias H10 a H13: crear, ver, editar y eliminar rutinas. Es el CRUD que presenta Javier."
+4,Epic,D. Entrenamiento (CRUD de Santiago),,Medium,epica-d,,,D. Entrenamiento (CRUD de Santiago),"Historias H14 a H17 y H23: registrar, ver, editar y eliminar sesiones. Es el CRUD que presenta Santiago."
+5,Epic,E. Récords y progreso,,Medium,epica-e,,,E. Récords y progreso,"Historias H18 a H20: récords automáticos, pantalla de récords y progreso por ejercicio. API: Santiago. Pantallas: Rances y Javier."
+6,Epic,F. Peso corporal (CRUD de Rances),,Medium,epica-f,,,F. Peso corporal (CRUD de Rances),"Historias H21, H22 y H24: registrar, ver, corregir y eliminar el peso corporal. Es el CRUD que presenta Rances."
+7,Epic,G. Base técnica y entregas,,Medium,epica-g,,,G. Base técnica y entregas,"Bases de los tres proyectos, Jira, diseño de la base de datos, Postman, datos de demostración, evidencias y ensayo de la sustentación."
+101,Story,H1 — Crear cuenta,1,High,sprint-2,javier,epica-a,,"*Como* visitante, *quiero* crear una cuenta con mi nombre, email, contraseña y objetivo, *para* guardar mis rutinas y mi progreso.
+
+*Criterios de aceptación*
+- *Dado* que no tengo cuenta
+- *Cuando* envío nombre, email, contraseña de 8 a 72 caracteres y un objetivo
+- *Entonces* se crea mi cuenta, quedo con la sesión iniciada y entro al inicio
+- *Y* mi contraseña se guarda cifrada, nunca en texto
+- *Y* si el email ya está registrado, sin importar mayúsculas, veo un aviso (409 {{EMAIL_YA_REGISTRADO}})
+- *Y* si un campo no cumple las reglas, veo el error junto a ese campo (400 {{VALIDACION_FALLIDA}})
+
+*Endpoints:* {{GET /referencias}}, {{POST /auth/registro}}
+*Responsable:* Rances (API) y Javier (pantalla)
+*Detalle:* https://github.com/rancesra/gymrutine/blob/main/docs/HISTORIAS.md#h1--crear-cuenta"
+102,Story,H2 — Iniciar sesión,1,High,sprint-2,javier,epica-a,,"*Como* visitante con cuenta, *quiero* iniciar sesión con mi email y contraseña, *para* entrar a mis datos desde cualquier dispositivo.
+
+*Criterios de aceptación*
+- *Dado* que tengo una cuenta
+- *Cuando* envío mi email y mi contraseña correctos
+- *Entonces* entro al inicio y mi sesión dura 7 días en ese navegador
+- *Y* si el email no existe o la contraseña no coincide, veo el mismo mensaje en los dos casos (401 {{CREDENCIALES_INVALIDAS}}), sin revelar cuál falló
+- *Y* si mi sesión vence o el token no es válido, cualquier pantalla me devuelve a iniciar sesión
+
+*Endpoints:* {{POST /auth/login}}
+*Responsable:* Rances (API) y Javier (pantalla)
+*Detalle:* https://github.com/rancesra/gymrutine/blob/main/docs/HISTORIAS.md#h2--iniciar-sesión"
+103,Story,H3 — Cerrar sesión,1,High,sprint-2,javier,epica-a,,"*Como* usuario, *quiero* cerrar sesión, *para* que nadie use mi cuenta en un dispositivo compartido.
+
+*Criterios de aceptación*
+- *Dado* que tengo la sesión iniciada
+- *Cuando* cierro sesión
+- *Entonces* mi token deja de funcionar en el servidor y vuelvo a la pantalla de iniciar sesión
+- *Y* en ese navegador ya no quedan guardados ni mi token ni mis datos
+
+*Endpoints:* {{POST /auth/logout}}
+*Responsable:* Rances (API) y Javier (pantalla)
+*Detalle:* https://github.com/rancesra/gymrutine/blob/main/docs/HISTORIAS.md#h3--cerrar-sesión"
+104,Story,H4 — Ver y editar mi perfil,1,Medium,sprint-3,rances,epica-a,,"*Como* usuario, *quiero* ver mi perfil y cambiar mi nombre y mi objetivo, *para* que las sugerencias se ajusten a lo que busco ahora.
+
+*Criterios de aceptación*
+- *Dado* que tengo la sesión iniciada
+- *Cuando* cambio mi nombre o mi objetivo y guardo
+- *Entonces* mi perfil queda actualizado
+- *Y* las sugerencias nuevas usan el objetivo nuevo: los recomendados del catálogo y las series y repeticiones de las rutinas que cree desde ahora
+- *Y* las rutinas que ya tenía conservan su objetivo
+- *Y* mi email se muestra, pero no se puede cambiar
+
+*Endpoints:* {{GET /usuarios/me}}, {{PUT /usuarios/me}}
+*Responsable:* Rances
+*Detalle:* https://github.com/rancesra/gymrutine/blob/main/docs/HISTORIAS.md#h4--ver-y-editar-mi-perfil"
+105,Story,H5 — Explorar el catálogo de ejercicios,2,High,sprint-3,javier,epica-b,,"*Como* usuario, *quiero* explorar los ejercicios por grupo muscular y por equipo, y ver los recomendados para mi objetivo, *para* elegir qué incluir en mis rutinas.
+
+*Criterios de aceptación*
+- *Dado* que tengo la sesión iniciada
+- *Cuando* abro el catálogo
+- *Entonces* veo los ejercicios base y mis ejercicios propios activos, agrupados por grupo muscular y con la cantidad de cada grupo
+- *Y* puedo filtrar por grupo muscular, por equipo y por ""recomendados para mi objetivo"", y buscar por nombre
+- *Y* un filtro sin resultados muestra una lista vacía, no un error
+- *Y* los ejercicios propios se distinguen de los del catálogo base
+- *Y* nunca veo los ejercicios propios de otros usuarios
+
+*Endpoints:* {{GET /referencias}}, {{GET /ejercicios}}
+*Responsable:* Javier
+*Detalle:* https://github.com/rancesra/gymrutine/blob/main/docs/HISTORIAS.md#h5--explorar-el-catálogo-de-ejercicios"
+106,Story,H6 — Ver el detalle de un ejercicio,2,Medium,sprint-3,javier,epica-b,,"*Como* usuario, *quiero* ver el detalle de un ejercicio, *para* saber cómo se hace antes de agregarlo a una rutina.
+
+*Criterios de aceptación*
+- *Dado* que un ejercicio es visible para mí
+- *Cuando* abro su detalle
+- *Entonces* veo nombre, grupo muscular, equipo, objetivos recomendados y la descripción de la técnica
+- *Y* tengo un enlace que busca la técnica del ejercicio en YouTube
+- *Y* si el ejercicio no existe o es propio de otro usuario, veo ""no encontrado"" (404 {{EJERCICIO_NO_ENCONTRADO}})
+
+*Endpoints:* {{GET /ejercicios/{id}}}
+*Responsable:* Javier
+*Detalle:* https://github.com/rancesra/gymrutine/blob/main/docs/HISTORIAS.md#h6--ver-el-detalle-de-un-ejercicio"
+107,Story,H7 — Crear un ejercicio propio,2,Medium,sprint-3,javier,epica-b,,"*Como* usuario, *quiero* crear un ejercicio que no está en el catálogo, *para* usarlo en mis rutinas.
+
+*Criterios de aceptación*
+- *Dado* que tengo la sesión iniciada
+- *Cuando* envío nombre (3 a 80 caracteres), grupo muscular, equipo, al menos un objetivo y, si quiero, una descripción
+- *Entonces* el ejercicio se crea como propio y solo yo lo veo
+- *Y* si ya existe un ejercicio base o uno propio activo con ese nombre, sin importar mayúsculas, veo un aviso (409 {{EJERCICIO_DUPLICADO}})
+- *Y* si un campo no cumple las reglas, veo el error junto a ese campo (400 {{VALIDACION_FALLIDA}})
+
+*Endpoints:* {{POST /ejercicios}}
+*Responsable:* Javier
+*Detalle:* https://github.com/rancesra/gymrutine/blob/main/docs/HISTORIAS.md#h7--crear-un-ejercicio-propio"
+108,Story,H8 — Editar un ejercicio propio,2,Low,sprint-3,javier,epica-b,,"*Como* usuario, *quiero* corregir los datos de un ejercicio que creé, *para* mantenerlo bien descrito.
+
+*Criterios de aceptación*
+- *Dado* que el ejercicio es mío y está activo
+- *Cuando* envío todos sus datos con los cambios
+- *Entonces* queda actualizado, también en las rutinas que lo usan
+- *Y* si intento editar un ejercicio del catálogo base, la operación se rechaza (403 {{EJERCICIO_NO_EDITABLE}})
+- *Y* si no existe, es de otro usuario o ya lo eliminé, veo ""no encontrado"" (404)
+
+*Endpoints:* {{PUT /ejercicios/{id}}}
+*Responsable:* Javier
+*Detalle:* https://github.com/rancesra/gymrutine/blob/main/docs/HISTORIAS.md#h8--editar-un-ejercicio-propio"
+109,Story,H9 — Eliminar un ejercicio propio,2,Low,sprint-3,javier,epica-b,,"*Como* usuario, *quiero* eliminar un ejercicio que creé y ya no uso, *para* mantener limpio mi catálogo.
+
+*Criterios de aceptación*
+- *Dado* que el ejercicio es mío
+- *Cuando* lo elimino y confirmo
+- *Entonces* deja de aparecer en el catálogo, y ya no puedo agregarlo a rutinas ni registrarlo en sesiones nuevas
+- *Y* mi historial y mis récords con ese ejercicio se conservan
+- *Y* si ya estaba eliminado, la operación responde con éxito sin cambiar nada
+- *Y* si intento eliminar un ejercicio del catálogo base, la operación se rechaza (403)
+
+*Endpoints:* {{DELETE /ejercicios/{id}}}
+*Responsable:* Javier
+*Detalle:* https://github.com/rancesra/gymrutine/blob/main/docs/HISTORIAS.md#h9--eliminar-un-ejercicio-propio"
+110,Story,H10 — Crear una rutina,3,High,sprint-4,javier,epica-c,,"*Como* usuario, *quiero* armar una rutina con ejercicios del catálogo y sus series y repeticiones objetivo, *para* entrenar con un plan alineado a mi objetivo.
+
+*Criterios de aceptación*
+- *Dado* que tengo la sesión iniciada
+- *Cuando* creo una rutina
+- *Entonces* su objetivo es, por defecto, el de mi perfil, y lo puedo cambiar
+- *Y* al agregar un ejercicio, las series y repeticiones vienen prellenadas según el objetivo de la rutina (fuerza 4 × 5, pérdida de peso 3 × 12, resistencia 3 × 15), y las puedo cambiar
+- *Y* al elegir ejercicios puedo filtrar y ver cuáles se recomiendan para ese objetivo
+- *Y* puedo ordenar y quitar ejercicios antes de guardar
+- *Y* al guardar con nombre (3 a 80 caracteres) y entre 1 y 15 ejercicios sin repetir, con series de 1 a 10 y repeticiones de 1 a 50, la rutina se crea con los ejercicios en el orden en que los dejé
+- *Y* si un ejercicio no existe, no es visible para mí o está eliminado, la rutina no se guarda (400 {{VALIDACION_FALLIDA}})
+
+*Endpoints:* {{GET /referencias}}, {{GET /ejercicios}}, {{POST /rutinas}}
+*Responsable:* Javier
+*Detalle:* https://github.com/rancesra/gymrutine/blob/main/docs/HISTORIAS.md#h10--crear-una-rutina"
+111,Story,H11 — Ver mis rutinas,3,High,sprint-4,javier,epica-c,,"*Como* usuario, *quiero* ver mis rutinas y el detalle de cada una, *para* elegir cuál entrenar hoy.
+
+*Criterios de aceptación*
+- *Dado* que tengo rutinas creadas
+- *Cuando* abro ""Mis rutinas""
+- *Entonces* veo cada rutina activa con su objetivo, cuántos ejercicios tiene y cuándo la entrené por última vez (""aún no la entrenas"" si nunca)
+- *Y* al abrir una, veo sus ejercicios en orden con sus series y repeticiones objetivo
+- *Y* si no tengo rutinas, veo una invitación a crear la primera
+- *Y* nunca veo rutinas de otros usuarios (404 {{RUTINA_NO_ENCONTRADA}})
+
+*Endpoints:* {{GET /rutinas}}, {{GET /rutinas/{id}}}
+*Responsable:* Javier
+*Detalle:* https://github.com/rancesra/gymrutine/blob/main/docs/HISTORIAS.md#h11--ver-mis-rutinas"
+112,Story,H12 — Editar una rutina,3,High,sprint-4,javier,epica-c,,"*Como* usuario, *quiero* cambiar una rutina, *para* ajustarla cuando progreso o cambio de plan.
+
+*Criterios de aceptación*
+- *Dado* que la rutina es mía y está activa
+- *Cuando* cambio su nombre, su objetivo o sus ejercicios y guardo
+- *Entonces* la rutina queda exactamente con lo que envié: la lista de ejercicios completa se reemplaza
+- *Y* las sesiones que ya registré con esa rutina no cambian
+- *Y* se aplican las mismas reglas de validación de H10
+- *Y* si la rutina fue eliminada, no se puede editar (404)
+
+*Endpoints:* {{GET /rutinas/{id}}}, {{PUT /rutinas/{id}}}
+*Responsable:* Javier
+*Detalle:* https://github.com/rancesra/gymrutine/blob/main/docs/HISTORIAS.md#h12--editar-una-rutina"
+113,Story,H13 — Eliminar una rutina,3,High,sprint-4,javier,epica-c,,"*Como* usuario, *quiero* eliminar una rutina que ya no uso, *para* tener a mano solo las que entreno.
+
+*Criterios de aceptación*
+- *Dado* que la rutina es mía
+- *Cuando* la elimino y confirmo
+- *Entonces* deja de aparecer en ""Mis rutinas"", y ya no puedo entrenarla ni editarla
+- *Y* las sesiones que registré con ella siguen en mi historial, con su nombre
+- *Y* si ya estaba eliminada, la operación responde con éxito sin cambiar nada
+
+*Endpoints:* {{DELETE /rutinas/{id}}}
+*Responsable:* Javier
+*Detalle:* https://github.com/rancesra/gymrutine/blob/main/docs/HISTORIAS.md#h13--eliminar-una-rutina"
+114,Story,H14 — Registrar una sesión de entrenamiento,4,High,sprint-4,santiago,epica-d,,"*Como* usuario, *quiero* registrar cada serie que realmente hice, con su peso y repeticiones, mientras ejecuto una rutina, *para* tener un registro exacto de mi entrenamiento.
+
+*Criterios de aceptación*
+- *Dado* que tengo una rutina activa
+- *Cuando* empiezo a entrenarla
+- *Entonces* veo sus ejercicios en orden, cada uno con su objetivo, mi récord actual y las filas de series prellenadas con lo que hice la última vez en ese ejercicio (en cualquier rutina)
+- *Y* si nunca he hecho un ejercicio, las filas vienen con el peso vacío y las repeticiones objetivo
+- *Y* marco cada serie como hecha, puedo agregar o quitar series y saltarme ejercicios
+- *Y* la fecha y hora de inicio es, por defecto, cuando abrí la pantalla, y puedo cambiarla para registrar un entrenamiento de otro día, pero no del futuro
+- *Y* si recargo la página o se cierra el navegador, lo que llevo no se pierde: puedo continuar o descartar
+- *Cuando* termino y guardo, con al menos una serie hecha, cada una de 0 a 500 kg y de 1 a 100 repeticiones
+- *Entonces* la sesión queda registrada y veo el resumen: ejercicios, series, repeticiones, volumen total en kg y duración
+- *Y* si falla la conexión al guardar, veo el error y puedo reintentar sin volver a escribir nada
+
+*Endpoints:* {{GET /rutinas/{id}}}, {{GET /sesiones/ultimos-registros?rutinaId=}}, {{POST /sesiones}}
+*Responsable:* Santiago
+*Detalle:* https://github.com/rancesra/gymrutine/blob/main/docs/HISTORIAS.md#h14--registrar-una-sesión-de-entrenamiento"
+115,Story,H15 — Ver el historial de sesiones,4,High,sprint-4,santiago,epica-d,,"*Como* usuario, *quiero* ver mis sesiones anteriores, *para* saber cuánto y cuándo he entrenado.
+
+*Criterios de aceptación*
+- *Dado* que he registrado sesiones
+- *Cuando* abro el historial
+- *Entonces* veo mis sesiones de la más reciente a la más antigua, con rutina, fecha, duración, volumen total, cantidad de series y cuántos récords tuvo cada una
+- *Y* si no tengo sesiones, veo una invitación a entrenar mi primera rutina
+
+*Endpoints:* {{GET /sesiones}}
+*Responsable:* Santiago
+*Detalle:* https://github.com/rancesra/gymrutine/blob/main/docs/HISTORIAS.md#h15--ver-el-historial-de-sesiones"
+116,Story,H16 — Ver el detalle de una sesión,4,High,sprint-4,santiago,epica-d,,"*Como* usuario, *quiero* ver el detalle de una sesión, *para* revisar exactamente qué hice ese día.
+
+*Criterios de aceptación*
+- *Dado* que la sesión es mía
+- *Cuando* abro su detalle
+- *Entonces* veo cada ejercicio con sus series (peso × repeticiones), las series récord resaltadas y el resumen de la sesión
+- *Y* si la rutina o un ejercicio se eliminaron después, igual se muestran con su nombre
+- *Y* si la sesión no existe o es de otro usuario, veo ""no encontrada"" (404 {{SESION_NO_ENCONTRADA}})
+
+*Endpoints:* {{GET /sesiones/{id}}}
+*Responsable:* Santiago
+*Detalle:* https://github.com/rancesra/gymrutine/blob/main/docs/HISTORIAS.md#h16--ver-el-detalle-de-una-sesión"
+117,Story,H17 — Eliminar una sesión,4,High,sprint-4,santiago,epica-d,,"*Como* usuario, *quiero* eliminar una sesión que registré mal, *para* que un error de digitación no altere mi progreso ni mis récords.
+
+*Criterios de aceptación*
+- *Dado* que la sesión es mía
+- *Cuando* la elimino y confirmo, después de ver el aviso de que mis récords se recalcularán
+- *Entonces* la sesión desaparece del historial, del progreso y de los récords
+- *Y* los récords de sus ejercicios se recalculan, y otra sesión puede pasar a ser récord
+
+*Endpoints:* {{DELETE /sesiones/{id}}}
+*Responsable:* Santiago
+*Detalle:* https://github.com/rancesra/gymrutine/blob/main/docs/HISTORIAS.md#h17--eliminar-una-sesión"
+118,Story,H18 — Detección automática de récords personales,5,High,sprint-4,santiago,epica-e,,"*Como* usuario, *quiero* que el sistema detecte solo cuándo supero mi mejor marca en un ejercicio, *para* saber que estoy progresando sin revisar el historial a mano.
+
+*Criterios de aceptación*
+- *Dado* que registro, edito o elimino una sesión
+- *Cuando* el sistema recalcula los récords de sus ejercicios
+- *Entonces* una serie es récord si su peso supera el máximo que había levantado antes en ese ejercicio, según la fecha de las sesiones
+- *Y* la primera vez que hago un ejercicio con más de 0 kg cuenta como récord
+- *Y* igualar el récord no es récord, y una serie con 0 kg nunca lo es
+- *Y* en cada sesión hay como máximo un récord por ejercicio: la primera serie con el peso más alto
+- *Y* si registro una sesión con fecha pasada, o le cambio la fecha o el peso al editarla, los récords de las sesiones posteriores se ajustan
+- *Y* al terminar de guardar veo ""¡Nuevo récord!"" en los ejercicios donde lo logré
+
+*Endpoints:* {{POST /sesiones}}, {{PUT /sesiones/{id}}}, {{DELETE /sesiones/{id}}}
+*Responsable:* Santiago
+*Detalle:* https://github.com/rancesra/gymrutine/blob/main/docs/HISTORIAS.md#h18--detección-automática-de-récords-personales"
+119,Story,H19 — Ver mis récords personales,5,Medium,sprint-4,rances,epica-e,,"*Como* usuario, *quiero* ver mis mejores marcas, *para* tener presente qué debo superar.
+
+*Criterios de aceptación*
+- *Dado* que tengo récords
+- *Cuando* abro ""Récords""
+- *Entonces* veo, agrupado por grupo muscular, mi récord vigente de cada ejercicio: peso, repeticiones de esa serie y fecha
+- *Y* al tocar uno voy al progreso de ese ejercicio
+- *Y* los ejercicios que solo he hecho con 0 kg no aparecen
+- *Y* si aún no tengo récords, veo una invitación a registrar mi primera sesión
+
+*Endpoints:* {{GET /records}}
+*Responsable:* Santiago (API) y Rances (pantalla)
+*Detalle:* https://github.com/rancesra/gymrutine/blob/main/docs/HISTORIAS.md#h19--ver-mis-récords-personales"
+120,Story,H20 — Ver el progreso de un ejercicio,5,High,sprint-4,javier,epica-e,,"*Como* usuario, *quiero* ver en una gráfica cómo evoluciona el peso que levanto en un ejercicio, *para* comprobar si realmente estoy progresando.
+
+*Criterios de aceptación*
+- *Dado* que he registrado un ejercicio en al menos una sesión
+- *Cuando* lo elijo en ""Progreso""
+- *Entonces* veo una gráfica del peso máximo de cada sesión a lo largo del tiempo, con las sesiones récord resaltadas
+- *Y* puedo cambiar la gráfica para ver el volumen (kg) de cada sesión
+- *Y* debajo de la gráfica veo los mismos datos en una tabla
+- *Y* en el selector solo aparecen ejercicios que he registrado
+
+*Endpoints:* {{GET /progreso/ejercicios}}, {{GET /progreso/ejercicios/{id}}}
+*Responsable:* Santiago (API) y Javier (pantalla)
+*Detalle:* https://github.com/rancesra/gymrutine/blob/main/docs/HISTORIAS.md#h20--ver-el-progreso-de-un-ejercicio"
+121,Story,H21 — Registrar mi peso corporal,6,High,sprint-3,rances,epica-f,,"*Como* usuario, *quiero* registrar mi peso corporal, *para* medir mi progreso aunque mi objetivo no sea levantar más peso.
+
+*Criterios de aceptación*
+- *Dado* que tengo la sesión iniciada
+- *Cuando* registro mi peso, entre 20 y 350 kg, con una fecha que por defecto es hoy y no puede ser futura
+- *Entonces* el registro queda guardado y aparece en la gráfica
+- *Y* si ya registré mi peso en esa fecha, veo un aviso (409 {{PESO_YA_REGISTRADO}})
+
+*Endpoints:* {{POST /peso-corporal}}
+*Responsable:* Rances
+*Detalle:* https://github.com/rancesra/gymrutine/blob/main/docs/HISTORIAS.md#h21--registrar-mi-peso-corporal"
+122,Story,H22 — Ver la evolución de mi peso corporal,6,High,sprint-3,rances,epica-f,,"*Como* usuario, *quiero* ver cómo cambia mi peso en el tiempo, *para* saber si voy hacia mi objetivo.
+
+*Criterios de aceptación*
+- *Dado* que tengo registros de peso
+- *Cuando* abro ""Peso corporal""
+- *Entonces* veo una gráfica de mi peso en el tiempo y la lista de registros, cada uno con la diferencia contra el anterior
+- *Y* puedo eliminar un registro equivocado, después de confirmar
+- *Y* con un solo registro, la gráfica muestra el punto sin errores
+- *Y* si no tengo registros, veo una invitación a registrar el primero
+
+*Endpoints:* {{GET /peso-corporal}}, {{DELETE /peso-corporal/{id}}}
+*Responsable:* Rances
+*Detalle:* https://github.com/rancesra/gymrutine/blob/main/docs/HISTORIAS.md#h22--ver-la-evolución-de-mi-peso-corporal"
+123,Story,H23 — Editar una sesión,4,High,sprint-4,santiago,epica-d,,"*Como* usuario, *quiero* corregir una sesión que ya registré, *para* arreglar un peso o unas repeticiones mal digitadas sin tener que registrarla de nuevo.
+
+*Criterios de aceptación*
+- *Dado* que la sesión es mía
+- *Cuando* abro su detalle, elijo editar y cambio la fecha y hora de inicio, la duración, o el peso y las repeticiones de sus series
+- *Entonces* la sesión queda corregida y veo el detalle actualizado
+- *Y* puedo agregar o quitar series, pero cada ejercicio conserva al menos una
+- *Y* no puedo agregar ni quitar ejercicios: la sesión conserva los que tenía, aunque la rutina o un ejercicio se hayan eliminado después
+- *Y* se aplican las reglas de H14: de 0 a 500 kg, de 1 a 100 repeticiones, de 1 a 20 series por ejercicio y una fecha que no sea futura (400 {{VALIDACION_FALLIDA}})
+- *Y* al guardar se recalculan los récords de sus ejercicios, y otra sesión puede ganar o perder un récord
+- *Y* si la sesión no existe o es de otro usuario, veo ""no encontrada"" (404 {{SESION_NO_ENCONTRADA}})
+
+*Endpoints:* {{GET /sesiones/{id}}}, {{PUT /sesiones/{id}}}
+*Responsable:* Santiago
+*Detalle:* https://github.com/rancesra/gymrutine/blob/main/docs/HISTORIAS.md#h23--editar-una-sesión"
+124,Story,H24 — Corregir un registro de peso,6,High,sprint-3,rances,epica-f,,"*Como* usuario, *quiero* corregir un registro de peso, *para* arreglar un error sin tener que borrarlo y registrarlo de nuevo.
+
+*Criterios de aceptación*
+- *Dado* que el registro es mío
+- *Cuando* elijo editarlo, cambio su peso o su fecha y guardo
+- *Entonces* el registro queda corregido y la gráfica y la lista se actualizan
+- *Y* se aplican las reglas de H21: entre 20 y 350 kg y una fecha que no sea futura (400 {{VALIDACION_FALLIDA}})
+- *Y* si ya tengo otro registro en la fecha nueva, veo un aviso (409 {{PESO_YA_REGISTRADO}})
+- *Y* si el registro no existe o es de otro usuario, veo ""no encontrado"" (404 {{REGISTRO_PESO_NO_ENCONTRADO}})
+
+*Endpoints:* {{PUT /peso-corporal/{id}}}
+*Responsable:* Rances
+*Detalle:* https://github.com/rancesra/gymrutine/blob/main/docs/HISTORIAS.md#h24--corregir-un-registro-de-peso"
+201,Task,"T4 API de cuenta: registro, login, logout, usuarios/me e interceptor",1,High,sprint-2,rances,epica-a,,"Qué entrega, cómo y cómo verificar: https://github.com/rancesra/gymrutine/blob/main/PLAN-DE-TRABAJO.md#t4--cuenta-y-perfil-historias-1-a-4"
+202,Task,"T5 API de catálogo: GET, POST, PUT y DELETE /ejercicios",2,High,sprint-3,javier,epica-b,,"Qué entrega, cómo y cómo verificar: https://github.com/rancesra/gymrutine/blob/main/PLAN-DE-TRABAJO.md#t5--catálogo-de-ejercicios-historias-5-a-9"
+203,Task,"T6 API de rutinas: GET, POST, PUT y DELETE /rutinas",3,High,sprint-3,javier,epica-c,,"Qué entrega, cómo y cómo verificar: https://github.com/rancesra/gymrutine/blob/main/PLAN-DE-TRABAJO.md#t6--rutinas-historias-10-a-13"
+204,Task,"T7 API de sesiones: POST, GET, PUT, DELETE y últimos registros",4,High,sprint-3,santiago,epica-d,,"Qué entrega, cómo y cómo verificar: https://github.com/rancesra/gymrutine/blob/main/PLAN-DE-TRABAJO.md#t7--sesiones-de-entrenamiento-historias-14-a-17-y-23"
+205,Task,T8 Algoritmo de récords (calcularRecords) con pruebas,5,High,sprint-3,santiago,epica-e,,"Qué entrega, cómo y cómo verificar: https://github.com/rancesra/gymrutine/blob/main/PLAN-DE-TRABAJO.md#t8--récords-personales-historias-18-y-19"
+206,Task,T8 API de récords: GET /records,5,High,sprint-3,santiago,epica-e,,"Qué entrega, cómo y cómo verificar: https://github.com/rancesra/gymrutine/blob/main/PLAN-DE-TRABAJO.md#t8--récords-personales-historias-18-y-19"
+207,Task,T9 API de progreso: GET /progreso/ejercicios,5,High,sprint-4,santiago,epica-e,,"Qué entrega, cómo y cómo verificar: https://github.com/rancesra/gymrutine/blob/main/PLAN-DE-TRABAJO.md#t9--progreso-por-ejercicio-historia-20"
+208,Task,"T10 API de peso corporal: GET, POST, PUT y DELETE",6,High,sprint-3,rances,epica-f,,"Qué entrega, cómo y cómo verificar: https://github.com/rancesra/gymrutine/blob/main/PLAN-DE-TRABAJO.md#t10--peso-corporal-historias-21-22-y-24"
+209,Task,GraficaLinea: componente de gráficas con Chart.js,6,High,sprint-3,rances,epica-f,,"Qué entrega, cómo y cómo verificar: https://github.com/rancesra/gymrutine/blob/main/PLAN-DE-TRABAJO.md#t10--peso-corporal-historias-21-22-y-24"
+210,Task,T0 Documentación y arquitectura,7,High,sprint-2,rances,epica-g,,"Qué entrega, cómo y cómo verificar: https://github.com/rancesra/gymrutine/blob/main/PLAN-DE-TRABAJO.md#resumen-de-tareas"
+211,Task,Diseño de la base de datos (MySQL y MongoDB),7,High,sprint-2,rances,epica-g,,"Qué entrega, cómo y cómo verificar: https://github.com/rancesra/gymrutine/blob/main/PLAN-DE-TRABAJO.md#qué-pide-el-curso"
+212,Task,"Jira: proyecto, backlog, sprints e invitaciones",7,High,sprint-2,rances,epica-g,,"Qué entrega, cómo y cómo verificar: https://github.com/rancesra/gymrutine/blob/main/PLAN-DE-TRABAJO.md#qué-pide-el-curso"
+213,Task,T1 Base del servicio de cuentas (Spring Boot + MySQL),7,High,sprint-2,rances,epica-g,,"Qué entrega, cómo y cómo verificar: https://github.com/rancesra/gymrutine/blob/main/PLAN-DE-TRABAJO.md#t1--base-del-servicio-de-cuentas-spring-boot--mysql"
+214,Task,T2 Base del frontend (React),7,High,sprint-2,javier,epica-g,,"Qué entrega, cómo y cómo verificar: https://github.com/rancesra/gymrutine/blob/main/PLAN-DE-TRABAJO.md#t2--base-del-frontend-react"
+215,Task,T3 Base del servicio de entrenamiento (Node + MongoDB),7,High,sprint-2,santiago,epica-g,,"Qué entrega, cómo y cómo verificar: https://github.com/rancesra/gymrutine/blob/main/PLAN-DE-TRABAJO.md#t3--base-del-servicio-de-entrenamiento-node--express--mongodb"
+216,Task,Colección de Postman de las dos APIs,7,High,sprint-4,rances,epica-g,,"Qué entrega, cómo y cómo verificar: https://github.com/rancesra/gymrutine/blob/main/PLAN-DE-TRABAJO.md#t11--inicio-integración-evidencias-y-entrega"
+217,Task,P3 Inicio,7,High,sprint-4,rances,epica-g,,"Qué entrega, cómo y cómo verificar: https://github.com/rancesra/gymrutine/blob/main/PLAN-DE-TRABAJO.md#t11--inicio-integración-evidencias-y-entrega"
+218,Task,Datos de demostración,7,High,sprint-4,rances,epica-g,,"Qué entrega, cómo y cómo verificar: https://github.com/rancesra/gymrutine/blob/main/PLAN-DE-TRABAJO.md#t11--inicio-integración-evidencias-y-entrega"
+219,Task,Pulido en celular,7,High,sprint-4,javier,epica-g,,"Qué entrega, cómo y cómo verificar: https://github.com/rancesra/gymrutine/blob/main/PLAN-DE-TRABAJO.md#t11--inicio-integración-evidencias-y-entrega"
+220,Task,Pruebas de punta a punta,7,High,sprint-4,santiago,epica-g,,"Qué entrega, cómo y cómo verificar: https://github.com/rancesra/gymrutine/blob/main/PLAN-DE-TRABAJO.md#t11--inicio-integración-evidencias-y-entrega"
+221,Task,Evidencias de participación y trazabilidad (EVIDENCIAS.md),7,High,sprint-4,rances,epica-g,,"Qué entrega, cómo y cómo verificar: https://github.com/rancesra/gymrutine/blob/main/PLAN-DE-TRABAJO.md#t11--inicio-integración-evidencias-y-entrega"
+222,Task,Ensayo de la sustentación,7,High,sprint-4,rances,epica-g,,"Qué entrega, cómo y cómo verificar: https://github.com/rancesra/gymrutine/blob/main/PLAN-DE-TRABAJO.md#t11--inicio-integración-evidencias-y-entrega"

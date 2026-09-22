@@ -2,5 +2,5 @@
 * text=auto
 
 # Scripts del Maven Wrapper: cada uno con el final de línea de su sistema
-backend/mvnw text eol=lf
+backend-spring/mvnw text eol=lf
 *.cmd text eol=crlf

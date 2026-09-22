@@ -1,6 +1,6 @@
 # Contrato de API — GymRutine
 
-**Versión:** 2.0
+**Versión:** 2.1
 **Fecha:** 2026-09-21
 **Lo implementan:** el servicio de cuentas (Spring Boot) y el servicio de entrenamiento (Node.js)
 **Lo consumen:** el frontend y la colección de Postman
@@ -49,12 +49,14 @@ Es el acuerdo entre el frontend y el backend: qué endpoints existen, qué recib
 | GET | `/sesiones` | Historial de sesiones | Entrenamiento | 🔒 | H15 |
 | GET | `/sesiones/{id}` | Detalle de una sesión | Entrenamiento | 🔒 | H16 |
 | GET | `/sesiones/ultimos-registros?rutinaId={id}` | Lo que se hizo la última vez en cada ejercicio de la rutina | Entrenamiento | 🔒 | H14 |
+| PUT | `/sesiones/{id}` | Corrige la fecha, la duración y las series de una sesión, y recalcula récords | Entrenamiento | 🔒 | H23, H18 |
 | DELETE | `/sesiones/{id}` | Elimina una sesión y recalcula récords | Entrenamiento | 🔒 | H17, H18 |
 | GET | `/records` | Récord vigente de cada ejercicio | Entrenamiento | 🔒 | H19 |
 | GET | `/progreso/ejercicios` | Ejercicios que el usuario ha registrado | Entrenamiento | 🔒 | H20 |
 | GET | `/progreso/ejercicios/{id}` | Evolución de un ejercicio sesión a sesión | Entrenamiento | 🔒 | H20 |
 | GET | `/peso-corporal` | Registros de peso corporal | Entrenamiento | 🔒 | H22 |
 | POST | `/peso-corporal` | Registra el peso de una fecha | Entrenamiento | 🔒 | H21 |
+| PUT | `/peso-corporal/{id}` | Corrige la fecha o el peso de un registro | Entrenamiento | 🔒 | H24 |
 | DELETE | `/peso-corporal/{id}` | Elimina un registro de peso | Entrenamiento | 🔒 | H22 |
 
 ## 3. Autenticación y perfil
@@ -433,7 +435,7 @@ Borrado lógico (`activa: false`). La rutina deja de listarse, no se puede edita
 | `series` | Cantidad de series |
 | `repeticiones` | Suma de las repeticiones |
 | `volumenKg` | Suma de `pesoKg × repeticiones` de todas las series |
-| `records` | Cantidad de series con `esRecord: true` en este momento (puede cambiar si se registra o elimina otra sesión) |
+| `records` | Cantidad de series con `esRecord: true` en este momento (puede cambiar si se registra, edita o elimina otra sesión) |
 
 En el ejemplo, la extensión de tríceps no tiene récord porque 27,5 kg ya era el máximo de una sesión anterior: empatar no cuenta.
 
@@ -496,6 +498,50 @@ Datos para prellenar la pantalla de entrenamiento. El servicio de entrenamiento 
 - Si el ejercicio nunca se ha registrado: `fechaInicio: null` y `series: []`.
 
 → **404** `RUTINA_NO_ENCONTRADA` si la rutina no existe o es de otro usuario · **503** `SERVICIO_NO_DISPONIBLE`
+
+### PUT /sesiones/{id} 🔒
+
+Corrige una sesión ya registrada: su fecha, su duración y las series de sus ejercicios. Reemplaza la sesión completa, así que el cuerpo lleva **todas** las series, no solo las que cambian.
+
+```json
+{
+  "fechaInicio": "2026-09-14T18:30:00",
+  "duracionMinutos": 55,
+  "registros": [
+    {
+      "ejercicioId": 1,
+      "series": [
+        { "pesoKg": 55, "repeticiones": 5 },
+        { "pesoKg": 57.5, "repeticiones": 5 },
+        { "pesoKg": 60, "repeticiones": 5 },
+        { "pesoKg": 60, "repeticiones": 4 }
+      ]
+    },
+    {
+      "ejercicioId": 23,
+      "series": [
+        { "pesoKg": 25, "repeticiones": 12 },
+        { "pesoKg": 27.5, "repeticiones": 10 }
+      ]
+    }
+  ]
+}
+```
+
+| Campo | Regla |
+|---|---|
+| `fechaInicio` | Requerida. No puede ser futura |
+| `duracionMinutos` | Requerida, 1 a 600 |
+| `registros` | Exactamente los mismos ejercicios que ya tiene la sesión, cada uno una vez y en cualquier orden: no se agregan ni se quitan |
+| `registros[].series` | 1 a 20 elementos |
+| `series[].pesoKg` | Requerido, 0 a 500, máximo 2 decimales |
+| `series[].repeticiones` | Requerido, 1 a 100 |
+
+- La rutina no cambia y **no se consulta al servicio de cuentas:** la sesión conserva su copia de los nombres, aunque la rutina o un ejercicio se hayan eliminado después.
+- `orden` se conserva; `numero` lo asigna el servidor según la posición en el arreglo. `esRecord` no se envía: si llega, se ignora.
+- Después de guardar se recalculan los récords de los ejercicios de la sesión (R6): si cambiaron la fecha o los pesos, otra sesión puede ganar o perder un récord.
+
+→ **200** con el detalle de la sesión (SesionDetalle) · **400** `VALIDACION_FALLIDA` (por ejemplo, si falta o sobra un ejercicio) · **404** `SESION_NO_ENCONTRADA` si no existe o es de otro usuario
 
 ### DELETE /sesiones/{id} 🔒
 
@@ -588,6 +634,16 @@ Registros del usuario en orden cronológico (del más antiguo al más reciente).
 
 → **201** con el registro creado · **400** `VALIDACION_FALLIDA` · **409** `PESO_YA_REGISTRADO` si ya hay un registro en esa fecha
 
+### PUT /peso-corporal/{id} 🔒
+
+Corrige un registro: reemplaza su fecha y su peso. El cuerpo y las reglas son los mismos que en `POST`.
+
+```json
+{ "fecha": "2026-09-14", "pesoKg": 77.6 }
+```
+
+→ **200** con el registro corregido · **400** `VALIDACION_FALLIDA` · **404** `REGISTRO_PESO_NO_ENCONTRADO` si no existe o es de otro usuario · **409** `PESO_YA_REGISTRADO` si **otro** registro del usuario ya tiene esa fecha
+
 ### DELETE /peso-corporal/{id} 🔒
 
 → **204** · **404** `REGISTRO_PESO_NO_ENCONTRADO` si no existe o es de otro usuario
@@ -643,16 +699,16 @@ Qué consume cada pantalla del [mockup](mockup/README.md), con su ruta en el fro
 | P7 Entrenar | `/rutinas/:id/entrenar` | `GET /rutinas/{id}`, `GET /sesiones/ultimos-registros?rutinaId=`, `POST /sesiones` |
 | P8 Resumen de la sesión | `/rutinas/:id/entrenar` (al guardar) | Respuesta de `POST /sesiones` (sin peticiones nuevas) |
 | P9 Historial | `/historial` | `GET /sesiones` |
-| P10 Detalle de sesión | `/historial/:id` | `GET /sesiones/{id}`, `DELETE /sesiones/{id}` |
+| P10 Detalle de sesión | `/historial/:id` | `GET /sesiones/{id}`, `PUT /sesiones/{id}` (al editar), `DELETE /sesiones/{id}` |
 | P11 Progreso por ejercicio | `/progreso` | `GET /progreso/ejercicios`, `GET /progreso/ejercicios/{id}` |
 | P12 Récords | `/progreso/records` | `GET /records`, `GET /referencias` (para agrupar) |
-| P13 Peso corporal | `/progreso/peso` | `GET /peso-corporal`, `POST /peso-corporal`, `DELETE /peso-corporal/{id}` |
+| P13 Peso corporal | `/progreso/peso` | `GET /peso-corporal`, `POST /peso-corporal`, `PUT /peso-corporal/{id}`, `DELETE /peso-corporal/{id}` |
 | P14 Perfil | `/perfil` | `GET /usuarios/me`, `PUT /usuarios/me`, `GET /referencias`, `POST /auth/logout` |
 
 ## 12. Fuera de alcance en esta versión
 
 - Recuperar o cambiar la contraseña, cambiar el email o eliminar la cuenta.
-- Editar una sesión: se elimina y se registra de nuevo.
+- Agregar o quitar ejercicios de una sesión ya registrada: se elimina y se registra de nuevo.
 - Agregar a una sesión ejercicios que no están en la rutina.
 - Ejercicios que se miden por tiempo o distancia (plancha, cinta, bicicleta).
 - Paginación: los volúmenes esperados por usuario son pequeños.
@@ -666,3 +722,4 @@ Qué consume cada pantalla del [mockup](mockup/README.md), con su ruta en el fro
 | 2026-09-14 | v1.0: versión inicial |
 | 2026-09-15 | v1.1: sin CORS, porque el frontend usa el proxy de Vite; §11 con la ruta de cada pantalla en React. Ningún endpoint cambia |
 | 2026-09-21 | v2.0: dos servicios. Columna *Servicio* en §2; ids de texto en el servicio de entrenamiento; `GET /rutinas/{id}/ultimos-registros` pasa a `GET /sesiones/ultimos-registros?rutinaId=`; `GET /rutinas` ya no trae `ultimaSesion`; la sesión guarda copia de los nombres (sin `activa` ni `activo`); `GET /records` se ordena por nombre; progreso responde 404 sin registros; nuevo error `SERVICIO_NO_DISPONIBLE` (503) |
+| 2026-09-21 | v2.1: un CRUD completo por integrante, como pide el curso: nuevos `PUT /sesiones/{id}` (H23) y `PUT /peso-corporal/{id}` (H24). Editar una sesión sale de §12. Quedan 29 endpoints |

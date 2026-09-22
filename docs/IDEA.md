@@ -1,10 +1,10 @@
 # GymRutine — Informe inicial
 
 **Asignatura:** Entornos de Programación (código 24542) · Universidad Industrial de Santander, Escuela de Ingeniería de Sistemas e Informática
-**Entregas:** login y base de datos el 22 de septiembre de 2026 · **proyecto final el 3 de octubre de 2026**
+**Entregas:** sprint 2 el 23 de septiembre de 2026 (Jira, diseño de la base de datos y repositorio) · **proyecto final el 9 de octubre de 2026** (login, un CRUD por integrante y evidencias)
 **Equipo:** Rances Ramírez (Product Owner y coordinador) · Javier · Santiago
 **Repositorio:** https://github.com/rancesra/gymrutine
-**Versión:** 3.0 · **Fecha:** 2026-09-21
+**Versión:** 3.1 · **Fecha:** 2026-09-21
 
 Este documento presenta el proyecto: qué problema resuelve, para quién, qué incluye y qué no, y qué decisiones se tomaron. El detalle técnico está en los documentos de la sección 14.
 
@@ -33,7 +33,7 @@ Esa es la diferencia entre usar una app y usar una libreta: la app compara, graf
 | Propósito del programa de la asignatura | Dónde se aplica en GymRutine |
 |---|---|
 | Entender Scrum: roles, responsabilidades, artefactos y fases | Scrum adaptado a 3 personas ([plan de trabajo](../PLAN-DE-TRABAJO.md)) |
-| Usar una herramienta de gestión para el seguimiento de errores e incidencias | GitHub Projects como tablero e Issues con la etiqueta `error` |
+| Usar una herramienta de gestión para el seguimiento de errores e incidencias | Jira como tablero Scrum, con los errores registrados como *Bug* ([guía de Jira](guias/JIRA.md)) |
 | Gestionar versiones con Git y un repositorio en GitHub | Ramas por tarea, pull requests y `main` protegida ([guía de git](../GUIA-GIT.md)) |
 | Arquitectura en capas que desacopla el frontend del backend y los comunica por API REST | Dos APIs (Spring Boot y Node.js) y un frontend que solo habla con ellas |
 | Construir la capa del cliente con JavaScript consumiendo la API REST | Frontend en React (temario §10) |
@@ -63,10 +63,10 @@ Esa es la diferencia entre usar una app y usar una libreta: la app compara, graf
 | F1 | **Cuenta y objetivo** | Crear cuenta con email y contraseña, iniciar y cerrar sesión, y elegir el objetivo: fuerza, pérdida de peso o resistencia | H1–H4 |
 | F2 | **Catálogo de ejercicios** | 40 ejercicios base, filtrables por grupo muscular, equipo y objetivo, más ejercicios propios con CRUD | H5–H9 |
 | F3 | **Rutinas** | Rutinas con ejercicios del catálogo y sus series y repeticiones objetivo, prellenadas según el objetivo | H10–H13 |
-| F4 | **Registro de sesiones** | Ejecutar una rutina registrando cada serie realmente hecha (peso y repeticiones), con fecha y duración, prellenada con lo que se hizo la última vez | H14–H17 |
+| F4 | **Registro de sesiones** | Ejecutar una rutina registrando cada serie realmente hecha (peso y repeticiones), con fecha y duración, prellenada con lo que se hizo la última vez. Una sesión registrada se puede corregir o eliminar | H14–H17, H23 |
 | F5 | **Progreso con gráficas** | Evolución del peso máximo y del volumen por ejercicio, sesión a sesión | H20 |
 | F6 | **Récords personales automáticos** | El sistema detecta cuándo una serie supera el máximo histórico del usuario en ese ejercicio y la marca como récord | H18, H19 |
-| F7 | **Peso corporal** | Registro del peso por fecha y su gráfica: la métrica de progreso del objetivo "pérdida de peso" (decisión D3) | H21, H22 |
+| F7 | **Peso corporal** | Registro del peso por fecha, que se puede corregir o eliminar, y su gráfica: la métrica de progreso del objetivo "pérdida de peso" (decisión D3) | H21, H22, H24 |
 
 **La distinción central del modelo:** la rutina guarda lo **planeado** (series y repeticiones objetivo); la sesión guarda lo **ejecutado** (peso y repeticiones reales de cada serie). De comparar ambos sale todo el valor de la app.
 
@@ -91,7 +91,7 @@ Se mencionan como trabajo futuro, pero no se desarrollan:
 - Ejercicios que se miden por tiempo o distancia (cardio, plancha).
 - Historial en calendario y rachas; favoritos en el catálogo.
 - Recuperar o cambiar la contraseña, cambiar el email y eliminar la cuenta.
-- Editar una sesión ya registrada: se elimina y se registra de nuevo.
+- Agregar o quitar ejercicios de una sesión ya registrada: se elimina y se registra de nuevo.
 
 **Extensiones candidatas** (solo si sobra tiempo; **no comprometidas**):
 
@@ -185,9 +185,9 @@ El programa separaba un corte de Spring Boot con JavaScript y otro FullStack MER
 
 **Scrum adaptado a 3 personas**, que es la metodología del curso. El detalle está en el [plan de trabajo](../PLAN-DE-TRABAJO.md).
 
-- **Roles:** Rances es Product Owner; el rol de Scrum Master rota entre Javier (sprints 1 y 3) y Santiago (sprints 2 y 4); los tres forman el equipo de desarrollo.
+- **Roles:** Rances es Product Owner; el rol de Scrum Master rota entre Javier (sprints 2 y 4) y Santiago (sprint 3); los tres forman el equipo de desarrollo.
 - **Eventos cortos:** planeación al inicio de cada sprint, daily por escrito, revisión antes de cada entrega y retrospectiva de 15 minutos.
-- **Artefactos:** el Product Backlog es [HISTORIAS.md](HISTORIAS.md); el Sprint Backlog es el tablero de GitHub Projects; el incremento es `main` al cierre del sprint, marcado con una etiqueta de git.
+- **Artefactos:** el Product Backlog es [HISTORIAS.md](HISTORIAS.md), cargado en **Jira**, como pide el curso; el Sprint Backlog es el sprint activo de Jira; el incremento es `main` al cierre del sprint, marcado con una etiqueta de git.
 
 ### Prácticas que adoptamos
 
@@ -204,31 +204,31 @@ El programa separaba un corte de Spring Boot con JavaScript y otro FullStack MER
 
 ### Lo que explícitamente no hacemos
 
-- **API gateway, registro de servicios ni colas de mensajes.** Dos servicios que se hablan por REST muestran la arquitectura de microservicios; esa infraestructura se comería los 12 días.
+- **API gateway, registro de servicios ni colas de mensajes.** Dos servicios que se hablan por REST muestran la arquitectura de microservicios; esa infraestructura se comería los 19 días.
 - **Scrum con toda su ceremonia.** Con 3 personas, los roles se combinan y los eventos son cortos.
 
 ## 11. Plan de entregas
 
-El curso ya dio todas las clases, así que el proyecto **deja de ir por cortes**: se entrega una sola aplicación, completa, el **sábado 3 de octubre de 2026**. Antes hay una entrega intermedia, el **martes 22 de septiembre: login y base de datos**. El calendario día a día y el reparto están en el [plan de trabajo](../PLAN-DE-TRABAJO.md).
+El curso ya dio todas las clases, así que el proyecto **deja de ir por cortes**: se entrega una sola aplicación, completa, el **viernes 9 de octubre de 2026**, con la sustentación del login y de un CRUD por integrante, y las evidencias de participación y de la trazabilidad en Jira. Antes está la entrega del **sprint 2, el miércoles 23 de septiembre:** cuenta en Jira, diseño de la base de datos y repositorio. El calendario día a día y el reparto están en el [plan de trabajo](../PLAN-DE-TRABAJO.md).
 
 | Sprint | Fechas | Objetivo | Entregable verificable |
 |---|---|---|---|
-| **1** | 21 – 22 sep | Login y base de datos | **Entrega 1:** registro e inicio de sesión desde React; MySQL con sus 6 tablas y el catálogo base; MongoDB con sus colecciones; los dos servicios conectados |
-| **2** | 23 – 26 sep | Catálogo, rutinas y API de entrenamiento | Catálogo y perfil de punta a punta; API de rutinas, de sesiones y de peso; algoritmo de récords con pruebas |
-| **3** | 27 – 30 sep | Entrenar de punta a punta | Rutinas, registro de sesiones con récords automáticos, historial y peso corporal |
-| **4** | 1 – 3 oct | Progreso, pulido y entrega | Gráfica de progreso, récords, inicio, datos de demostración, pulido en celular y **entrega final** |
+| **2** | 21 – 23 sep | Bases, login y Jira | **Entrega del sprint 2:** Jira con el backlog, diseño de la base de datos y repositorio. Como avance: registro e inicio de sesión desde React, las dos bases de datos y los dos servicios conectados |
+| **3** | 24 – 29 sep | Las APIs | Catálogo y perfil de punta a punta; peso corporal (CRUD de Rances); APIs de rutinas y de sesiones; algoritmo de récords con pruebas |
+| **4** | 30 sep – 9 oct | Pantallas, evidencias y entrega | Rutinas (CRUD de Javier), sesiones (CRUD de Santiago), récords, progreso, inicio, datos de demostración, evidencias y **entrega final** |
 
 ## 12. Riesgos
 
 | Riesgo | Mitigación |
 |---|---|
-| Solo 12 días para todo | Prioridades explícitas en el plan (imprescindible, importante y si da el tiempo), congelamiento el 1 de octubre y margen en el sprint 4 |
-| Los dos servicios no se entienden entre sí | La validación del token entre servicios se prueba desde la entrega 1 (T3); el contrato dice qué servicio atiende cada endpoint |
+| Solo 19 días para todo | Prioridades explícitas en el plan, con lo que pide el curso (login y un CRUD por integrante) como imprescindible, y congelamiento el 6 de octubre |
+| Llegar a la sustentación sin evidencias de quién hizo qué | Jira al día desde el sprint 2, la clave de Jira en cada pull request y capturas al cerrar cada sprint en [EVIDENCIAS.md](../EVIDENCIAS.md) |
+| Los dos servicios no se entienden entre sí | La validación del token entre servicios se prueba desde la entrega del sprint 2 (T3); el contrato dice qué servicio atiende cada endpoint |
 | Los tres tocan los mismos archivos y se pisan | Cada proyecto vive en su carpeta; T1, T2 y T3 crean las piezas compartidas; una rama por tarea y PR con revisión |
-| El frontend se queda esperando al backend | Contrato escrito desde el sprint 1; las pantallas se construyen antes y se conectan cuando el endpoint está en `main` |
-| La base del backend y la autenticación se atrasan (cuello de botella del sprint 1) | Son lo primero del sprint; mientras tanto, Javier y Santiago avanzan en la base del frontend y el algoritmo de récords |
+| El frontend se queda esperando al backend | Contrato escrito desde el primer día y una API falsa del servicio de cuentas; las pantallas se construyen antes y se conectan cuando el endpoint está en `main` |
+| La base del backend y la autenticación se atrasan (cuello de botella del sprint 2) | Son lo primero del sprint; mientras tanto, Javier y Santiago avanzan en la base del frontend y el algoritmo de récords |
 | La autenticación consume más tiempo del previsto | Diseño mínimo: token en una tabla más un interceptor, sin Spring Security |
-| La regla de récords tiene errores sutiles (fechas pasadas, eliminaciones) | Se programa como una función separada con pruebas unitarias de 7 casos desde el sprint 1 |
+| La regla de récords tiene errores sutiles (fechas pasadas, correcciones, eliminaciones) | Se programa como una función separada con pruebas unitarias de 8 casos, antes que la API de sesiones |
 | Mala señal en el gimnasio | Borrador del entrenamiento en el navegador y reintento de guardado |
 | Chart.js se vuelve un hueco de tiempo | Cada gráfica tiene primero su tabla: si la gráfica falla, la pantalla sigue siendo útil |
 | MongoDB en local no tiene transacciones entre documentos | El recálculo de récords es idempotente: la siguiente escritura corrige cualquier falla a mitad (ARQUITECTURA DEC-18) |
@@ -248,17 +248,19 @@ El curso ya dio todas las clases, así que el proyecto **deja de ir por cortes**
 | D4 | ¿Login real o usuario fijo? | **Login con email y contraseña:** contraseñas con BCrypt y token guardado en MySQL | 2026-09-14 |
 | D5 | ¿Cómo se reparte el trabajo? | **Por funcionalidad, de punta a punta:** Rances, cuenta y peso corporal; Javier, catálogo, rutinas y progreso; Santiago, sesiones y récords | 2026-09-14 |
 | D10 | ¿Frontend con React o con JavaScript sin framework? | **React con Vite.** Está en el temario (§10) y es JavaScript | 2026-09-15 |
-| D7 | Fechas de entrega | **22 de septiembre:** login y base de datos. **3 de octubre:** proyecto final. No hay otras entregas | 2026-09-21 |
+| D7 | Fechas de entrega | Las del curso. **23 de septiembre, sprint 2:** cuenta en Jira, diseño de la base de datos y repositorio. **9 de octubre, sprints 3 y 4:** sustentación del login y de un CRUD por integrante, con un archivo de evidencias de participación y de la trazabilidad en Jira | 2026-09-21 |
 | D11 | ¿Cómo se usan todas las tecnologías del curso? | **Dos servicios:** cuentas y rutinas en Spring Boot + MySQL; entrenamiento (sesiones, récords, progreso y peso) en Node.js + Express + MongoDB | 2026-09-21 |
-| D12 | ¿Cómo nos repartimos para terminar el 3 de octubre? | **Rances:** servicio de cuentas, peso corporal, perfil, inicio e integración. **Javier:** frontend, catálogo y rutinas, progreso. **Santiago:** servicio de entrenamiento con sus pantallas | 2026-09-21 |
+| D12 | ¿Cómo nos repartimos para terminar el 9 de octubre? | **Rances:** servicio de cuentas, peso corporal, perfil, inicio e integración. **Javier:** frontend, catálogo y rutinas, progreso. **Santiago:** servicio de entrenamiento con sus pantallas | 2026-09-21 |
+| D13 | ¿Qué CRUD presenta cada integrante? | **Javier:** rutinas. **Rances:** peso corporal. **Santiago:** sesiones de entrenamiento. A peso corporal y a sesiones se les agrega editar (H24 y H23) para que los tres sean completos | 2026-09-21 |
+| D14 | ¿Dónde se lleva el tablero Scrum? | **Jira**, porque lo pide el curso. Reemplaza a GitHub Projects; GitHub queda para el código y los pull requests | 2026-09-21 |
 
 ### Pendientes — no asumir
 
 | ID | Decisión | Por qué importa | Fecha límite |
 |---|---|---|---|
-| D6 | Identidad visual: aprobar la propuesta del [mockup HTML](mockup/mockup.html) (colores, tipografía y logo) o usar el template que se vea en clase (§10.2) | Define los estilos de la base del frontend | Antes de cerrar T2 (sprint 1) |
-| D8 | Confirmar con el profesor las tres piezas que no están en el temario: React Router, Chart.js y spring-security-crypto | Si no se aprueba alguna, cambian la navegación, las gráficas o el cifrado de contraseñas | Entrega del 22 de septiembre |
-| D9 | Confirmar los roles de Scrum (Product Owner y rotación de Scrum Master) | Queda registrado en el plan | Hoy, en la planeación del sprint 1 |
+| D6 | Identidad visual: aprobar la propuesta del [mockup HTML](mockup/mockup.html) (colores, tipografía y logo) o usar el template que se vea en clase (§10.2) | Define los estilos de la base del frontend | Antes de cerrar T2 (sprint 2) |
+| D8 | Confirmar con el profesor las tres piezas que no están en el temario: React Router, Chart.js y spring-security-crypto | Si no se aprueba alguna, cambian la navegación, las gráficas o el cifrado de contraseñas | Entrega del 23 de septiembre |
+| D9 | Confirmar los roles de Scrum (Product Owner y rotación de Scrum Master) | Queda registrado en el plan | En la planeación del sprint 2 |
 
 ## 14. Documentos del proyecto
 
@@ -268,6 +270,8 @@ El curso ya dio todas las clases, así que el proyecto **deja de ir por cortes**
 | [PLAN-DE-TRABAJO.md](../PLAN-DE-TRABAJO.md) | Scrum adaptado, tareas, dependencias, definición de terminado y cómo verificar cada tarea |
 | [GUIA-INICIO.md](../GUIA-INICIO.md) | Instalación y primer arranque en Windows y macOS |
 | [GUIA-GIT.md](../GUIA-GIT.md) | Ramas, pull requests, conflictos y protección de `main` |
+| [guias/JIRA.md](guias/JIRA.md) | Crear el proyecto en Jira, importar el backlog y llevar los sprints |
+| [EVIDENCIAS.md](../EVIDENCIAS.md) | Participación de cada integrante y trazabilidad en Jira (entrega final) |
 | [HISTORIAS.md](HISTORIAS.md) | Product Backlog con criterios de aceptación y diagrama de casos de uso |
 | [MODELO-DATOS.md](MODELO-DATOS.md) | Diagrama entidad-relación, diccionario de datos, reglas de negocio y catálogo base |
 | [ARQUITECTURA.md](ARQUITECTURA.md) | Stack, capas, autenticación, diagramas de secuencia y decisiones |
@@ -283,3 +287,4 @@ El curso ya dio todas las clases, así que el proyecto **deja de ir por cortes**
 | 2026-09-14 | v2.0: cierre de D1 a D5; se agregan el peso corporal (F7) y la cuenta con login (F1); benchmark con las capturas de GymTracker; metodología Scrum adaptada; nuevas decisiones pendientes D7 a D9 |
 | 2026-09-15 | v2.1: frontend con React (D10); mockup en HTML con una propuesta visual para D6; D8 incluye confirmar React en este corte; MySQL referenciado al temario (§6) |
 | 2026-09-21 | v3.0: el proyecto une los cortes y se entrega completo el 3 de octubre (D7). Arquitectura de dos servicios con Node.js y MongoDB para el entrenamiento (D11) y nuevo reparto (D12) |
+| 2026-09-21 | v3.1: fechas del curso: sprint 2 el 23 de septiembre (Jira, diseño de la base de datos y repositorio) y final el 9 de octubre (D7). Un CRUD por integrante (D13): editar sesiones y registros de peso. Jira como tablero en lugar de GitHub Projects (D14) |

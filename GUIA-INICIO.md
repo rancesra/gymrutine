@@ -7,10 +7,11 @@ Pasos para dejar tu computador listo: instalar las herramientas, crear la base d
 
 > **¿Ya instalaste Git, el JDK 21 y VS Code para el proyecto teambsoft?** Salta al paso 1.4. Te faltan Node.js 24 (si no lo tienes), MySQL con Workbench, MongoDB con Compass y Postman.
 
-## 0. Acceso al repositorio
+## 0. Acceso al repositorio y a Jira
 
 1. Necesitas una cuenta de GitHub.
 2. Acepta la invitación de colaborador que te llegó por correo, o entra a https://github.com/rancesra/gymrutine/invitations. Sin aceptarla puedes descargar el repositorio, pero no subir cambios.
+3. Acepta también la invitación a **Jira** que te llega por correo. Jira es el tablero del equipo, y el curso lo revisa ([guía de Jira](docs/guias/JIRA.md)).
 
 ## 1. Instalar las herramientas
 
@@ -32,10 +33,10 @@ Pasos para dejar tu computador listo: instalar las herramientas, crear la base d
 | Quién | Para su primera tarea | Lo demás, cuando pueda |
 |---|---|---|
 | Rances (T1 y T4) | Git, JDK 21, VS Code, MySQL con Workbench y Postman | Node.js 24, MongoDB y Compass |
-| Javier (T2) | Git, VS Code y Node.js 24 | JDK 21 y MySQL con Workbench (los necesita el 23 para la API de catálogo), MongoDB, Compass y Postman |
+| Javier (T2) | Git, VS Code y Node.js 24 | JDK 21 y MySQL con Workbench (los necesita el 24 para la API de catálogo), MongoDB, Compass y Postman |
 | Santiago (T3) | Git, VS Code, Node.js 24, MongoDB con Compass y Postman | JDK 21 y MySQL con Workbench |
 
-El computador donde se presente la demostración del martes 22 necesita todo, porque ahí corren los dos servicios, las dos bases de datos y el frontend.
+El computador donde se presente la demostración del miércoles 23 necesita todo, porque ahí corren los dos servicios, las dos bases de datos y el frontend.
 
 ### 1.1 Git
 
@@ -289,6 +290,7 @@ Al arrancar de nuevo los servicios, todo se crea con la estructura nueva.
 2. Busca tu tarea en el [plan de trabajo](PLAN-DE-TRABAJO.md). En [¿Quién espera a quién?](PLAN-DE-TRABAJO.md#quién-espera-a-quién) ves con qué empiezas y de quién dependes.
 3. Si tu primera tarea es T2 o T3, sigue su guía paso a paso, con el código ya probado: [T2, frontend](docs/guias/T2-FRONTEND.md) (Javier) o [T3, servicio de entrenamiento](docs/guias/T3-NODE.md) (Santiago).
 4. Lee la [guía de git](GUIA-GIT.md): cómo crear tu rama, qué hacer cada día y cómo entregar tu tarea con un pull request.
+5. Abre Jira y revisa tus tarjetas del sprint: cómo se mueven está en la [guía de Jira](docs/guias/JIRA.md) §7.
 
 ---
 

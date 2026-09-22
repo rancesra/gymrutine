@@ -1,6 +1,6 @@
 # Guía de T3 — Base del servicio de entrenamiento
 
-**Para:** Santiago · **Tarea:** T3, base del servicio de entrenamiento (Node.js + Express + MongoDB) · **Rama:** `t3-base-node` · **Entrega 1:** martes 22 de septiembre
+**Para:** Santiago · **Tarea:** T3, base del servicio de entrenamiento (Node.js + Express + MongoDB) · **Rama:** `t3-base-node` · **Entrega:** la del sprint 2, el miércoles 23 de septiembre
 
 Al terminar tendrás el segundo servicio de la arquitectura funcionando:
 
@@ -10,7 +10,7 @@ Al terminar tendrás el segundo servicio de la arquitectura funcionando:
 - Los errores con el formato del contrato.
 - `GET /salud` y `GET /api/sesiones`.
 
-Son los puntos 3 y 6 de la demostración de la entrega 1 ([plan de trabajo](../../PLAN-DE-TRABAJO.md#entrega-1--martes-22-de-septiembre-login-y-base-de-datos)).
+En la presentación del miércoles 23 muestras el modelo de MongoDB en Compass (punto 2) y los dos servicios conectados (punto 6) ([plan de trabajo](../../PLAN-DE-TRABAJO.md#entrega-del-sprint-2--miércoles-23-de-septiembre)).
 
 **Todo el código de esta guía ya se probó** con MongoDB 8.0: colecciones e índices, 401 sin token o con un token inválido, 200 con un token válido, 503 con el servicio de cuentas apagado, y cada usuario viendo solo sus sesiones. Si copias cada archivo tal cual, funciona.
 
@@ -20,7 +20,7 @@ Los comandos son para **PowerShell**, en la terminal de VS Code. En macOS son lo
 
 ## 1. Antes de empezar
 
-1. Necesitas **Git, Node.js 24, VS Code, MongoDB 8.0 con Compass y Postman** ([guía de inicio](../../GUIA-INICIO.md) §1.1, §1.3, §1.4, §1.7 y §1.8).
+1. Necesitas **Git, Node.js 24, VS Code, MongoDB 8.0 con Compass y Postman** ([guía de inicio](../../GUIA-INICIO.md) §1.1, §1.3, §1.4, §1.7 y §1.8), y haber aceptado las invitaciones de GitHub y de Jira (§0).
 2. **MongoDB debe estar encendido.** Abre Compass → **New connection** → deja `mongodb://localhost:27017` → **Connect**. Si no conecta, en Windows presiona `Win + R`, escribe `services.msc`, busca **MongoDB Server (MongoDB)** y elige **Iniciar**.
 3. Comprueba Node.js y npm:
 
@@ -417,8 +417,8 @@ export default mongoose.model('RegistroPeso', esquemaRegistroPeso, 'registrosPes
 Por ahora solo el historial, que responde `[]` mientras no haya sesiones. Registrar, ver el detalle y eliminar llegan con T7. **Toda consulta filtra por `usuarioId`:** así nadie ve las sesiones de otro.
 
 ```js
-// Rutas de /api/sesiones. Por ahora solo el historial vacío para la entrega 1;
-// T7 agrega registrar, detalle, eliminar y últimos registros.
+// Rutas de /api/sesiones. Por ahora solo el historial vacío para la entrega del sprint 2;
+// T7 agrega registrar, detalle, editar, eliminar y últimos registros.
 import { Router } from 'express'
 import Sesion from '../modelos/Sesion.js'
 
@@ -531,7 +531,7 @@ Cuando Rances avise en el grupo que T1 y la API de T4 están en `main`:
 3. Arranca el servicio de cuentas ([guía de inicio](../../GUIA-INICIO.md) §5.1) **en lugar de** la API falsa: los dos usan el puerto 8080.
 4. Crea una cuenta (`POST http://127.0.0.1:8080/api/auth/registro`, cuerpo del [contrato](../CONTRATO-API.md) §3), usa su token y repite las pruebas del paso 6.
 
-Si no alcanzas a instalar MySQL hoy, esta prueba se hace mañana temprano en el computador de Rances, al unir los pull requests (cronograma del plan).
+Si no alcanzas a instalar MySQL, esta prueba se hace el miércoles temprano en el computador de Rances, al unir los pull requests (cronograma del plan).
 
 ## 8. Subir tu trabajo
 
@@ -549,14 +549,16 @@ git push
 ```
 
 - En `git status` deben aparecer `package.json`, `package-lock.json`, `.env.ejemplo` y `src/`. **Si aparece `.env` o `node_modules/`, no sigas y pregunta:** el `.env` es tuyo y no se sube.
-- Luego abre el pull request en GitHub (**Compare & pull request**, base `main`) con el título `T3: base del servicio de entrenamiento` y pide la revisión de Rances. En "Cómo probarlo", pega las pruebas del paso 6.
+- Luego abre el pull request en GitHub (**Compare & pull request**, base `main`). El título empieza con la clave de tu tarjeta de T3 en Jira, por ejemplo `GR-15 T3: base del servicio de entrenamiento`. Pide la revisión de Rances y, en "Cómo probarlo", pega las pruebas del paso 6.
+- En Jira, pasa tu tarjeta de T3 a **En revisión**; cuando se una el PR, a **Listo** ([guía de Jira](JIRA.md) §7).
 - En el mismo PR, marca en el README la casilla de T3.
 
-## 9. Lo que sigue: sprint 2
+## 9. Lo que sigue: sprint 3
 
-- **Primero, T8 algoritmo de récords (23 y 24 de septiembre).** No depende de nadie: es una función pura, `calcularRecords`, con sus pruebas en `node --test` ([modelo de datos](../MODELO-DATOS.md) §7.1 y [plan](../../PLAN-DE-TRABAJO.md#t8--récords-personales-historias-18-y-19)).
-- **Después, T7 API de sesiones (24 al 26 de septiembre).** Para registrar una sesión, el servicio le pide la rutina al de cuentas con `GET /api/rutinas/{id}`, que hace Javier en T6. Mientras no esté en `main`, la API falsa ya responde para Ana la rutina 3 (activa) y la 4 (eliminada, `activa: false`), y cualquier otra da 404. Ver [¿Quién espera a quién?](../../PLAN-DE-TRABAJO.md#quién-espera-a-quién).
-- **Mañana, en la entrega,** presentas los puntos 3 (MongoDB en Compass) y 6 (los dos servicios conectados).
+- **Primero, T8 algoritmo de récords (24 y 25 de septiembre).** No depende de nadie: es una función pura, `calcularRecords`, con sus pruebas en `node --test` ([modelo de datos](../MODELO-DATOS.md) §7.1 y [plan](../../PLAN-DE-TRABAJO.md#t8--récords-personales-historias-18-y-19)).
+- **Después, T7 API de sesiones (26 al 28 de septiembre),** con `PUT /api/sesiones/{id}` para editar (contrato §7). Para registrar una sesión, el servicio le pide la rutina al de cuentas con `GET /api/rutinas/{id}`, que hace Javier en T6 y debe estar en `main` el domingo 27. Mientras no esté, la API falsa ya responde para Ana la rutina 3 (activa) y la 4 (eliminada, `activa: false`), y cualquier otra da 404. Ver [¿Quién espera a quién?](../../PLAN-DE-TRABAJO.md#quién-espera-a-quién).
+- **Tu CRUD para la entrega final es el de sesiones** (T7: registrar, ver, editar y eliminar), de la colección a las pantallas P7 a P10. Ver [Un CRUD por integrante](../../PLAN-DE-TRABAJO.md#un-crud-por-integrante).
+- **El miércoles 23, en la entrega,** presentas el modelo de MongoDB en Compass (punto 2) y los dos servicios conectados (punto 6).
 
 ## 10. Si algo falla
 

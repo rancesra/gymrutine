@@ -1,6 +1,6 @@
 # Modelo de datos — GymRutine
 
-**Versión:** 2.0
+**Versión:** 2.1
 **Fecha:** 2026-09-21
 **Bases de datos:** MySQL 8.4 LTS (servicio de cuentas, con Spring Data JPA) · MongoDB 8.0 (servicio de entrenamiento, con Mongoose)
 
@@ -317,10 +317,10 @@ Reglas que el esquema no garantiza solo y que implementan los servicios. Cada un
 | R2 | **Solo los propios se modifican.** Editar o eliminar un ejercicio base responde 403 | Cuentas |
 | R3 | **Borrado lógico** en `ejercicio` y `rutina`. Lo eliminado desaparece de los listados y no se puede usar en rutinas ni sesiones nuevas, pero se sigue viendo en el historial | Cuentas |
 | R4 | **Consistencia de la sesión.** La rutina es del usuario y está activa; cada ejercicio registrado está en esa rutina, activo y sin repetir; hay al menos un ejercicio con al menos una serie. `orden` y `numero` los asigna el servidor | Entrenamiento, preguntando al de cuentas |
-| R5 | **Las sesiones no se editan.** Para corregir una, se elimina y se registra de nuevo. Así el recálculo de récords tiene un solo camino | Entrenamiento |
+| R5 | **Corregir una sesión.** Se pueden cambiar su fecha, su duración y sus series, pero no sus ejercicios: no se agregan ni se quitan. La rutina no se vuelve a consultar, porque la sesión guarda la copia de los nombres. Al corregirla se recalculan los récords de sus ejercicios, igual que al registrarla o eliminarla | Entrenamiento |
 | R6 | **Récords personales:** ver §7.1 | Entrenamiento |
 | R7 | **Volumen.** Volumen de una serie = `pesoKg × repeticiones`. El de un ejercicio y el de una sesión son sumas, redondeadas a 2 decimales. No se guardan: se calculan al consultar | Entrenamiento |
-| R8 | **Peso corporal.** Como máximo un registro por usuario y fecha (índice único) | Entrenamiento |
+| R8 | **Peso corporal.** Como máximo un registro por usuario y fecha (índice único), también al corregir la fecha de un registro | Entrenamiento |
 | R9 | **Tokens.** Vencen a los 7 días. Cerrar sesión borra el token. Al iniciar sesión se borran los tokens vencidos de ese usuario | Cuentas |
 | R10 | **Pertenencia.** Todo recurso de otro usuario responde como si no existiera: 404. En MongoDB, toda consulta lleva el `usuarioId` del token | Los dos |
 
@@ -338,9 +338,9 @@ Reglas que el esquema no garantiza solo y que implementan los servicios. Cada un
    - Las demás series de ese ejercicio quedan con `esRecord: false`.
 4. Guardar solo las sesiones que cambiaron.
 
-**Cuándo se ejecuta:** después de guardar una sesión y después de eliminarla, para cada ejercicio de esa sesión.
+**Cuándo se ejecuta:** después de registrar, corregir o eliminar una sesión, para cada ejercicio de esa sesión.
 
-**Por qué se recalcula todo el historial del ejercicio** y no se compara solo contra el récord actual: una sesión puede registrarse con fecha pasada o eliminarse, y en los dos casos cambian los récords de sesiones posteriores. Además, así el recálculo es **idempotente**: MongoDB en local no tiene transacciones entre documentos, y si algo falla a mitad, la siguiente escritura deja todo correcto (ARQUITECTURA DEC-18).
+**Por qué se recalcula todo el historial del ejercicio** y no se compara solo contra el récord actual: una sesión puede registrarse con fecha pasada, corregirse o eliminarse, y en los tres casos cambian los récords de sesiones posteriores. Además, así el recálculo es **idempotente**: MongoDB en local no tiene transacciones entre documentos, y si algo falla a mitad, la siguiente escritura deja todo correcto (ARQUITECTURA DEC-18).
 
 **El cálculo es una función pura** (`calcularRecords`): recibe las sesiones ordenadas y devuelve qué series son récord, sin tocar la base de datos. Así se prueba con `node --test`.
 
@@ -355,6 +355,7 @@ Reglas que el esquema no garantiza solo y que implementan los servicios. Cada un
 | Peso 0 | Nunca es récord |
 | Se registra una sesión con una fecha anterior y un peso mayor | Esa sesión es récord y puede quitárselo a sesiones posteriores |
 | Se elimina la sesión que tenía el récord | Una sesión posterior puede pasar a ser récord |
+| Se corrige a la baja el peso de la serie récord de una sesión | Esa sesión puede perder el récord y una posterior ganarlo |
 
 **Ejemplo — Press de banca con barra:**
 
@@ -367,6 +368,7 @@ Reglas que el esquema no garantiza solo y que implementan los servicios. Cada un
 
 - Si se **elimina S3**, el máximo vuelve a 45 y S4 (40 kg) sigue sin ser récord.
 - Si después se **registra una sesión con fecha 06-sep** y una serie de 52,5 × 3, esa sesión pasa a ser récord y **S3 deja de serlo** (50 < 52,5).
+- Si en cambio se **corrige S3** y todas sus series quedan en 45 kg, S3 solo empata el máximo previo (45) y deja de ser récord; S4 (40 kg) sigue sin serlo. Si se corrige solo la serie de 50 × 6, S3 sigue siendo récord con la de 50 × 5.
 
 ## 8. Normalización y desnormalización
 
@@ -523,7 +525,7 @@ No hay ejercicios que se midan por tiempo o distancia (plancha, cinta, bicicleta
 | DM-05 | **Cada registro de la sesión apunta al ejercicio**, no a la fila de la rutina | Referenciar `rutina_ejercicio` | Editar o eliminar una rutina no debe alterar el historial. Además permite prellenar con "la última vez" aunque haya sido en otra rutina |
 | DM-06 | **Borrado lógico** en ejercicio y rutina; **físico** en sesión y registro de peso | Todo físico · todo lógico | Ejercicios y rutinas aparecen en el historial y no pueden desaparecer. Sesiones y pesos no los referencia nada, y borrarlos de verdad es lo que el usuario espera al corregir un error |
 | DM-07 | **Enumerados como texto** | Tablas de catálogo · `ORDINAL` | Son listas fijas que no se administran desde la app. `ORDINAL` se rompe al reordenar |
-| DM-08 | **Las sesiones en MongoDB, como un documento anidado** | Tres tablas en MySQL (sesión, registro y serie) | Una sesión se escribe una vez, completa, y se lee completa. Como documento no necesita uniones entre tablas, y su forma es la misma que la del JSON del contrato |
+| DM-08 | **Las sesiones en MongoDB, como un documento anidado** | Tres tablas en MySQL (sesión, registro y serie) | Una sesión se escribe completa, al registrarla o al corregirla, y se lee completa. Como documento no necesita uniones entre tablas, y su forma es la misma que la del JSON del contrato |
 | DM-09 | **Copia de nombres en la sesión** (ARQUITECTURA DEC-15) | Guardar solo los ids | El historial debe verse igual aunque la rutina o el ejercicio se renombren o se eliminen, y sin llamar al servicio de cuentas por cada sesión |
 | DM-10 | **"No repetir ejercicios en una rutina" se valida en el servicio**, sin restricción única en la base de datos | UK (`rutina_id`, `ejercicio_id`) | Al editar, Hibernate reemplaza la lista y puede insertar las filas nuevas antes de borrar las viejas, lo que dispararía la restricción aunque el resultado final sea válido |
 | DM-11 | **Fechas de MongoDB como texto ISO en hora local** (`2026-09-14T18:30:00`) | El tipo `Date` de MongoDB | `Date` se guarda en UTC y obliga a convertir zonas horarias, un error clásico. El texto ISO es igual al del contrato y se ordena bien como texto |
@@ -541,3 +543,4 @@ No hay ejercicios que se midan por tiempo o distancia (plancha, cinta, bicicleta
 |---|---|
 | 2026-09-14 | v1.0: versión inicial con las decisiones D2 (registro por serie, récord por peso), D3 (peso corporal) y D4 (login con email y contraseña) |
 | 2026-09-21 | v2.0: el modelo se reparte entre dos bases. MySQL queda con 6 tablas (cuentas, catálogo y rutinas); las sesiones y el peso corporal pasan a MongoDB como las colecciones `sesiones` y `registrosPeso`. Nuevas decisiones DM-08, DM-09, DM-11 y DM-12 |
+| 2026-09-21 | v2.1: un CRUD completo por integrante. Las sesiones se pueden corregir (R5: fecha, duración y series, sin cambiar los ejercicios) y el recálculo de récords se ejecuta también al corregir (§7.1, con un caso de prueba más). Los registros de peso se pueden corregir sin repetir fecha (R8) |

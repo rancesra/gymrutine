@@ -270,7 +270,7 @@
     <span class="logo"><span class="logo-marca"><svg class="ic"><use href="#i-rutinas"/></svg></span><span>Gym<b>Rutine</b></span></span>
     <h1>Mockup de pantallas</h1>
     <p>Cómo se vería GymRutine en el celular, pantalla por pantalla, con las reglas anotadas al lado. Los números azules del dibujo corresponden a las reglas de cada nota.</p>
-    <div class="meta"><span>Versión 1.2</span><span>2026-09-21</span><span>Entornos de Programación · entrega final 3 de octubre</span><span>React · Spring Boot · Node.js</span></div>
+    <div class="meta"><span>Versión 1.3</span><span>2026-09-21</span><span>Entornos de Programación · entrega final 9 de octubre</span><span>React · Spring Boot · Node.js</span></div>
   </div>
 </header>
 
@@ -936,7 +936,7 @@
 <!-- ======================= P10 ======================= -->
 <section class="seccion" id="p10">
   <h2>P10 · Detalle de sesión</h2>
-  <div class="seccion-meta"><span><b>Ruta</b> <code>/historial/:id</code></span><span><b>Página</b> <code>PaginaSesion</code></span><span><b>Historias</b> H16 y H17</span><span><b>Responsable</b> Santiago (T7)</span></div>
+  <div class="seccion-meta"><span><b>Ruta</b> <code>/historial/:id</code></span><span><b>Página</b> <code>PaginaSesion</code></span><span><b>Historias</b> H16, H17 y H23</span><span><b>Responsable</b> Santiago (T7)</span></div>
   <div class="bloque">
     <div class="movil">
       <div class="movil-estado"><span>07:21</span><span class="isla"></span><span class="senal">5G ▮▮▮</span></div>
@@ -958,7 +958,8 @@
             <div class="lista-fila"><span class="texto-3" style="width:18px">2</span><span class="crece">27,5 kg × 10</span></div>
             <div class="lista-fila"><span class="texto-3" style="width:18px">3</span><span class="crece">27,5 kg × 9</span></div>
           </div>
-          <div class="con-m"><a class="btn btn-peligro btn-bloque"><svg class="ic sm"><use href="#i-basura"/></svg>Eliminar sesión</a><span class="m m-abs">2</span></div>
+          <div class="con-m"><a class="btn btn-secundario btn-bloque"><svg class="ic sm"><use href="#i-lapiz"/></svg>Editar sesión</a><span class="m m-abs">2</span></div>
+          <div class="con-m"><a class="btn btn-peligro btn-bloque"><svg class="ic sm"><use href="#i-basura"/></svg>Eliminar sesión</a><span class="m m-abs">3</span></div>
         </div>
         <nav class="nav-inferior">
           <span><svg class="ic"><use href="#i-inicio"/></svg>Inicio</span>
@@ -973,10 +974,11 @@
       <h3>Reglas</h3>
       <ol>
         <li><span class="m">1</span><span>Los ejercicios van en su orden, cada uno con su volumen y sus series. Las series con <code>esRecord: true</code> se resaltan con la marca de récord. Si la rutina o un ejercicio se eliminaron después, se muestran igual, con su nombre.</span></li>
-        <li><span class="m">2</span><span>"Eliminar sesión" pide confirmación: "¿Eliminar esta sesión? Se recalcularán tus récords." Luego <code>DELETE</code> y vuelve a P9.</span></li>
-        <li><span class="m">3</span><span>Con 404, estado "no encontrado" y botón para volver al historial.</span></li>
+        <li><span class="m">2</span><span>"Editar sesión" (parte del CRUD de Santiago) pasa a modo edición con los controles de P7: fecha, duración y las series de cada ejercicio (peso y repeticiones, agregar o quitar series). Los ejercicios no cambian y cada uno conserva al menos una serie. "Guardar cambios" hace <code>PUT</code> y vuelve al detalle con los récords recalculados; "Cancelar" descarta.</span></li>
+        <li><span class="m">3</span><span>"Eliminar sesión" pide confirmación: "¿Eliminar esta sesión? Se recalcularán tus récords." Luego <code>DELETE</code> y vuelve a P9.</span></li>
+        <li><span class="m">4</span><span>Con 404, estado "no encontrado" y botón para volver al historial.</span></li>
       </ol>
-      <div class="datos"><b>Datos:</b> <code>GET /sesiones/{id}</code> · <code>DELETE /sesiones/{id}</code></div>
+      <div class="datos"><b>Datos:</b> <code>GET /sesiones/{id}</code> · <code>PUT /sesiones/{id}</code> · <code>DELETE /sesiones/{id}</code></div>
     </aside>
   </div>
 </section>
@@ -1111,7 +1113,7 @@
 <!-- ======================= P13 ======================= -->
 <section class="seccion" id="p13">
   <h2>P13 · Peso corporal</h2>
-  <div class="seccion-meta"><span><b>Ruta</b> <code>/progreso/peso</code></span><span><b>Página</b> <code>PaginaPeso</code></span><span><b>Historias</b> H21 y H22</span><span><b>Responsable</b> Rances (T10)</span></div>
+  <div class="seccion-meta"><span><b>Ruta</b> <code>/progreso/peso</code></span><span><b>Página</b> <code>PaginaPeso</code></span><span><b>Historias</b> H21, H22 y H24</span><span><b>Responsable</b> Rances (T10)</span></div>
   <div class="bloque">
     <div class="movil">
       <div class="movil-estado"><span>07:28</span><span class="isla"></span><span class="senal">5G ▮▮▮</span></div>
@@ -1149,9 +1151,9 @@
             <span class="m m-abs">2</span>
           </div>
           <div class="lista con-m">
-            <div class="lista-fila"><div class="crece"><b>77,9 kg</b><div class="texto-3">lun 14 sep 2026</div></div><span class="etiqueta gris">−0,5</span><span class="icono-btn" style="color:var(--tinta-3)"><svg class="ic sm"><use href="#i-basura"/></svg></span></div>
-            <div class="lista-fila"><div class="crece"><b>78,4 kg</b><div class="texto-3">lun 7 sep 2026</div></div><span class="etiqueta gris">+0,2</span><span class="icono-btn" style="color:var(--tinta-3)"><svg class="ic sm"><use href="#i-basura"/></svg></span></div>
-            <div class="lista-fila"><div class="crece"><b>78,2 kg</b><div class="texto-3">lun 31 ago 2026</div></div><span class="etiqueta gris">—</span><span class="icono-btn" style="color:var(--tinta-3)"><svg class="ic sm"><use href="#i-basura"/></svg></span></div>
+            <div class="lista-fila"><div class="crece"><b>77,9 kg</b><div class="texto-3">lun 14 sep 2026</div></div><span class="etiqueta gris">−0,5</span><span class="icono-btn" style="color:var(--tinta-3)"><svg class="ic sm"><use href="#i-lapiz"/></svg></span><span class="icono-btn" style="color:var(--tinta-3)"><svg class="ic sm"><use href="#i-basura"/></svg></span></div>
+            <div class="lista-fila"><div class="crece"><b>78,4 kg</b><div class="texto-3">lun 7 sep 2026</div></div><span class="etiqueta gris">+0,2</span><span class="icono-btn" style="color:var(--tinta-3)"><svg class="ic sm"><use href="#i-lapiz"/></svg></span><span class="icono-btn" style="color:var(--tinta-3)"><svg class="ic sm"><use href="#i-basura"/></svg></span></div>
+            <div class="lista-fila"><div class="crece"><b>78,2 kg</b><div class="texto-3">lun 31 ago 2026</div></div><span class="etiqueta gris">—</span><span class="icono-btn" style="color:var(--tinta-3)"><svg class="ic sm"><use href="#i-lapiz"/></svg></span><span class="icono-btn" style="color:var(--tinta-3)"><svg class="ic sm"><use href="#i-basura"/></svg></span></div>
             <span class="m m-abs">3</span>
           </div>
         </div>
@@ -1169,9 +1171,9 @@
       <ol>
         <li><span class="m">1</span><span>Fecha por defecto: hoy; no se permite una fecha futura. Peso de 20 a 350 kg. Con 409 <code>PESO_YA_REGISTRADO</code>, bajo la fecha: "Ya registraste tu peso ese día".</span></li>
         <li><span class="m">2</span><span><code>GraficaLinea</code> con los registros en orden cronológico, tal como llegan de la API. Es la primera gráfica del proyecto (sprint 3): aquí nace el componente que después reutiliza P11.</span></li>
-        <li><span class="m">3</span><span>La lista va de la más reciente a la más antigua, cada registro con su diferencia contra el anterior; el más antiguo muestra "—". La diferencia va en gris: subir o bajar de peso no es bueno ni malo por sí mismo, depende del objetivo. Eliminar pide confirmación: "¿Eliminar el registro del 14 sep?".</span></li>
+        <li><span class="m">3</span><span>La lista va de la más reciente a la más antigua, cada registro con su diferencia contra el anterior; el más antiguo muestra "—". La diferencia va en gris: subir o bajar de peso no es bueno ni malo por sí mismo, depende del objetivo. El lápiz carga el registro en el formulario de arriba para corregirlo (parte del CRUD de Rances): "Guardar cambios" hace <code>PUT</code>, con 409 si la fecha nueva ya tiene otro registro, y "Cancelar" vuelve a registrar uno nuevo. Eliminar pide confirmación: "¿Eliminar el registro del 14 sep?".</span></li>
       </ol>
-      <div class="datos"><b>Datos:</b> <code>GET /peso-corporal</code> · <code>POST /peso-corporal</code> · <code>DELETE /peso-corporal/{id}</code></div>
+      <div class="datos"><b>Datos:</b> <code>GET /peso-corporal</code> · <code>POST /peso-corporal</code> · <code>PUT /peso-corporal/{id}</code> · <code>DELETE /peso-corporal/{id}</code></div>
     </aside>
   </div>
 </section>
@@ -1373,7 +1375,7 @@
 </section>
 
 <footer class="pie">
-  GymRutine · Mockup de pantallas v1.2 · Última actualización: 2026-09-21 · Reglas en <a href="README.md">README.md</a> · Endpoints en <a href="../CONTRATO-API.md">CONTRATO-API.md</a>
+  GymRutine · Mockup de pantallas v1.3 · Última actualización: 2026-09-21 · Reglas en <a href="README.md">README.md</a> · Endpoints en <a href="../CONTRATO-API.md">CONTRATO-API.md</a>
 </footer>
 
 </div>

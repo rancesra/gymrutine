@@ -1,6 +1,6 @@
 # Mockup de pantallas — GymRutine
 
-**Versión:** 1.2
+**Versión:** 1.3
 **Fecha:** 2026-09-21
 
 Las 14 pantallas de GymRutine, **cada una con sus reglas**: ruta, de dónde salen los datos, qué se valida, qué pasa al enviar y qué se ve cuando algo falla. Lo que obliga son las reglas, que salen del [contrato](../CONTRATO-API.md) y de las [historias](../HISTORIAS.md).
@@ -53,10 +53,10 @@ flowchart TD
 | [P7 Entrenar](#p7--entrenar-) | `/rutinas/:id/entrenar` | `PaginaEntrenar` | H14, H18 | Santiago (T7) |
 | [P8 Resumen de la sesión](#p8--resumen-de-la-sesión) | `/rutinas/:id/entrenar` (al guardar) | `PaginaEntrenar` | H14, H18 | Santiago (T7) |
 | [P9 Historial](#p9--historial) | `/historial` | `PaginaHistorial` | H15 | Santiago (T7) |
-| [P10 Detalle de sesión](#p10--detalle-de-sesión) | `/historial/:id` | `PaginaSesion` | H16, H17 | Santiago (T7) |
+| [P10 Detalle de sesión](#p10--detalle-de-sesión) | `/historial/:id` | `PaginaSesion` | H16, H17, H23 | Santiago (T7) |
 | [P11 Progreso por ejercicio](#p11--progreso-por-ejercicio) | `/progreso` | `PaginaProgreso` | H20 | Javier (T9) |
 | [P12 Récords](#p12--récords) | `/progreso/records` | `PaginaRecords` | H19 | Rances (T8) |
-| [P13 Peso corporal](#p13--peso-corporal) | `/progreso/peso` | `PaginaPeso` | H21, H22 | Rances (T10) |
+| [P13 Peso corporal](#p13--peso-corporal) | `/progreso/peso` | `PaginaPeso` | H21, H22, H24 | Rances (T10) |
 | [P14 Perfil](#p14--perfil) | `/perfil` | `PaginaPerfil` | H3, H4 | Rances (T4) |
 
 ## Reglas generales (todas las pantallas)
@@ -213,10 +213,14 @@ La pantalla más importante: es la única que se usa **dentro del gimnasio**, de
 
 ## P10 — Detalle de sesión
 
-**Ruta:** `/historial/:id` · **Boceto:** [mockup.html#p10](mockup.html#p10) · **Datos:** `GET /sesiones/{id}` y `DELETE /sesiones/{id}`
+**Ruta:** `/historial/:id` · **Boceto:** [mockup.html#p10](mockup.html#p10) · **Datos:** `GET /sesiones/{id}`, `PUT /sesiones/{id}` y `DELETE /sesiones/{id}`
 
 - Los ejercicios van en su orden, cada uno con su volumen y sus series. Las series con `esRecord: true` llevan la marca de récord.
 - Una rutina o un ejercicio eliminados después se muestran igual, con su nombre.
+- **Editar sesión** (parte del CRUD de Santiago, H23): el botón "Editar sesión" pasa la pantalla a modo edición, con los mismos controles de P7: fecha y hora de inicio, duración y, en cada ejercicio, sus filas de series con peso y repeticiones, "Agregar serie" y quitar serie.
+  - Los ejercicios no se agregan ni se quitan, y cada uno conserva al menos una serie. Las validaciones son las de P7: de 0 a 500 kg, de 1 a 100 repeticiones y una fecha que no sea futura.
+  - "Guardar cambios" → `PUT /sesiones/{id}` → vuelve al detalle, con los récords recalculados. "Cancelar" descarta los cambios.
+  - Un 400 marca cada campo con error según la ruta que llega en `campos` (`registros[0].series[1].pesoKg`).
 - **Eliminar sesión:** "¿Eliminar esta sesión? Se recalcularán tus récords." → `DELETE` → P9.
 - 404 → estado "no encontrado" con el botón para volver al historial.
 
@@ -241,12 +245,13 @@ La pantalla más importante: es la única que se usa **dentro del gimnasio**, de
 
 ## P13 — Peso corporal
 
-**Ruta:** `/progreso/peso` · **Boceto:** [mockup.html#p13](mockup.html#p13) · **Datos:** `GET /peso-corporal`, `POST /peso-corporal` y `DELETE /peso-corporal/{id}`
+**Ruta:** `/progreso/peso` · **Boceto:** [mockup.html#p13](mockup.html#p13) · **Datos:** `GET /peso-corporal`, `POST /peso-corporal`, `PUT /peso-corporal/{id}` y `DELETE /peso-corporal/{id}`
 
 - **Fecha por defecto: hoy.** No se permite una fecha futura. Peso de 20 a 350 kg.
 - 409 `PESO_YA_REGISTRADO` → mensaje bajo la fecha: "Ya registraste tu peso ese día".
 - **Gráfica de línea (`GraficaLinea`)** con los registros en orden cronológico, tal como llegan de la API.
 - **La lista va de la más reciente a la más antigua,** cada registro con su diferencia contra el anterior (`+0,2`, `-0,5`). El registro más antiguo muestra `—`. La diferencia va en gris: subir o bajar de peso no es bueno ni malo por sí mismo, depende del objetivo.
+- **Corregir un registro** (parte del CRUD de Rances, H24): el lápiz de un registro carga su fecha y su peso en el formulario de arriba, que cambia a "Guardar cambios" y "Cancelar". Guardar → `PUT /peso-corporal/{id}`. Si la fecha nueva ya tiene otro registro, llega un 409 y se muestra "Ya registraste tu peso ese día".
 - Eliminar → "¿Eliminar el registro del 14 sep?" → `DELETE`.
 - Es la primera pantalla con gráfica (sprint 3): aquí nace `GraficaLinea`, que después reutiliza P11.
 
@@ -297,3 +302,4 @@ Una pantalla está lista para revisión cuando:
 | 2026-09-14 | v1.0: versión inicial con 14 pantallas en bocetos de texto |
 | 2026-09-15 | v1.1: los bocetos pasan a [mockup.html](mockup.html) (HTML y CSS, con propuesta visual); rutas y páginas de React; fechas de ejemplo corregidas (el 14 de septiembre de 2026 es lunes) |
 | 2026-09-21 | v1.2: responsables según el nuevo plan; la última vez de cada rutina y los últimos registros salen del servicio de entrenamiento |
+| 2026-09-21 | v1.3: un CRUD por integrante: P10 permite editar la sesión (H23) y P13 corregir un registro de peso (H24) |

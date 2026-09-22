@@ -1,6 +1,6 @@
 # Arquitectura — GymRutine
 
-**Versión:** 2.1
+**Versión:** 2.2
 **Fecha:** 2026-09-21
 
 ## 1. Vista general
@@ -53,7 +53,8 @@ Versiones verificadas en las fuentes oficiales el **2026-09-21**. Se fijan para 
 | React Router | 8.4 | Navegación entre pantallas | Complemento estándar de React (confirmar, D8) |
 | Chart.js | 4.5.1 | Gráficas de progreso y de peso | **No:** excepción justificada (DEC-08) |
 | Postman | vigente | Pruebas de las dos APIs | Sí (§7.7) |
-| Git, GitHub, Projects e Issues | vigente | Versiones, tablero y seguimiento de errores | Sí (§4 y §5) |
+| Git y GitHub | vigente | Versiones, ramas y pull requests | Sí (§5) |
+| Jira | plan Free | Tablero Scrum: backlog, sprints, errores y trazabilidad ([guía](guias/JIRA.md)) | Sí: lo pide el curso (§4) |
 
 ## 4. Servicio de cuentas y rutinas (Spring Boot)
 
@@ -270,7 +271,7 @@ sequenceDiagram
     F-->>U: Resumen con ¡Nuevo récord!
 ```
 
-**Sin transacciones:** MongoDB instalado en local, sin réplica, no hace transacciones entre documentos. Por eso el recálculo de récords se diseñó **idempotente**: siempre parte del historial completo del ejercicio, así que si falla después de guardar la sesión, el siguiente registro o eliminación deja todo correcto (DEC-18). Eliminar una sesión sigue el mismo camino: se borra el documento y se recalculan los récords de sus ejercicios.
+**Sin transacciones:** MongoDB instalado en local, sin réplica, no hace transacciones entre documentos. Por eso el recálculo de récords se diseñó **idempotente**: siempre parte del historial completo del ejercicio, así que si falla después de guardar la sesión, el siguiente registro o eliminación deja todo correcto (DEC-18). Corregir o eliminar una sesión sigue el mismo camino: se guarda el cambio (o se borra el documento) y se recalculan los récords de sus ejercicios. Al corregir, el servicio de entrenamiento no vuelve a consultar la rutina, porque la sesión ya guarda la copia de los nombres.
 
 ## 9. Entorno de desarrollo
 
@@ -311,7 +312,7 @@ Son **cinco piezas**: las dos bases de datos arrancan solas con el computador y 
 
 | # | Decisión | Alternativas descartadas | Por qué |
 |---|---|---|---|
-| DEC-01 | **Dos servicios (microservicios) separados por responsabilidad:** cuentas y rutinas en Spring Boot; entrenamiento en Node | Un solo backend · un servicio por tecnología que duplique funciones · microservicios completos con gateway, registro de servicios y colas | El curso pide usar todas sus tecnologías y presenta la arquitectura de microservicios (§7.1). Dos servicios con una frontera clara (lo que se planea y lo que se ejecuta) muestran el concepto sin montar una infraestructura que no cabe en 12 días |
+| DEC-01 | **Dos servicios (microservicios) separados por responsabilidad:** cuentas y rutinas en Spring Boot; entrenamiento en Node | Un solo backend · un servicio por tecnología que duplique funciones · microservicios completos con gateway, registro de servicios y colas | El curso pide usar todas sus tecnologías y presenta la arquitectura de microservicios (§7.1). Dos servicios con una frontera clara (lo que se planea y lo que se ejecuta) muestran el concepto sin montar una infraestructura que no cabe en 19 días |
 | DEC-02 | **Una base de datos por servicio:** MySQL para cuentas, catálogo y rutinas; MongoDB para el entrenamiento | Todo en MySQL · todo en MongoDB | Cada dato va al motor que le sienta. Lo que se planea necesita integridad referencial (una rutina apunta a ejercicios que existen). Una sesión es un documento anidado (ejercicios → series) que se escribe una vez y se lee completo, sin uniones entre tablas |
 | DEC-03 | **MySQL 8.4 LTS** y **MongoDB 8.0**, con versiones fijadas | Versiones de innovación (MySQL 26.x, MongoDB 8.3) | Las versiones de soporte largo tienen más material de referencia. Fijarlas evita que cada integrante instale una distinta |
 | DEC-04 | **Spring Boot 4.1.1 con Java 21** y **Node.js 24 LTS** | Java 25 · Node 22 | Son las versiones estables vigentes. Java 21 es el JDK que el equipo ya instaló para teambsoft; Node 24 trae de fábrica lo que en otras versiones exige librerías (DEC-17) |
@@ -345,3 +346,4 @@ Son **cinco piezas**: las dos bases de datos arrancan solas con el computador y 
 | 2026-09-15 | v1.1: frontend con React 19 y Vite 8; proxy de Vite en lugar de CORS; tabla de rutas |
 | 2026-09-21 | v2.0: el proyecto une los dos cortes y pasa a **dos servicios**: cuentas y rutinas (Spring Boot + MySQL) y entrenamiento (Node.js 24 + Express 5 + Mongoose 9 + MongoDB 8.0). Autenticación entre servicios, proxy hacia los dos y decisiones DEC-01, DEC-02, DEC-06 y DEC-14 a DEC-18 |
 | 2026-09-21 | v2.1: la sesión de React se divide en `contexto.js`, `AuthProvider.jsx` y `useAuth.js`; Oxlint en el stack; React Router 8.4; conexiones entre programas por `127.0.0.1`; API falsa del servicio de cuentas para desarrollo |
+| 2026-09-21 | v2.2: Jira reemplaza a GitHub Projects como tablero, como pide el curso. Corregir una sesión (`PUT /sesiones/{id}`) sigue el mismo camino de recálculo que registrarla o eliminarla |
