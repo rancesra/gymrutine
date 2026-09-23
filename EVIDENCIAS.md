@@ -41,9 +41,9 @@ git shortlog -sn --no-merges
 
 | Integrante | Commits | Pull requests unidos | Dónde verlos |
 |---|---|---|---|
-| Rances | | | https://github.com/rancesra/gymrutine/pulls?q=is%3Apr+author%3Arancesra |
-| Javier | | | *(su enlace, con su usuario de GitHub)* |
-| Santiago | | | *(su enlace, con su usuario de GitHub)* |
+| Rances | 12 | 2 ([#3](https://github.com/rancesra/gymrutine/pull/3), [#4](https://github.com/rancesra/gymrutine/pull/4)) | https://github.com/rancesra/gymrutine/pulls?q=is%3Apr+author%3Arancesra |
+| Javier | 1 | 1 ([#5](https://github.com/rancesra/gymrutine/pull/5)) | https://github.com/rancesra/gymrutine/pulls?q=is%3Apr+author%3AJavierCamargo23 |
+| Santiago | 2 | 2 ([#1](https://github.com/rancesra/gymrutine/pull/1), [#2](https://github.com/rancesra/gymrutine/pull/2)) | https://github.com/rancesra/gymrutine/pulls?q=is%3Apr+author%3AThiago3108 |
 
 ## 3. Trazabilidad en Jira
 
@@ -51,7 +51,7 @@ git shortlog -sn --no-merges
 
 | Sprint | Fechas | Objetivo | Historias terminadas | Capturas en `docs/evidencias/` |
 |---|---|---|---|---|
-| 2 | 21 al 23 sep | Bases de los tres proyectos, login y Jira | | `sprint-2-tablero.png` · `sprint-2-informe.png` |
+| 2 | 21 al 23 sep | Bases de los tres proyectos, login y Jira | H1, H2 y H3 | `sprint-2-tablero.png` · `sprint-2-informe.png` |
 | 3 | 24 al 29 sep | Las APIs de catálogo, rutinas, sesiones, récords y peso corporal | | `sprint-3-tablero.png` · `sprint-3-informe.png` |
 | 4 | 30 sep al 9 oct | Las pantallas de punta a punta, evidencias y entrega final | | `sprint-4-tablero.png` · `sprint-4-informe.png` |
 
@@ -63,9 +63,9 @@ Cada historia tiene su tarjeta en Jira; la clave abre la tarjeta (hay que tener 
 
 | Historia | Responsable | Tarjeta de Jira | Pull request | Terminada en el sprint |
 |---|---|---|---|---|
-| H1 — Crear cuenta | Rances (API) y Javier (pantalla) | [GR-8](https://gymrutine-uis.atlassian.net/browse/GR-8) | | |
-| H2 — Iniciar sesión | Rances (API) y Javier (pantalla) | [GR-9](https://gymrutine-uis.atlassian.net/browse/GR-9) | | |
-| H3 — Cerrar sesión | Rances (API) y Javier (pantalla) | [GR-10](https://gymrutine-uis.atlassian.net/browse/GR-10) | | |
+| H1 — Crear cuenta | Rances (API) y Javier (pantalla) | [GR-8](https://gymrutine-uis.atlassian.net/browse/GR-8) | [#4](https://github.com/rancesra/gymrutine/pull/4) y [#5](https://github.com/rancesra/gymrutine/pull/5) | 2 |
+| H2 — Iniciar sesión | Rances (API) y Javier (pantalla) | [GR-9](https://gymrutine-uis.atlassian.net/browse/GR-9) | [#4](https://github.com/rancesra/gymrutine/pull/4) y [#5](https://github.com/rancesra/gymrutine/pull/5) | 2 |
+| H3 — Cerrar sesión | Rances (API) y Javier (pantalla) | [GR-10](https://gymrutine-uis.atlassian.net/browse/GR-10) | [#4](https://github.com/rancesra/gymrutine/pull/4) y [#5](https://github.com/rancesra/gymrutine/pull/5) | 2 |
 | H4 — Ver y editar mi perfil | Rances | [GR-11](https://gymrutine-uis.atlassian.net/browse/GR-11) | | |
 | H5 — Explorar el catálogo de ejercicios | Javier | [GR-12](https://gymrutine-uis.atlassian.net/browse/GR-12) | | |
 | H6 — Ver el detalle de un ejercicio | Javier | [GR-13](https://gymrutine-uis.atlassian.net/browse/GR-13) | | |
@@ -103,4 +103,4 @@ Lo que funcionó, lo que no y el cambio acordado para el siguiente sprint están
 
 ---
 
-_Última actualización: 2026-09-21_
+_Última actualización: 2026-09-22_

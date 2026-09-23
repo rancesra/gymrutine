@@ -99,9 +99,12 @@ Descárgalo de https://dev.mysql.com/downloads/workbench/ (la versión que apare
 
 ```bash
 brew tap mongodb/brew
+brew trust mongodb/brew
 brew install mongodb-community@8.0
 brew services start mongodb-community@8.0
 ```
+
+  `brew trust` hace falta desde Homebrew 7: sin él, se niega a instalar fórmulas que no son suyas. Si además dice que **Xcode o las Command Line Tools están desactualizadas**, actualiza Xcode en la App Store y las herramientas en **Configuración del Sistema → General → Actualización de software**, y repite la instalación.
 
   Después descarga MongoDB Compass (DMG) de https://www.mongodb.com/try/download/compass.
 
@@ -294,4 +297,4 @@ Al arrancar de nuevo los servicios, todo se crea con la estructura nueva.
 
 ---
 
-_Última actualización: 2026-09-21_
+_Última actualización: 2026-09-22_

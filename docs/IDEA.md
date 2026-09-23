@@ -272,6 +272,7 @@ El curso ya dio todas las clases, así que el proyecto **deja de ir por cortes**
 | [GUIA-GIT.md](../GUIA-GIT.md) | Ramas, pull requests, conflictos y protección de `main` |
 | [guias/JIRA.md](guias/JIRA.md) | Crear el proyecto en Jira, importar el backlog y llevar los sprints |
 | [EVIDENCIAS.md](../EVIDENCIAS.md) | Participación de cada integrante y trazabilidad en Jira (entrega final) |
+| [GUION-DEMO.md](GUION-DEMO.md) | Guion de la demostración de cada entrega: orden, responsables y plan B |
 | [HISTORIAS.md](HISTORIAS.md) | Product Backlog con criterios de aceptación y diagrama de casos de uso |
 | [MODELO-DATOS.md](MODELO-DATOS.md) | Diagrama entidad-relación, diccionario de datos, reglas de negocio y catálogo base |
 | [ARQUITECTURA.md](ARQUITECTURA.md) | Stack, capas, autenticación, diagramas de secuencia y decisiones |

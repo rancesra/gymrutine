@@ -255,7 +255,7 @@ Lo imprescindible se termina primero, aunque lo importante quede para después.
 |---|---|---|---|
 | 1 | **Jira** (lo pide el curso) | El proyecto `GymRutine`: las 24 historias en sus épicas, el sprint 2 en curso con cada tarjeta asignada y los sprints 3 y 4 planeados | Rances |
 | 2 | **Diseño de la base de datos** (lo pide el curso) | [MODELO-DATOS.md](docs/MODELO-DATOS.md): el diagrama entidad-relación de MySQL y el modelo de documentos de MongoDB. Si T1 ya está en `main`, también las 6 tablas en MySQL Workbench con los 40 ejercicios base | Rances (MySQL) y Santiago (MongoDB) |
-| 3 | **Repositorio con Git** (lo pide el curso) | GitHub: la documentación, las ramas por tarea, los pull requests revisados y `main` protegida | Javier |
+| 3 | **Repositorio con Git** (lo pide el curso) | GitHub: la documentación, las ramas por tarea y los pull requests revisados y aprobados. La protección de `main` se activa al cerrar el sprint 2 | Javier |
 | 4 | Arquitectura | Diagrama de [ARQUITECTURA.md](docs/ARQUITECTURA.md) §1: React, dos servicios y dos bases de datos | Rances |
 | 5 | Avance: login funcionando | Crear una cuenta y entrar desde React; cerrar sesión; volver a entrar | Javier |
 | 6 | Avance: los dos servicios conectados | `GET /api/sesiones` en Node responde `[]` con token y 401 sin él: Node le pregunta a Spring si el token es válido | Santiago |

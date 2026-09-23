@@ -46,6 +46,7 @@ graph LR
 |---|---|
 | [Plan de trabajo](PLAN-DE-TRABAJO.md) | Qué pide el curso, calendario hasta el 9 de octubre, un CRUD por integrante, quién espera a quién y cómo verificar cada tarea |
 | [Evidencias](EVIDENCIAS.md) | Participación de cada integrante y trazabilidad del avance en Jira (entrega final) |
+| [Guion de la demostración](docs/GUION-DEMO.md) | Qué se muestra en cada entrega, en qué orden, quién presenta cada parte y el plan B |
 | [Informe inicial](docs/IDEA.md) | Problema, justificación, alcance, benchmark contra GymTracker y decisiones del proyecto |
 | [Historias de usuario](docs/HISTORIAS.md) | Product Backlog: 24 historias con criterios de aceptación y diagrama de casos de uso |
 | [Modelo de datos](docs/MODELO-DATOS.md) | Diagrama entidad-relación (MySQL), modelo de documentos (MongoDB), reglas de negocio y catálogo base |
@@ -98,11 +99,11 @@ Son cinco piezas. Las dos bases de datos arrancan solas con el computador; las o
 - [x] Repositorio con Git
 - [x] Proyecto en [Jira](https://gymrutine-uis.atlassian.net/browse/GR) con el backlog y los sprints
 - [x] T1 Base del servicio de cuentas (Spring Boot + MySQL)
-- [ ] T2 Base del frontend (React)
+- [x] T2 Base del frontend (React)
 - [x] T3 Base del servicio de entrenamiento (Node + MongoDB)
-- [ ] H1 — Crear cuenta
-- [ ] H2 — Iniciar sesión
-- [ ] H3 — Cerrar sesión
+- [x] H1 — Crear cuenta
+- [x] H2 — Iniciar sesión
+- [x] H3 — Cerrar sesión
 
 ### Sprint 3 — Las APIs (24 al 29 de septiembre)
 
