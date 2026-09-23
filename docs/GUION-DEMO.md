@@ -21,7 +21,13 @@ brew services list
 | 2 · Entrenamiento | `cd ~/Desktop/proyecto-entornos/backend-node && npm run dev` | `Servicio de entrenamiento en http://localhost:3000` |
 | 3 · Frontend | `cd ~/Desktop/proyecto-entornos/frontend && npm run dev` | `Local: http://localhost:5173/` |
 
-Deja una **cuarta pestaña libre** para los comandos del punto 6.
+Deja una **cuarta pestaña libre** para los comandos del punto 6. Cada servicio ocupa su pestaña mientras corre: si se reutiliza una, ese servicio se apaga.
+
+**Comprobar que los tres están arriba.** Debe imprimir 200 tres veces:
+
+```bash
+curl -s -o /dev/null -w 'cuentas %{http_code}\n' http://127.0.0.1:8080/api/referencias; curl -s -o /dev/null -w 'entrenamiento %{http_code}\n' http://127.0.0.1:3000/salud; curl -s -o /dev/null -w 'frontend %{http_code}\n' http://localhost:5173
+```
 
 **Pestañas del navegador, en este orden:**
 
