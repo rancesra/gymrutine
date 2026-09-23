@@ -36,6 +36,18 @@ curl -s -o /dev/null -w 'cuentas %{http_code}\n' http://127.0.0.1:8080/api/refer
 3. GitHub: la lista de pull requests.
 4. La aplicación: http://localhost:5173.
 
+**Direcciones, para tenerlas a mano:**
+
+| Qué | Dónde |
+|---|---|
+| La aplicación | http://localhost:5173 · cuenta de Ana: `ana@correo.com` / `clave-segura-1` |
+| Servicio de cuentas | http://localhost:8080/api/referencias |
+| Servicio de entrenamiento | http://localhost:3000/salud |
+| Jira | https://gymrutine-uis.atlassian.net/browse/GR |
+| Repositorio y pull requests | https://github.com/rancesra/gymrutine · https://github.com/rancesra/gymrutine/pulls |
+| Diagramas, ya dibujados | [MODELO-DATOS.md](MODELO-DATOS.md) y [ARQUITECTURA.md](ARQUITECTURA.md), abiertos en GitHub |
+| MySQL | Workbench → conexión *Local* → base `gymrutine` |
+
 **También:** MySQL Workbench abierto en la base `gymrutine`, la letra de la terminal grande (`Cmd` y `+`), el modo concentración encendido y una prueba completa del guion, cronometrada.
 
 ## 2. El guion
