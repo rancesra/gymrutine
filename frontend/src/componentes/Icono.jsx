@@ -6,6 +6,7 @@ const trazos = {
   progreso: 'M4 4v16h16M7 15l4-4 3 3 5-6',
   perfil: 'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6',
   ojo: 'M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12zM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6',
+  trofeo: 'M8 4h8v5a4 4 0 0 1-8 0zM8 6H5a3 3 0 0 0 3 4M16 6h3a3 3 0 0 1-3 4M12 13v4M8.5 20h7',
 }
 
 export default function Icono({ nombre, tamano = 22 }) {

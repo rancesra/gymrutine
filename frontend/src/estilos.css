@@ -102,6 +102,16 @@ a { color: var(--naranja); font-weight: 600; }
 .tarjeta { background: var(--papel); border: 1px solid var(--linea); border-radius: var(--radio); padding: 14px; }
 .fila { display: flex; align-items: center; gap: 12px; }
 .texto-2 { color: var(--tinta-2); font-size: 13px; }
+.texto-3 { color: var(--tinta-3); font-size: 12px; }
+.num { font-variant-numeric: tabular-nums; }
+.entre { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.etiqueta { display: inline-flex; align-items: center; gap: 4px; font-size: 11.5px; font-weight: 600; padding: 2px 8px; border-radius: 999px; background: #f1f5f9; color: var(--tinta-2); white-space: nowrap; }
+.etiqueta.record { background: var(--oro-suave); color: var(--oro-tinta); }
+.lista-tarjetas { display: grid; gap: 10px; }
+.tarjeta-enlace { display: grid; gap: 2px; color: inherit; font-weight: inherit; text-decoration: none; }
+.tarjeta-enlace:hover { border-color: var(--borde); }
+.tarjeta-enlace h2 { font-size: 15.5px; letter-spacing: -0.01em; }
+.fecha-tarjeta { font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
 .avatar { width: 44px; height: 44px; flex: none; display: grid; place-items: center; border-radius: 50%; background: var(--carbon); color: #fff; font-weight: 700; }
 .aviso { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 12px; border-radius: 12px; font-size: 13.5px; }
 .aviso.error { background: var(--rojo-suave); color: #7f1d1d; }
