@@ -23,3 +23,7 @@ export function formatoFecha(texto, { diaSemana = true, anio = false } = {}) {
   if (anio) partes.push(fecha.getFullYear())
   return partes.join(' ')
 }
+// "2026-09-14T18:30:00" → "18:30"
+export function formatoHora(texto) {
+  return texto.slice(11, 16)
+}

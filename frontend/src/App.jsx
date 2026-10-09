@@ -2,6 +2,7 @@ import { Navigate, Route, Routes } from 'react-router'
 import RutaPrivada from './auth/RutaPrivada.jsx'
 import Plantilla from './componentes/Plantilla.jsx'
 import PaginaEnConstruccion from './paginas/PaginaEnConstruccion.jsx'
+import PaginaHistorial from './paginas/PaginaHistorial.jsx'
 import PaginaLogin from './paginas/PaginaLogin.jsx'
 import PaginaPerfil from './paginas/PaginaPerfil.jsx'
 import PaginaRegistro from './paginas/PaginaRegistro.jsx'
@@ -24,7 +25,7 @@ export default function App() {
           <Route path="/rutinas" element={<PaginaEnConstruccion titulo="Mis rutinas" tarea="T6" />} />
           <Route path="/rutinas/nueva" element={<PaginaEnConstruccion titulo="Nueva rutina" tarea="T6" />} />
           <Route path="/rutinas/:id/editar" element={<PaginaEnConstruccion titulo="Editar rutina" tarea="T6" />} />
-          <Route path="/historial" element={<PaginaEnConstruccion titulo="Historial" tarea="T7" />} />
+          <Route path="/historial" element={<PaginaHistorial />} />
           <Route path="/historial/:id" element={<PaginaEnConstruccion titulo="Detalle de sesión" tarea="T7" />} />
           <Route path="/progreso" element={<PaginaEnConstruccion titulo="Progreso" tarea="T9" />} />
           <Route path="/progreso/records" element={<PaginaEnConstruccion titulo="Récords" tarea="T8" />} />
