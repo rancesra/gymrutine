@@ -6,6 +6,7 @@ import PaginaHistorial from './paginas/PaginaHistorial.jsx'
 import PaginaLogin from './paginas/PaginaLogin.jsx'
 import PaginaPerfil from './paginas/PaginaPerfil.jsx'
 import PaginaRegistro from './paginas/PaginaRegistro.jsx'
+import PaginaSesion from './paginas/PaginaSesion.jsx'
 
 // Tabla de rutas: una por pantalla del mockup (ARQUITECTURA §7).
 // Cada tarea reemplaza su PaginaEnConstruccion por la página real.
@@ -26,7 +27,7 @@ export default function App() {
           <Route path="/rutinas/nueva" element={<PaginaEnConstruccion titulo="Nueva rutina" tarea="T6" />} />
           <Route path="/rutinas/:id/editar" element={<PaginaEnConstruccion titulo="Editar rutina" tarea="T6" />} />
           <Route path="/historial" element={<PaginaHistorial />} />
-          <Route path="/historial/:id" element={<PaginaEnConstruccion titulo="Detalle de sesión" tarea="T7" />} />
+          <Route path="/historial/:id" element={<PaginaSesion />} />
           <Route path="/progreso" element={<PaginaEnConstruccion titulo="Progreso" tarea="T9" />} />
           <Route path="/progreso/records" element={<PaginaEnConstruccion titulo="Récords" tarea="T8" />} />
           <Route path="/progreso/peso" element={<PaginaEnConstruccion titulo="Peso corporal" tarea="T10" />} />

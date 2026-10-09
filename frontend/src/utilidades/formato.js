@@ -3,9 +3,14 @@ const numero = new Intl.NumberFormat('es-CO', { maximumFractionDigits: 2 })
 const dias = ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb']
 const meses = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic']
 
+// 1935 → "1.935"  ·  57.5 → "57,5"
+export function formatoNumero(valor) {
+  return numero.format(valor)
+}
+
 // 62.5 → "62,5 kg"  ·  1935 → "1.935 kg"
 export function formatoKg(valor) {
-  return `${numero.format(valor)} kg`
+  return `${formatoNumero(valor)} kg`
 }
 
 // Lee lo que escribe el usuario, con coma o con punto: "57,5" → 57.5
