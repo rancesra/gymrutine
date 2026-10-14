@@ -184,3 +184,17 @@ a { color: var(--naranja); font-weight: 600; }
 .hoja { position: fixed; inset: 0; z-index: 20; overflow-y: auto; background: var(--app); }
 .hoja-contenido { max-width: 720px; margin: 0 auto; padding: 16px; display: grid; gap: 14px; }
 .pie-fijo { position: sticky; bottom: 0; padding: 12px 0; background: var(--app); }
+
+/* Mis rutinas (P5): tarjeta que se abre para ver sus ejercicios */
+.tarjeta-cabecera {
+  display: grid; gap: 2px; width: 100%; padding: 0; border: 0; background: none;
+  font: inherit; color: inherit; text-align: left; cursor: pointer;
+}
+.titulo-tarjeta { font-size: 15.5px; letter-spacing: -0.01em; }
+ol.lista { margin: 0; padding: 0; list-style: none; }
+.etiqueta.objetivo { background: #e0e7ff; color: #3730a3; }
+.miniatura { display: grid; place-items: center; flex: none; width: 40px; height: 40px; border-radius: 10px; background: var(--naranja-suave); color: var(--naranja); }
+.btn-volver.naranja { color: var(--naranja); }
+.bloque { display: block; }
+.tarjeta-enlace.fila { display: flex; }
+.fila > .crece { flex: 1; min-width: 0; }

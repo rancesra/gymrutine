@@ -7,6 +7,7 @@ import PaginaLogin from './paginas/PaginaLogin.jsx'
 import PaginaPerfil from './paginas/PaginaPerfil.jsx'
 import PaginaRegistro from './paginas/PaginaRegistro.jsx'
 import PaginaRutinaFormulario from './paginas/PaginaRutinaFormulario.jsx'
+import PaginaRutinas from './paginas/PaginaRutinas.jsx'
 import PaginaSesion from './paginas/PaginaSesion.jsx'
 
 // Tabla de rutas: una por pantalla del mockup (ARQUITECTURA §7).
@@ -24,7 +25,7 @@ export default function App() {
         <Route element={<Plantilla />}>
           <Route path="/" element={<PaginaEnConstruccion titulo="Inicio" tarea="T11" />} />
           <Route path="/ejercicios" element={<PaginaEnConstruccion titulo="Catálogo de ejercicios" tarea="T5" />} />
-          <Route path="/rutinas" element={<PaginaEnConstruccion titulo="Mis rutinas" tarea="T6" />} />
+          <Route path="/rutinas" element={<PaginaRutinas />} />
           <Route path="/rutinas/nueva" element={<PaginaRutinaFormulario />} />
           <Route path="/rutinas/:id/editar" element={<PaginaEnConstruccion titulo="Editar rutina" tarea="T6" />} />
           <Route path="/historial" element={<PaginaHistorial />} />
