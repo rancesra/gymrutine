@@ -4,6 +4,7 @@ import mongoose from 'mongoose'
 import { autenticar } from './middlewares/autenticar.js'
 import { manejarErrores, rutaNoEncontrada } from './middlewares/errores.js'
 import rutasPesoCorporal from './rutas/pesoCorporal.js'
+import rutasProgreso from './rutas/progreso.js'
 import rutasRecords from './rutas/records.js'
 import rutasSesiones from './rutas/sesiones.js'
 
@@ -21,6 +22,7 @@ app.use('/api', autenticar)
 app.use('/api/sesiones', rutasSesiones)
 app.use('/api/peso-corporal', rutasPesoCorporal)
 app.use('/api/records', rutasRecords)
+app.use('/api/progreso', rutasProgreso)
 
 app.use(rutaNoEncontrada)
 app.use(manejarErrores)
