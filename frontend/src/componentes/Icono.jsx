@@ -12,6 +12,13 @@ const trazos = {
   basura: 'M4 7h16M9.5 7V4h5v3M6 7l1 13h10l1-13',
   lapiz: 'M4 20h4L19 9l-4-4L4 16z',
   check: 'M5 12.5l4.5 4.5L19 7',
+  arriba: 'M18 15l-6-6-6 6',
+  abajo: 'M6 9l6 6 6-6',
+  derecha: 'M9 5l7 7-7 7',
+  externo: 'M14 4h6v6M20 4l-9 9M18 14v5H5V6h5',
+  candado: 'M6 11h12v9H6zM8 11V8a4 4 0 0 1 8 0v3',
+  buscar: 'M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14M20 20l-4-4',
+  info: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18M12 11v5M12 8h.01',
   trofeo: 'M8 4h8v5a4 4 0 0 1-8 0zM8 6H5a3 3 0 0 0 3 4M16 6h3a3 3 0 0 1-3 4M12 13v4M8.5 20h7',
 }
 

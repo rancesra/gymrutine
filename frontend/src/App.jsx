@@ -1,12 +1,16 @@
 import { Navigate, Route, Routes } from 'react-router'
 import RutaPrivada from './auth/RutaPrivada.jsx'
 import Plantilla from './componentes/Plantilla.jsx'
+import PaginaEjercicios from './paginas/PaginaEjercicios.jsx'
 import PaginaEnConstruccion from './paginas/PaginaEnConstruccion.jsx'
 import PaginaEntrenar from './paginas/PaginaEntrenar.jsx'
 import PaginaHistorial from './paginas/PaginaHistorial.jsx'
 import PaginaLogin from './paginas/PaginaLogin.jsx'
 import PaginaPerfil from './paginas/PaginaPerfil.jsx'
+import PaginaPeso from './paginas/PaginaPeso.jsx'
 import PaginaRegistro from './paginas/PaginaRegistro.jsx'
+import PaginaRutinaFormulario from './paginas/PaginaRutinaFormulario.jsx'
+import PaginaRutinas from './paginas/PaginaRutinas.jsx'
 import PaginaSesion from './paginas/PaginaSesion.jsx'
 
 // Tabla de rutas: una por pantalla del mockup (ARQUITECTURA §7).
@@ -23,15 +27,15 @@ export default function App() {
 
         <Route element={<Plantilla />}>
           <Route path="/" element={<PaginaEnConstruccion titulo="Inicio" tarea="T11" />} />
-          <Route path="/ejercicios" element={<PaginaEnConstruccion titulo="Catálogo de ejercicios" tarea="T5" />} />
-          <Route path="/rutinas" element={<PaginaEnConstruccion titulo="Mis rutinas" tarea="T6" />} />
-          <Route path="/rutinas/nueva" element={<PaginaEnConstruccion titulo="Nueva rutina" tarea="T6" />} />
-          <Route path="/rutinas/:id/editar" element={<PaginaEnConstruccion titulo="Editar rutina" tarea="T6" />} />
+          <Route path="/ejercicios" element={<PaginaEjercicios />} />
+          <Route path="/rutinas" element={<PaginaRutinas />} />
+          <Route path="/rutinas/nueva" element={<PaginaRutinaFormulario />} />
+          <Route path="/rutinas/:id/editar" element={<PaginaRutinaFormulario />} />
           <Route path="/historial" element={<PaginaHistorial />} />
           <Route path="/historial/:id" element={<PaginaSesion />} />
           <Route path="/progreso" element={<PaginaEnConstruccion titulo="Progreso" tarea="T9" />} />
           <Route path="/progreso/records" element={<PaginaEnConstruccion titulo="Récords" tarea="T8" />} />
-          <Route path="/progreso/peso" element={<PaginaEnConstruccion titulo="Peso corporal" tarea="T10" />} />
+          <Route path="/progreso/peso" element={<PaginaPeso />} />
           <Route path="/perfil" element={<PaginaPerfil />} />
         </Route>
       </Route>

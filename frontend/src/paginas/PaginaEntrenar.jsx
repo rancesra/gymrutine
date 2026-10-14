@@ -313,7 +313,7 @@ export default function PaginaEntrenar() {
         />
       ))}
 
-      <div className="pie-fijo">
+      <div className="pie-entrenar">
         <div className="series">
           {aviso && (
             <div className="aviso error" role="alert">
@@ -328,7 +328,7 @@ export default function PaginaEntrenar() {
 
       {confirmando && (
         <div className="velo">
-          <div className="hoja num" role="dialog" aria-modal="true" aria-labelledby="titulo-confirmar">
+          <div className="hoja-confirmar num" role="dialog" aria-modal="true" aria-labelledby="titulo-confirmar">
             <h2 id="titulo-confirmar">¿Terminar la sesión?</h2>
             <div className="kpis">
               <div className="kpi">

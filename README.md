@@ -92,6 +92,8 @@ Son cinco piezas. Las dos bases de datos arrancan solas con el computador; las o
 
 ## Estado
 
+**Al 14 de octubre:** funcionan el login y los tres CRUD de la entrega —rutinas (Javier), sesiones (Santiago) y peso corporal (Rances)—, salvo la pantalla para registrar una sesión, que sigue pendiente. Las pantallas de catálogo, progreso, récords e inicio quedan como trabajo siguiente; sus APIs, donde existen, ya están.
+
 ### Sprint 2 — Bases, login y Jira (21 al 23 de septiembre) · Entrega del sprint 2
 
 - [x] Documentación: plan, informe, historias, modelo de datos, arquitectura, contrato, mockup en HTML y guías
@@ -113,23 +115,24 @@ Son cinco piezas. Las dos bases de datos arrancan solas con el computador; las o
 - [ ] H7 — Crear un ejercicio propio
 - [ ] H8 — Editar un ejercicio propio
 - [ ] H9 — Eliminar un ejercicio propio
-- [ ] H21 — Registrar mi peso corporal
-- [ ] H22 — Ver la evolución de mi peso corporal
-- [ ] H24 — Corregir un registro de peso
-- [ ] API de rutinas, de sesiones y de récords; algoritmo de récords con pruebas
+- [x] H21 — Registrar mi peso corporal
+- [x] H22 — Ver la evolución de mi peso corporal
+- [x] H24 — Corregir un registro de peso
+- [x] API de catálogo, de rutinas, de sesiones y de peso corporal; algoritmo de récords con pruebas
+- [ ] API de récords y de progreso
 
 ### Sprint 4 — Pantallas, evidencias y entrega final (30 de septiembre al 9 de octubre)
 
-- [ ] H10 — Crear una rutina
-- [ ] H11 — Ver mis rutinas
-- [ ] H12 — Editar una rutina
-- [ ] H13 — Eliminar una rutina
-- [ ] H14 — Registrar una sesión de entrenamiento
-- [ ] H15 — Ver el historial de sesiones
-- [ ] H16 — Ver el detalle de una sesión
-- [ ] H17 — Eliminar una sesión
-- [ ] H23 — Editar una sesión
-- [ ] H18 — Detección automática de récords personales
+- [x] H10 — Crear una rutina
+- [x] H11 — Ver mis rutinas
+- [x] H12 — Editar una rutina
+- [x] H13 — Eliminar una rutina
+- [ ] H14 — Registrar una sesión de entrenamiento *(falta la pantalla Entrenar; la API ya está)*
+- [x] H15 — Ver el historial de sesiones
+- [x] H16 — Ver el detalle de una sesión
+- [x] H17 — Eliminar una sesión
+- [x] H23 — Editar una sesión
+- [x] H18 — Detección automática de récords personales
 - [ ] H19 — Ver mis récords personales
 - [ ] H20 — Ver el progreso de un ejercicio
 - [ ] Inicio, colección de Postman y datos de demostración
