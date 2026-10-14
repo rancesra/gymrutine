@@ -8,7 +8,7 @@ import MensajeError from '../componentes/MensajeError.jsx'
 import { formatoFecha } from '../utilidades/formato.js'
 import { nombreDe, obtenerReferencias } from '../utilidades/referencias.js'
 
-// P5 Mis rutinas (historia H11). Reglas: docs/mockup/README.md, sección P5.
+// P5 Mis rutinas (historias H11 y H13). Reglas: docs/mockup/README.md, sección P5.
 // Las rutinas salen del servicio de cuentas; la última vez que se entrenó cada una, de GET /sesiones
 // (servicio de entrenamiento).
 export default function PaginaRutinas() {
@@ -32,6 +32,11 @@ export default function PaginaRutinas() {
   function reintentar() {
     setError(null)
     setIntento(intento + 1)
+  }
+
+  // Al eliminarla, la rutina sale de la lista sin volver a pedirla
+  function quitarDeLaLista(rutinaId) {
+    setRutinas(rutinas.filter((rutina) => rutina.id !== rutinaId))
   }
 
   return (
@@ -73,6 +78,7 @@ export default function PaginaRutinas() {
               rutina={rutina}
               objetivo={nombreDe(referencias.objetivos, rutina.objetivo)}
               ultimaVez={ultimaVez}
+              alEliminar={() => quitarDeLaLista(rutina.id)}
             />
           ))}
         </div>
@@ -81,13 +87,33 @@ export default function PaginaRutinas() {
   )
 }
 
-function TarjetaRutina({ rutina, objetivo, ultimaVez }) {
+function TarjetaRutina({ rutina, objetivo, ultimaVez, alEliminar }) {
   const [abierta, setAbierta] = useState(false)
+  const [eliminando, setEliminando] = useState(false)
+  const [errorEliminar, setErrorEliminar] = useState(null)
   const cantidad = rutina.cantidadEjercicios === 1 ? '1 ejercicio' : `${rutina.cantidadEjercicios} ejercicios`
   let entrenada = ''
   if (ultimaVez) {
     const fecha = ultimaVez[rutina.id]
     entrenada = fecha ? ` · última vez ${formatoFecha(fecha)}` : ' · aún no la entrenas'
+  }
+
+  // Borrado lógico (H13): las sesiones de la rutina siguen en el historial
+  async function eliminar() {
+    if (!window.confirm(`¿Eliminar "${rutina.nombre}"? Sus sesiones seguirán en tu historial.`)) return
+    setErrorEliminar(null)
+    setEliminando(true)
+    try {
+      await api.borrar(`/rutinas/${rutina.id}`)
+      alEliminar()
+    } catch (e) {
+      // Si ya no existe, de todos modos ya no debe estar en la lista
+      if (e.estado === 404) alEliminar()
+      else {
+        setErrorEliminar(e)
+        setEliminando(false)
+      }
+    }
   }
 
   return (
@@ -123,7 +149,17 @@ function TarjetaRutina({ rutina, objetivo, ultimaVez }) {
           <Icono nombre="lapiz" tamano={16} />
           Editar
         </Link>
+        <button
+          type="button"
+          className="btn btn-peligro btn-sm"
+          aria-label={`Eliminar ${rutina.nombre}`}
+          disabled={eliminando}
+          onClick={eliminar}
+        >
+          <Icono nombre="basura" tamano={16} />
+        </button>
       </div>
+      <MensajeError error={errorEliminar} />
     </div>
   )
 }

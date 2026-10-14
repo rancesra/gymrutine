@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router'
+import { Link, useNavigate, useParams } from 'react-router'
 import { api } from '../api/cliente.js'
 import { useAuth } from '../auth/useAuth.js'
 import CampoFormulario from '../componentes/CampoFormulario.jsx'
 import Cargando from '../componentes/Cargando.jsx'
+import EstadoVacio from '../componentes/EstadoVacio.jsx'
 import Icono from '../componentes/Icono.jsx'
 import MensajeError from '../componentes/MensajeError.jsx'
 import SelectorEjercicios from '../componentes/SelectorEjercicios.jsx'
@@ -12,8 +13,11 @@ import { obtenerReferencias } from '../utilidades/referencias.js'
 
 const MAXIMO_EJERCICIOS = 15
 
-// P6 Constructor de rutina, al crear (historia H10). Reglas: docs/mockup/README.md, sección P6.
+// P6 Constructor de rutina: crear (historia H10) en /rutinas/nueva y editar (H12) en /rutinas/:id/editar.
+// Reglas: docs/mockup/README.md, sección P6.
 export default function PaginaRutinaFormulario() {
+  const { id } = useParams()
+  const editando = id !== undefined
   const navegar = useNavigate()
   const { usuario } = useAuth()
   const [referencias, setReferencias] = useState(null)
@@ -28,17 +32,35 @@ export default function PaginaRutinaFormulario() {
   const [errores, setErrores] = useState({})
   const [errorEnvio, setErrorEnvio] = useState(null)
   const [enviando, setEnviando] = useState(false)
+  // Foto del formulario recién cargado, para saber si hay cambios sin guardar. Al editar, llega con la rutina
+  const [original, setOriginal] = useState(() => (editando ? null : instantanea('', objetivo, [])))
 
-  const hayCambios = nombre.trim() !== '' || ejercicios.length > 0
+  const hayCambios = original !== null && instantanea(nombre, objetivo, ejercicios) !== original
 
   useEffect(() => {
-    Promise.all([obtenerReferencias(), api.get('/ejercicios')])
-      .then(([refs, lista]) => {
+    Promise.all([obtenerReferencias(), api.get('/ejercicios'), editando ? api.get(`/rutinas/${id}`) : null])
+      .then(([refs, lista, rutina]) => {
+        // Una rutina eliminada se puede consultar, pero no editar: se trata como no encontrada
+        if (rutina && !rutina.activa) {
+          setErrorCarga({ estado: 404 })
+          return
+        }
         setReferencias(refs)
         setCatalogo(lista)
+        if (rutina) {
+          const items = rutina.ejercicios.map((item) => ({
+            ejercicio: item.ejercicio,
+            seriesObjetivo: String(item.seriesObjetivo),
+            repeticionesObjetivo: String(item.repeticionesObjetivo),
+          }))
+          setNombre(rutina.nombre)
+          setObjetivo(rutina.objetivo)
+          setEjercicios(items)
+          setOriginal(instantanea(rutina.nombre, rutina.objetivo, items))
+        }
       })
       .catch(setErrorCarga)
-  }, [intento])
+  }, [id, editando, intento])
 
   // Cerrar o recargar la pestaña con cambios sin guardar también pregunta
   useEffect(() => {
@@ -97,7 +119,9 @@ export default function PaginaRutinaFormulario() {
 
     setEnviando(true)
     try {
-      await api.post('/rutinas', aCuerpo(nombre, objetivo, ejercicios))
+      const cuerpo = aCuerpo(nombre, objetivo, ejercicios)
+      if (editando) await api.put(`/rutinas/${id}`, cuerpo)
+      else await api.post('/rutinas', cuerpo)
       navegar('/rutinas')
     } catch (e) {
       // Un 400 marca cada campo según la ruta que llega en "campos"
@@ -107,20 +131,34 @@ export default function PaginaRutinaFormulario() {
     }
   }
 
+  const titulo = editando ? 'Editar rutina' : 'Nueva rutina'
+
+  if (errorCarga?.estado === 404) {
+    return (
+      <section className="pagina">
+        <EstadoVacio titulo="No encontramos lo que buscas" texto="La rutina no existe o fue eliminada.">
+          <Link to="/rutinas" className="btn btn-primario">
+            Volver a mis rutinas
+          </Link>
+        </EstadoVacio>
+      </section>
+    )
+  }
+
   if (errorCarga) {
     return (
       <section className="pagina">
-        <Encabezado alVolver={salir} />
+        <Encabezado titulo={titulo} alVolver={salir} />
         <MensajeError error={errorCarga} alReintentar={reintentar} />
       </section>
     )
   }
 
-  if (!referencias || !catalogo) {
+  if (!referencias || !catalogo || original === null) {
     return (
       <section className="pagina">
-        <Encabezado alVolver={salir} />
-        <Cargando texto="Cargando el catálogo…" />
+        <Encabezado titulo={titulo} alVolver={salir} />
+        <Cargando texto={editando ? 'Cargando la rutina…' : 'Cargando el catálogo…'} />
       </section>
     )
   }
@@ -128,7 +166,7 @@ export default function PaginaRutinaFormulario() {
   return (
     <>
       <form className="pagina" onSubmit={guardar} noValidate>
-        <Encabezado alVolver={salir} />
+        <Encabezado titulo={titulo} alVolver={salir} />
 
         <CampoFormulario etiqueta="Nombre" error={errores.nombre}>
           <input
@@ -162,12 +200,19 @@ export default function PaginaRutinaFormulario() {
         {errores.ejercicios && <span className="error-texto">{errores.ejercicios}</span>}
 
         {ejercicios.map((item, i) => {
-          const errorEjercicio = errores[`ejercicios[${i}].ejercicioId`] ?? errores[`ejercicios[${i}]`]
+          // Un ejercicio eliminado del catálogo avisa desde el principio que hay que quitarlo
+          const errorEjercicio =
+            errores[`ejercicios[${i}].ejercicioId`] ??
+            errores[`ejercicios[${i}]`] ??
+            (item.ejercicio.activo ? null : 'Quítalo para poder guardar')
           return (
             <div key={item.ejercicio.id} className="tarjeta series">
               <div className="fila">
                 <span className="etiqueta gris">{i + 1}</span>
-                <b className="crece">{item.ejercicio.nombre}</b>
+                <span className="crece">
+                  <b>{item.ejercicio.nombre}</b>
+                  {!item.ejercicio.activo && <span className="texto-3 bloque">Ya no está en el catálogo</span>}
+                </span>
                 <button
                   type="button"
                   className="btn-icono"
@@ -247,15 +292,20 @@ export default function PaginaRutinaFormulario() {
   )
 }
 
-function Encabezado({ alVolver }) {
+function Encabezado({ titulo, alVolver }) {
   return (
     <div className="encabezado">
       <button type="button" className="btn-volver btn-icono" aria-label="Volver a mis rutinas" onClick={alVolver}>
         <Icono nombre="atras" />
       </button>
-      <h1>Nueva rutina</h1>
+      <h1>{titulo}</h1>
     </div>
   )
+}
+
+// El formulario como texto, para compararlo con el original
+function instantanea(nombre, objetivo, ejercicios) {
+  return JSON.stringify([nombre.trim(), objetivo, aCuerpo(nombre, objetivo, ejercicios).ejercicios])
 }
 
 // Lo que se escribió → el cuerpo de POST /rutinas (contrato §6), en el orden visible
@@ -280,6 +330,8 @@ function validar(nombre, ejercicios) {
   if (ejercicios.length < 1 || ejercicios.length > MAXIMO_EJERCICIOS) errores.ejercicios = 'Agrega entre 1 y 15 ejercicios'
 
   ejercicios.forEach((item, i) => {
+    // Al editar puede venir un ejercicio que se eliminó del catálogo: la API no lo acepta
+    if (!item.ejercicio.activo) errores[`ejercicios[${i}].ejercicioId`] = 'Quítalo para poder guardar'
     if (!enRango(item.seriesObjetivo, 1, 10)) errores[`ejercicios[${i}].seriesObjetivo`] = 'Debe estar entre 1 y 10'
     if (!enRango(item.repeticionesObjetivo, 1, 50)) {
       errores[`ejercicios[${i}].repeticionesObjetivo`] = 'Debe estar entre 1 y 50'

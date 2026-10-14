@@ -27,7 +27,7 @@ export default function App() {
           <Route path="/ejercicios" element={<PaginaEnConstruccion titulo="Catálogo de ejercicios" tarea="T5" />} />
           <Route path="/rutinas" element={<PaginaRutinas />} />
           <Route path="/rutinas/nueva" element={<PaginaRutinaFormulario />} />
-          <Route path="/rutinas/:id/editar" element={<PaginaEnConstruccion titulo="Editar rutina" tarea="T6" />} />
+          <Route path="/rutinas/:id/editar" element={<PaginaRutinaFormulario />} />
           <Route path="/historial" element={<PaginaHistorial />} />
           <Route path="/historial/:id" element={<PaginaSesion />} />
           <Route path="/progreso" element={<PaginaEnConstruccion titulo="Progreso" tarea="T9" />} />
