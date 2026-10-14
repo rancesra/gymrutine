@@ -11,6 +11,7 @@ const trazos = {
   x: 'M6 6l12 12M18 6L6 18',
   basura: 'M4 7h16M9.5 7V4h5v3M6 7l1 13h10l1-13',
   lapiz: 'M4 20h4L19 9l-4-4L4 16z',
+  check: 'M5 12.5l4.5 4.5L19 7',
   trofeo: 'M8 4h8v5a4 4 0 0 1-8 0zM8 6H5a3 3 0 0 0 3 4M16 6h3a3 3 0 0 1-3 4M12 13v4M8.5 20h7',
 }
 
