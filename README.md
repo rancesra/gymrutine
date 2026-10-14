@@ -127,7 +127,7 @@ Son cinco piezas. Las dos bases de datos arrancan solas con el computador; las o
 - [x] H11 — Ver mis rutinas
 - [x] H12 — Editar una rutina
 - [x] H13 — Eliminar una rutina
-- [ ] H14 — Registrar una sesión de entrenamiento *(falta la pantalla Entrenar; la API ya está)*
+- [x] H14 — Registrar una sesión de entrenamiento
 - [x] H15 — Ver el historial de sesiones
 - [x] H16 — Ver el detalle de una sesión
 - [x] H17 — Eliminar una sesión
