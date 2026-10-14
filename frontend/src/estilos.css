@@ -198,3 +198,15 @@ ol.lista { margin: 0; padding: 0; list-style: none; }
 .bloque { display: block; }
 .tarjeta-enlace.fila { display: flex; }
 .fila > .crece { flex: 1; min-width: 0; }
+
+/* Catálogo de ejercicios (P4): grupos plegables, filas que abren el detalle y formulario */
+.cabecera-boton, .fila-boton { width: 100%; border: 0; font: inherit; text-align: left; cursor: pointer; }
+.cabecera-boton { color: var(--tinta); }
+.lista-cab + .lista-cab { border-top: 1px solid var(--linea); }
+.fila-boton { min-height: 48px; background: var(--papel); color: inherit; border-top: 1px solid var(--linea); }
+.fila-boton:hover { background: var(--naranja-fondo); }
+.encabezado h1.crece { flex: 1; min-width: 0; }
+.portada { display: grid; place-items: center; height: 150px; background: var(--naranja-fondo); border-color: var(--naranja-suave); color: var(--naranja); }
+.sin-margen { margin: 4px 0 0; }
+.entrada:has(textarea) { align-items: flex-start; padding-top: 10px; padding-bottom: 10px; }
+.entrada textarea { resize: vertical; }
