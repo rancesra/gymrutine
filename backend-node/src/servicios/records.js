@@ -46,3 +46,34 @@ export async function recalcularVarios(usuarioId, ejercicioIds) {
     await recalcularRecords(usuarioId, ejercicioId)
   }
 }
+
+// Récord vigente de cada ejercicio: entre todas las series marcadas como récord, la de mayor peso.
+// Como cada récord supera al anterior, coincide con el último que se marcó. Función pura: recibe las
+// sesiones del usuario como objetos planos y devuelve la lista del contrato (§8), ordenada por nombre.
+export function elegirRecordsVigentes(sesiones) {
+  const porEjercicio = new Map()
+  for (const sesion of sesiones) {
+    for (const registro of sesion.registros) {
+      for (const serie of registro.series) {
+        if (!serie.esRecord) continue
+        const actual = porEjercicio.get(registro.ejercicio.id)
+        if (actual && actual.pesoKg >= serie.pesoKg) continue
+        const { id, nombre, grupoMuscular } = registro.ejercicio
+        porEjercicio.set(id, {
+          ejercicio: { id, nombre, grupoMuscular },
+          pesoKg: serie.pesoKg,
+          repeticiones: serie.repeticiones,
+          fechaInicio: sesion.fechaInicio,
+          sesionId: String(sesion._id),
+        })
+      }
+    }
+  }
+  return [...porEjercicio.values()].sort((a, b) => a.ejercicio.nombre.localeCompare(b.ejercicio.nombre, 'es'))
+}
+
+// GET /records: solo hacen falta las sesiones que tienen alguna serie récord
+export async function listarRecords(usuarioId) {
+  const sesiones = await Sesion.find({ usuarioId, 'registros.series.esRecord': true }).lean()
+  return elegirRecordsVigentes(sesiones)
+}
