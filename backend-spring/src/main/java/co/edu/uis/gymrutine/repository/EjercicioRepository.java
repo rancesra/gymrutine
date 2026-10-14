@@ -21,4 +21,16 @@ public interface EjercicioRepository extends JpaRepository<Ejercicio, Long> {
             where e.activo = true and (e.usuario is null or e.usuario.id = :usuarioId)
             order by e.nombre""")
     List<Ejercicio> buscarVisibles(@Param("usuarioId") Long usuarioId);
+
+    /**
+     * ¿Ya hay un ejercicio base, o uno propio y activo del usuario, con ese nombre sin importar mayúsculas?
+     * Al editar, {@code excluirId} es el mismo ejercicio, que no choca consigo mismo; al crear, {@code null}.
+     */
+    @Query("""
+            select count(e) > 0 from Ejercicio e
+            where lower(e.nombre) = lower(:nombre)
+              and (e.usuario is null or (e.usuario.id = :usuarioId and e.activo = true))
+              and (:excluirId is null or e.id <> :excluirId)""")
+    boolean existeNombre(@Param("nombre") String nombre, @Param("usuarioId") Long usuarioId,
+            @Param("excluirId") Long excluirId);
 }
