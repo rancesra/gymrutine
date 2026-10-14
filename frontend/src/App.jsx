@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes } from 'react-router'
 import RutaPrivada from './auth/RutaPrivada.jsx'
 import Plantilla from './componentes/Plantilla.jsx'
+import PaginaEjercicios from './paginas/PaginaEjercicios.jsx'
 import PaginaEnConstruccion from './paginas/PaginaEnConstruccion.jsx'
 import PaginaHistorial from './paginas/PaginaHistorial.jsx'
 import PaginaLogin from './paginas/PaginaLogin.jsx'
@@ -25,7 +26,7 @@ export default function App() {
 
         <Route element={<Plantilla />}>
           <Route path="/" element={<PaginaEnConstruccion titulo="Inicio" tarea="T11" />} />
-          <Route path="/ejercicios" element={<PaginaEnConstruccion titulo="Catálogo de ejercicios" tarea="T5" />} />
+          <Route path="/ejercicios" element={<PaginaEjercicios />} />
           <Route path="/rutinas" element={<PaginaRutinas />} />
           <Route path="/rutinas/nueva" element={<PaginaRutinaFormulario />} />
           <Route path="/rutinas/:id/editar" element={<PaginaRutinaFormulario />} />
