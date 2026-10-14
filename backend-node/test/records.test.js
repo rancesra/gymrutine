@@ -1,7 +1,7 @@
 // Pruebas de la regla de récords R6 (MODELO-DATOS §7.1): los 8 casos de la tabla y el ejemplo S1 a S4.
 import assert from 'node:assert/strict'
 import { describe, test } from 'node:test'
-import { calcularRecords } from '../src/servicios/records.js'
+import { calcularRecords, elegirRecordsVigentes } from '../src/servicios/records.js'
 
 // Arma una sesión a partir de sus pesos: sesion(40, 45) → series 1 y 2 con 40 y 45 kg
 function sesion(...pesos) {
@@ -98,5 +98,57 @@ describe('calcularRecords: ejemplo del modelo de datos', () => {
 
   test('si solo se corrige la serie de 50 × 6, S3 sigue siendo récord con la de 50 × 5', () => {
     assert.deepEqual(calcularRecords([s1, s2, sesion(47.5, 45, 50), s4]), [2, null, 3, null])
+  })
+})
+
+// GET /records (contrato §8): el récord vigente de cada ejercicio
+describe('elegirRecordsVigentes', () => {
+  const press = { id: 1, nombre: 'Press de banca con barra', grupoMuscular: 'PECHO' }
+  const triceps = { id: 23, nombre: 'Extensión de tríceps en polea', grupoMuscular: 'TRICEPS' }
+  const serie = (numero, pesoKg, repeticiones, esRecord = false) => ({ numero, pesoKg, repeticiones, esRecord })
+  const sesionCon = (_id, fechaInicio, registros) => ({ _id, fechaInicio, registros })
+
+  test('sin sesiones devuelve una lista vacía', () => {
+    assert.deepEqual(elegirRecordsVigentes([]), [])
+  })
+
+  test('de cada ejercicio queda la serie récord de mayor peso, con su sesión', () => {
+    const sesiones = [
+      sesionCon('s1', '2026-09-07T18:10:00', [{ ejercicio: press, series: [serie(1, 55, 5), serie(2, 60, 5, true)] }]),
+      sesionCon('s2', '2026-09-14T18:30:00', [{ ejercicio: press, series: [serie(1, 60, 5), serie(2, 62.5, 4, true)] }]),
+    ]
+    assert.deepEqual(elegirRecordsVigentes(sesiones), [
+      { ejercicio: press, pesoKg: 62.5, repeticiones: 4, fechaInicio: '2026-09-14T18:30:00', sesionId: 's2' },
+    ])
+  })
+
+  test('no depende del orden en que lleguen las sesiones', () => {
+    const vieja = sesionCon('s1', '2026-09-07T18:10:00', [{ ejercicio: press, series: [serie(1, 60, 5, true)] }])
+    const nueva = sesionCon('s2', '2026-09-14T18:30:00', [{ ejercicio: press, series: [serie(1, 62.5, 4, true)] }])
+    assert.equal(elegirRecordsVigentes([nueva, vieja])[0].sesionId, 's2')
+  })
+
+  test('las series que no son récord no cuentan, aunque pesen más', () => {
+    const sesiones = [sesionCon('s1', '2026-09-07T18:10:00', [{ ejercicio: press, series: [serie(1, 40, 8, true), serie(2, 40, 6)] }])]
+    assert.deepEqual(elegirRecordsVigentes(sesiones).map((r) => r.repeticiones), [8])
+  })
+
+  test('un ejercicio hecho solo con 0 kg no aparece, porque nunca tiene récord', () => {
+    const plancha = { id: 40, nombre: 'Abdominales', grupoMuscular: 'ABDOMEN' }
+    const sesiones = [sesionCon('s1', '2026-09-07T18:10:00', [{ ejercicio: plancha, series: [serie(1, 0, 20)] }])]
+    assert.deepEqual(elegirRecordsVigentes(sesiones), [])
+  })
+
+  test('salen ordenados por nombre del ejercicio', () => {
+    const sesiones = [
+      sesionCon('s1', '2026-09-07T18:10:00', [
+        { ejercicio: press, series: [serie(1, 60, 5, true)] },
+        { ejercicio: triceps, series: [serie(1, 27.5, 10, true)] },
+      ]),
+    ]
+    assert.deepEqual(elegirRecordsVigentes(sesiones).map((r) => r.ejercicio.nombre), [
+      'Extensión de tríceps en polea',
+      'Press de banca con barra',
+    ])
   })
 })
