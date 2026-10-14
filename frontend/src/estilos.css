@@ -66,6 +66,8 @@ a { color: var(--naranja); font-weight: 600; }
 /* Campos */
 .campo { display: grid; gap: 6px; margin: 0; padding: 0; border: 0; min-width: 0; }
 .campo-etiqueta { font-size: 13px; font-weight: 600; color: var(--tinta-2); padding: 0; }
+.fila-campos { display: grid; gap: 10px; }
+@media (min-width: 400px) { .fila-campos { grid-template-columns: 1fr 1fr; } }
 .entrada {
   display: flex; align-items: center; gap: 8px; min-height: 46px; padding: 0 12px;
   border: 1.5px solid var(--borde); border-radius: 12px; background: var(--papel);
@@ -137,6 +139,7 @@ a { color: var(--naranja); font-weight: 600; }
 .lista-fila { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-top: 1px solid var(--linea); }
 .lista-fila .crece { flex: 1; min-width: 0; }
 .lista-fila.record { background: #fffbeb; }
+.grafica { background: var(--papel); border: 1px solid var(--linea); border-radius: var(--radio); padding: 10px 8px 4px; }
 .numero-serie { width: 18px; flex: none; }
 
 /* Filas de series editables (P10 al editar y, después, P7) */

@@ -3,6 +3,7 @@ import express from 'express'
 import mongoose from 'mongoose'
 import { autenticar } from './middlewares/autenticar.js'
 import { manejarErrores, rutaNoEncontrada } from './middlewares/errores.js'
+import rutasPesoCorporal from './rutas/pesoCorporal.js'
 import rutasSesiones from './rutas/sesiones.js'
 
 const app = express()
@@ -17,6 +18,7 @@ app.get('/salud', (req, res) => {
 // Todo lo que está bajo /api exige un token válido del servicio de cuentas
 app.use('/api', autenticar)
 app.use('/api/sesiones', rutasSesiones)
+app.use('/api/peso-corporal', rutasPesoCorporal)
 
 app.use(rutaNoEncontrada)
 app.use(manejarErrores)

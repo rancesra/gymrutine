@@ -5,6 +5,7 @@ import PaginaEnConstruccion from './paginas/PaginaEnConstruccion.jsx'
 import PaginaHistorial from './paginas/PaginaHistorial.jsx'
 import PaginaLogin from './paginas/PaginaLogin.jsx'
 import PaginaPerfil from './paginas/PaginaPerfil.jsx'
+import PaginaPeso from './paginas/PaginaPeso.jsx'
 import PaginaRegistro from './paginas/PaginaRegistro.jsx'
 import PaginaSesion from './paginas/PaginaSesion.jsx'
 
@@ -30,7 +31,7 @@ export default function App() {
           <Route path="/historial/:id" element={<PaginaSesion />} />
           <Route path="/progreso" element={<PaginaEnConstruccion titulo="Progreso" tarea="T9" />} />
           <Route path="/progreso/records" element={<PaginaEnConstruccion titulo="Récords" tarea="T8" />} />
-          <Route path="/progreso/peso" element={<PaginaEnConstruccion titulo="Peso corporal" tarea="T10" />} />
+          <Route path="/progreso/peso" element={<PaginaPeso />} />
           <Route path="/perfil" element={<PaginaPerfil />} />
         </Route>
       </Route>
