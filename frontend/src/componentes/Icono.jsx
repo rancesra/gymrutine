@@ -11,6 +11,7 @@ const trazos = {
   x: 'M6 6l12 12M18 6L6 18',
   basura: 'M4 7h16M9.5 7V4h5v3M6 7l1 13h10l1-13',
   lapiz: 'M4 20h4L19 9l-4-4L4 16z',
+  check: 'M5 12.5l4.5 4.5L19 7',
   arriba: 'M18 15l-6-6-6 6',
   abajo: 'M6 9l6 6 6-6',
   derecha: 'M9 5l7 7-7 7',

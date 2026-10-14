@@ -3,6 +3,7 @@ import RutaPrivada from './auth/RutaPrivada.jsx'
 import Plantilla from './componentes/Plantilla.jsx'
 import PaginaEjercicios from './paginas/PaginaEjercicios.jsx'
 import PaginaEnConstruccion from './paginas/PaginaEnConstruccion.jsx'
+import PaginaEntrenar from './paginas/PaginaEntrenar.jsx'
 import PaginaHistorial from './paginas/PaginaHistorial.jsx'
 import PaginaLogin from './paginas/PaginaLogin.jsx'
 import PaginaPerfil from './paginas/PaginaPerfil.jsx'
@@ -22,7 +23,7 @@ export default function App() {
 
       <Route element={<RutaPrivada />}>
         {/* Entrenar ocupa toda la pantalla: va sin la barra de navegación */}
-        <Route path="/rutinas/:id/entrenar" element={<PaginaEnConstruccion titulo="Entrenar" tarea="T7" />} />
+        <Route path="/rutinas/:id/entrenar" element={<PaginaEntrenar />} />
 
         <Route element={<Plantilla />}>
           <Route path="/" element={<PaginaEnConstruccion titulo="Inicio" tarea="T11" />} />

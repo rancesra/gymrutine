@@ -32,3 +32,10 @@ export function formatoFecha(texto, { diaSemana = true, anio = false } = {}) {
 export function formatoHora(texto) {
   return texto.slice(11, 16)
 }
+
+// Fecha y hora local en el formato del contrato: 2026-10-11T18:30:05
+export function fechaHoraLocal(fecha = new Date()) {
+  const dos = (numero) => String(numero).padStart(2, '0')
+  const dia = `${fecha.getFullYear()}-${dos(fecha.getMonth() + 1)}-${dos(fecha.getDate())}`
+  return `${dia}T${dos(fecha.getHours())}:${dos(fecha.getMinutes())}:${dos(fecha.getSeconds())}`
+}

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { api } from '../api/cliente.js'
+import { borrarTodosLosBorradores } from '../utilidades/borrador.js'
 import { AuthContext } from './contexto.js'
 
 // Sesión del usuario disponible en toda la app. Se guarda también en localStorage
@@ -42,6 +43,7 @@ export default function AuthProvider({ children }) {
     }
     localStorage.removeItem(CLAVE_TOKEN)
     localStorage.removeItem(CLAVE_USUARIO)
+    borrarTodosLosBorradores()
     setToken(null)
     setUsuario(null)
   }
