@@ -6,6 +6,7 @@ import EstadoVacio from '../componentes/EstadoVacio.jsx'
 import GraficaLinea from '../componentes/GraficaLinea.jsx'
 import Icono from '../componentes/Icono.jsx'
 import MensajeError from '../componentes/MensajeError.jsx'
+import NavProgreso from '../componentes/NavProgreso.jsx'
 import { formatoFecha, formatoKg, formatoNumero, leerNumero } from '../utilidades/formato.js'
 
 // P13 Peso corporal (historias H21, H22 y H24). Reglas: docs/mockup/README.md, sección P13.
@@ -105,7 +106,8 @@ export default function PaginaPeso() {
 
   return (
     <section className="pagina num">
-      <h1>Peso corporal</h1>
+      <h1>Progreso</h1>
+      <NavProgreso />
 
       <form className="tarjeta formulario" onSubmit={guardar} noValidate>
         <div className="fila-campos">

@@ -92,7 +92,7 @@ Son cinco piezas. Las dos bases de datos arrancan solas con el computador; las o
 
 ## Estado
 
-**Al 14 de octubre:** funcionan el login y los tres CRUD de la entrega —rutinas (Javier), sesiones (Santiago) y peso corporal (Rances)—, salvo la pantalla para registrar una sesión, que sigue pendiente. Las pantallas de catálogo, progreso, récords e inicio quedan como trabajo siguiente; sus APIs, donde existen, ya están.
+**Al 3 de noviembre:** la aplicación está completa salvo la pantalla de progreso por ejercicio (P11). Funcionan el login y el perfil, el catálogo, los tres CRUD de la entrega —rutinas (Javier), sesiones (Santiago) y peso corporal (Rances)—, los récords automáticos con su pantalla y el inicio con el resumen. Quedan la pantalla P11 con la API ya lista, la colección de Postman y las capturas de las evidencias.
 
 ### Sprint 2 — Bases, login y Jira (21 al 23 de septiembre) · Entrega del sprint 2
 
@@ -109,17 +109,17 @@ Son cinco piezas. Las dos bases de datos arrancan solas con el computador; las o
 
 ### Sprint 3 — Las APIs (24 al 29 de septiembre)
 
-- [ ] H4 — Ver y editar mi perfil
-- [ ] H5 — Explorar el catálogo de ejercicios
-- [ ] H6 — Ver el detalle de un ejercicio
-- [ ] H7 — Crear un ejercicio propio
-- [ ] H8 — Editar un ejercicio propio
-- [ ] H9 — Eliminar un ejercicio propio
+- [x] H4 — Ver y editar mi perfil
+- [x] H5 — Explorar el catálogo de ejercicios
+- [x] H6 — Ver el detalle de un ejercicio
+- [x] H7 — Crear un ejercicio propio
+- [x] H8 — Editar un ejercicio propio
+- [x] H9 — Eliminar un ejercicio propio
 - [x] H21 — Registrar mi peso corporal
 - [x] H22 — Ver la evolución de mi peso corporal
 - [x] H24 — Corregir un registro de peso
 - [x] API de catálogo, de rutinas, de sesiones y de peso corporal; algoritmo de récords con pruebas
-- [ ] API de récords y de progreso
+- [x] API de récords y de progreso
 
 ### Sprint 4 — Pantallas, evidencias y entrega final (30 de septiembre al 9 de octubre)
 
@@ -133,12 +133,13 @@ Son cinco piezas. Las dos bases de datos arrancan solas con el computador; las o
 - [x] H17 — Eliminar una sesión
 - [x] H23 — Editar una sesión
 - [x] H18 — Detección automática de récords personales
-- [ ] H19 — Ver mis récords personales
+- [x] H19 — Ver mis récords personales
 - [ ] H20 — Ver el progreso de un ejercicio
-- [ ] Inicio, colección de Postman y datos de demostración
+- [x] Pantalla de inicio
+- [ ] Colección de Postman y datos de demostración
 - [ ] [Evidencias de participación y trazabilidad en Jira](EVIDENCIAS.md)
 - [ ] Pulido en celulares reales y documentación final
-- [ ] **Entrega final: viernes 9 de octubre**
+- [ ] **Entrega final**
 
 ## Equipo
 

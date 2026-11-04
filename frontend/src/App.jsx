@@ -5,8 +5,10 @@ import PaginaEjercicios from './paginas/PaginaEjercicios.jsx'
 import PaginaEnConstruccion from './paginas/PaginaEnConstruccion.jsx'
 import PaginaEntrenar from './paginas/PaginaEntrenar.jsx'
 import PaginaHistorial from './paginas/PaginaHistorial.jsx'
+import PaginaInicio from './paginas/PaginaInicio.jsx'
 import PaginaLogin from './paginas/PaginaLogin.jsx'
 import PaginaPerfil from './paginas/PaginaPerfil.jsx'
+import PaginaRecords from './paginas/PaginaRecords.jsx'
 import PaginaPeso from './paginas/PaginaPeso.jsx'
 import PaginaRegistro from './paginas/PaginaRegistro.jsx'
 import PaginaRutinaFormulario from './paginas/PaginaRutinaFormulario.jsx'
@@ -26,7 +28,7 @@ export default function App() {
         <Route path="/rutinas/:id/entrenar" element={<PaginaEntrenar />} />
 
         <Route element={<Plantilla />}>
-          <Route path="/" element={<PaginaEnConstruccion titulo="Inicio" tarea="T11" />} />
+          <Route path="/" element={<PaginaInicio />} />
           <Route path="/ejercicios" element={<PaginaEjercicios />} />
           <Route path="/rutinas" element={<PaginaRutinas />} />
           <Route path="/rutinas/nueva" element={<PaginaRutinaFormulario />} />
@@ -34,7 +36,7 @@ export default function App() {
           <Route path="/historial" element={<PaginaHistorial />} />
           <Route path="/historial/:id" element={<PaginaSesion />} />
           <Route path="/progreso" element={<PaginaEnConstruccion titulo="Progreso" tarea="T9" />} />
-          <Route path="/progreso/records" element={<PaginaEnConstruccion titulo="Récords" tarea="T8" />} />
+          <Route path="/progreso/records" element={<PaginaRecords />} />
           <Route path="/progreso/peso" element={<PaginaPeso />} />
           <Route path="/perfil" element={<PaginaPerfil />} />
         </Route>
