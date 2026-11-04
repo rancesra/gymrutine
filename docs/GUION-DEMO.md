@@ -48,6 +48,14 @@ curl -s -o /dev/null -w 'cuentas %{http_code}\n' http://127.0.0.1:8080/api/refer
 | Diagramas, ya dibujados | [MODELO-DATOS.md](MODELO-DATOS.md) y [ARQUITECTURA.md](ARQUITECTURA.md), abiertos en GitHub |
 | MySQL | Workbench → conexión *Local* → base `gymrutine` |
 
+**Datos de demostración.** Con los servicios encendidos, desde la raíz del repositorio:
+
+```bash
+node presentacion/cargar-datos-demo.mjs
+```
+
+Deja la cuenta `ana@correo.com` con 4 rutinas, 15 sesiones de cinco semanas, 9 récords y 6 registros de peso ([presentacion/README.md](../presentacion/README.md)). Si ya tiene datos, no crea nada.
+
 **También:** MySQL Workbench abierto en la base `gymrutine`, la letra de la terminal grande (`Cmd` y `+`), el modo concentración encendido y una prueba completa del guion, cronometrada.
 
 ## 2. El guion

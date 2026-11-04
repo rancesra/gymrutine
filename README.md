@@ -52,6 +52,8 @@ graph LR
 | [Modelo de datos](docs/MODELO-DATOS.md) | Diagrama entidad-relación (MySQL), modelo de documentos (MongoDB), reglas de negocio y catálogo base |
 | [Arquitectura](docs/ARQUITECTURA.md) | Los dos servicios, cómo se comunican, stack con versiones, diagramas y decisiones técnicas |
 | [Contrato de API](docs/CONTRATO-API.md) | Los 29 endpoints, qué servicio atiende cada uno, modelos y errores |
+| [Colección de Postman](postman/README.md) | Los 29 endpoints listos para probar, con el token guardándose solo |
+| [Presentación](presentacion/README.md) | Datos de demostración y capturas de respaldo para la sustentación |
 | [Mockup en HTML](docs/mockup/mockup.html) | Cómo se ven las 14 pantallas, con sus reglas anotadas (se abre en el navegador) |
 | [Reglas de las pantallas](docs/mockup/README.md) | Ruta, datos, validaciones y estados de cada pantalla |
 | [Guía de inicio](GUIA-INICIO.md) | Instalar las herramientas, crear las bases de datos y arrancar todo (Windows y macOS) |
@@ -136,7 +138,8 @@ Son cinco piezas. Las dos bases de datos arrancan solas con el computador; las o
 - [x] H19 — Ver mis récords personales
 - [ ] H20 — Ver el progreso de un ejercicio
 - [x] Pantalla de inicio
-- [ ] Colección de Postman y datos de demostración
+- [x] Colección de Postman
+- [x] Datos de demostración
 - [ ] [Evidencias de participación y trazabilidad en Jira](EVIDENCIAS.md)
 - [ ] Pulido en celulares reales y documentación final
 - [ ] **Entrega final**

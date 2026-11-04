@@ -1,0 +1,1529 @@
+{
+  "info": {
+    "name": "GymRutine",
+    "description": "Los 29 endpoints de GymRutine (docs/CONTRATO-API.md), con una carpeta por servicio.\n\nSe puede correr entera con el Collection Runner, en orden: cada petición guarda en el entorno lo que necesita la siguiente (token, ejercicioId, rutinaId, sesionId y pesoId), y cada una comprueba el código de estado que promete el contrato.\n\nAntes de correrla hay que tener encendidos los dos servicios (GUIA-INICIO.md §5) y elegir el entorno «GymRutine local».",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "exec": [
+          "// Fecha y hora de Colombia (UTC-5) en el formato del contrato, para que nunca sea futura",
+          "const colombia = new Date(Date.now() - 5 * 60 * 60 * 1000)",
+          "pm.variables.set('hoy', colombia.toISOString().slice(0, 10))",
+          "pm.variables.set('ahora', colombia.toISOString().slice(0, 19))",
+          "// Marca para que los nombres de los ejercicios propios no choquen entre corridas",
+          "pm.variables.set('marca', String(Date.now()).slice(-5))"
+        ]
+      }
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Cuentas · Autenticación y perfil",
+      "description": "Crear cuenta, iniciar y cerrar sesión, y el perfil (contrato §3). El token se guarda solo en el entorno al registrarse o iniciar sesión.",
+      "item": [
+        {
+          "name": "POST /auth/registro",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 201, 409', () => pm.expect([201, 409]).to.include(pm.response.code))",
+                  "if (pm.response.code < 300) {",
+                  "  pm.environment.set('token', pm.response.json().token)",
+                  "}"
+                ],
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{cuentas}}/auth/registro",
+              "host": [
+                "{{cuentas}}"
+              ],
+              "path": [
+                "auth",
+                "registro"
+              ]
+            },
+            "description": "Crea la cuenta de prueba. La segunda vez responde 409 EMAIL_YA_REGISTRADO, que también se da por bueno para poder correr la colección varias veces.",
+            "auth": {
+              "type": "noauth"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Ana Gómez\",\n  \"email\": \"{{email}}\",\n  \"contrasena\": \"{{contrasena}}\",\n  \"objetivo\": \"FUERZA\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "POST /auth/login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.expect([200]).to.include(pm.response.code))",
+                  "if (pm.response.code < 300) {",
+                  "  pm.environment.set('token', pm.response.json().token)",
+                  "}",
+                  "if (pm.response.code < 300) {",
+                  "  pm.environment.set('usuarioId', pm.response.json().usuario.id)",
+                  "}"
+                ],
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{cuentas}}/auth/login",
+              "host": [
+                "{{cuentas}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "description": "Inicia sesión y guarda el token en el entorno; de aquí en adelante todas las peticiones lo mandan en la cabecera Authorization.",
+            "auth": {
+              "type": "noauth"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"contrasena\": \"{{contrasena}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "POST /auth/login (contraseña incorrecta)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 401', () => pm.expect([401]).to.include(pm.response.code))"
+                ],
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{cuentas}}/auth/login",
+              "host": [
+                "{{cuentas}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "description": "Mismo mensaje que cuando el email no existe, para no revelar qué correos están registrados.",
+            "auth": {
+              "type": "noauth"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"contrasena\": \"no-es-la-clave\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "GET /referencias",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.expect([200]).to.include(pm.response.code))"
+                ],
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{cuentas}}/referencias",
+              "host": [
+                "{{cuentas}}"
+              ],
+              "path": [
+                "referencias"
+              ]
+            },
+            "description": "Objetivos, grupos musculares y equipos con su nombre visible. Es pública: el formulario de registro la necesita antes de iniciar sesión.",
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        },
+        {
+          "name": "GET /usuarios/me",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.expect([200]).to.include(pm.response.code))"
+                ],
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{cuentas}}/usuarios/me",
+              "host": [
+                "{{cuentas}}"
+              ],
+              "path": [
+                "usuarios",
+                "me"
+              ]
+            },
+            "description": "Perfil del usuario autenticado. El servicio de entrenamiento llama a este mismo endpoint para validar el token."
+          }
+        },
+        {
+          "name": "PUT /usuarios/me",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.expect([200]).to.include(pm.response.code))"
+                ],
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{cuentas}}/usuarios/me",
+              "host": [
+                "{{cuentas}}"
+              ],
+              "path": [
+                "usuarios",
+                "me"
+              ]
+            },
+            "description": "Cambia el nombre y el objetivo. El email y la contraseña no se cambian.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Ana María Gómez\",\n  \"objetivo\": \"RESISTENCIA\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "GET /usuarios/me (sin token)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 401', () => pm.expect([401]).to.include(pm.response.code))"
+                ],
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{cuentas}}/usuarios/me",
+              "host": [
+                "{{cuentas}}"
+              ],
+              "path": [
+                "usuarios",
+                "me"
+              ]
+            },
+            "description": "Sin la cabecera Authorization responde 401 NO_AUTENTICADO.",
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Cuentas · Catálogo de ejercicios",
+      "description": "Los 40 ejercicios base más los propios de cada usuario (contrato §5, reglas R1 y R2).",
+      "item": [
+        {
+          "name": "GET /ejercicios",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.expect([200]).to.include(pm.response.code))"
+                ],
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{cuentas}}/ejercicios",
+              "host": [
+                "{{cuentas}}"
+              ],
+              "path": [
+                "ejercicios"
+              ]
+            },
+            "description": "Catálogo visible: los base y los propios activos, ordenados por nombre."
+          }
+        },
+        {
+          "name": "GET /ejercicios (con filtros)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.expect([200]).to.include(pm.response.code))"
+                ],
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{cuentas}}/ejercicios?grupoMuscular=PECHO&objetivo=FUERZA",
+              "host": [
+                "{{cuentas}}"
+              ],
+              "path": [
+                "ejercicios"
+              ],
+              "query": [
+                {
+                  "key": "grupoMuscular",
+                  "value": "PECHO"
+                },
+                {
+                  "key": "objetivo",
+                  "value": "FUERZA"
+                }
+              ]
+            },
+            "description": "Los filtros se combinan entre sí. Un valor inventado responde 400."
+          }
+        },
+        {
+          "name": "GET /ejercicios (filtro inválido)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 400', () => pm.expect([400]).to.include(pm.response.code))"
+                ],
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{cuentas}}/ejercicios?grupoMuscular=VOLAR",
+              "host": [
+                "{{cuentas}}"
+              ],
+              "path": [
+                "ejercicios"
+              ],
+              "query": [
+                {
+                  "key": "grupoMuscular",
+                  "value": "VOLAR"
+                }
+              ]
+            },
+            "description": "Un enumerado que no existe responde 400 VALIDACION_FALLIDA."
+          }
+        },
+        {
+          "name": "GET /ejercicios/1",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.expect([200]).to.include(pm.response.code))"
+                ],
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{cuentas}}/ejercicios/1",
+              "host": [
+                "{{cuentas}}"
+              ],
+              "path": [
+                "ejercicios",
+                "1"
+              ]
+            },
+            "description": "Detalle de un ejercicio del catálogo base."
+          }
+        },
+        {
+          "name": "POST /ejercicios",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 201', () => pm.expect([201]).to.include(pm.response.code))",
+                  "if (pm.response.code < 300) {",
+                  "  pm.environment.set('ejercicioId', pm.response.json().id)",
+                  "}"
+                ],
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{cuentas}}/ejercicios",
+              "host": [
+                "{{cuentas}}"
+              ],
+              "path": [
+                "ejercicios"
+              ]
+            },
+            "description": "Crea un ejercicio propio. El nombre lleva la marca de tiempo para que la colección se pueda correr varias veces sin chocar con el 409 de duplicado.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Remo invertido {{marca}}\",\n  \"grupoMuscular\": \"ESPALDA\",\n  \"equipo\": \"BARRA\",\n  \"objetivos\": [\n    \"FUERZA\",\n    \"RESISTENCIA\"\n  ],\n  \"descripcion\": \"Cuerpo recto y codos pegados\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "POST /ejercicios (nombre repetido)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 409', () => pm.expect([409]).to.include(pm.response.code))"
+                ],
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{cuentas}}/ejercicios",
+              "host": [
+                "{{cuentas}}"
+              ],
+              "path": [
+                "ejercicios"
+              ]
+            },
+            "description": "Un nombre que ya existe en el catálogo base responde 409 EJERCICIO_DUPLICADO.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"press de banca con barra\",\n  \"grupoMuscular\": \"PECHO\",\n  \"equipo\": \"BARRA\",\n  \"objetivos\": [\n    \"FUERZA\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "PUT /ejercicios/{{ejercicioId}}",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.expect([200]).to.include(pm.response.code))"
+                ],
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{cuentas}}/ejercicios/{{ejercicioId}}",
+              "host": [
+                "{{cuentas}}"
+              ],
+              "path": [
+                "ejercicios",
+                "{{ejercicioId}}"
+              ]
+            },
+            "description": "Edita el ejercicio propio recién creado.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Remo invertido {{marca}}\",\n  \"grupoMuscular\": \"ESPALDA\",\n  \"equipo\": \"BARRA\",\n  \"objetivos\": [\n    \"FUERZA\"\n  ],\n  \"descripcion\": \"Con los pies apoyados\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "PUT /ejercicios/1 (del catálogo base)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 403', () => pm.expect([403]).to.include(pm.response.code))"
+                ],
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{cuentas}}/ejercicios/1",
+              "host": [
+                "{{cuentas}}"
+              ],
+              "path": [
+                "ejercicios",
+                "1"
+              ]
+            },
+            "description": "El catálogo base es de solo lectura: responde 403 EJERCICIO_NO_EDITABLE.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Press cambiado\",\n  \"grupoMuscular\": \"PECHO\",\n  \"equipo\": \"BARRA\",\n  \"objetivos\": [\n    \"FUERZA\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "DELETE /ejercicios/{{ejercicioId}}",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 204', () => pm.expect([204]).to.include(pm.response.code))"
+                ],
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{cuentas}}/ejercicios/{{ejercicioId}}",
+              "host": [
+                "{{cuentas}}"
+              ],
+              "path": [
+                "ejercicios",
+                "{{ejercicioId}}"
+              ]
+            },
+            "description": "Borrado lógico e idempotente: repetirlo vuelve a responder 204."
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Cuentas · Rutinas",
+      "description": "El CRUD de rutinas (contrato §6). La rutina que se crea aquí la usa después la carpeta de sesiones.",
+      "item": [
+        {
+          "name": "POST /rutinas",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 201', () => pm.expect([201]).to.include(pm.response.code))",
+                  "if (pm.response.code < 300) {",
+                  "  pm.environment.set('rutinaId', pm.response.json().id)",
+                  "}"
+                ],
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{cuentas}}/rutinas",
+              "host": [
+                "{{cuentas}}"
+              ],
+              "path": [
+                "rutinas"
+              ]
+            },
+            "description": "Crea una rutina con dos ejercicios del catálogo base. El orden es el del arreglo.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Pecho y tríceps (Postman)\",\n  \"objetivo\": \"FUERZA\",\n  \"ejercicios\": [\n    {\n      \"ejercicioId\": 1,\n      \"seriesObjetivo\": 4,\n      \"repeticionesObjetivo\": 5\n    },\n    {\n      \"ejercicioId\": 22,\n      \"seriesObjetivo\": 3,\n      \"repeticionesObjetivo\": 10\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "POST /rutinas (ejercicio repetido)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 400', () => pm.expect([400]).to.include(pm.response.code))"
+                ],
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{cuentas}}/rutinas",
+              "host": [
+                "{{cuentas}}"
+              ],
+              "path": [
+                "rutinas"
+              ]
+            },
+            "description": "El mismo ejercicio dos veces responde 400 con el campo señalado.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Repetida\",\n  \"objetivo\": \"FUERZA\",\n  \"ejercicios\": [\n    {\n      \"ejercicioId\": 1,\n      \"seriesObjetivo\": 4,\n      \"repeticionesObjetivo\": 5\n    },\n    {\n      \"ejercicioId\": 1,\n      \"seriesObjetivo\": 3,\n      \"repeticionesObjetivo\": 5\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "GET /rutinas",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.expect([200]).to.include(pm.response.code))"
+                ],
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{cuentas}}/rutinas",
+              "host": [
+                "{{cuentas}}"
+              ],
+              "path": [
+                "rutinas"
+              ]
+            },
+            "description": "Solo las rutinas activas del usuario, ordenadas por nombre."
+          }
+        },
+        {
+          "name": "GET /rutinas/{{rutinaId}}",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.expect([200]).to.include(pm.response.code))"
+                ],
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{cuentas}}/rutinas/{{rutinaId}}",
+              "host": [
+                "{{cuentas}}"
+              ],
+              "path": [
+                "rutinas",
+                "{{rutinaId}}"
+              ]
+            },
+            "description": "Detalle con sus ejercicios en orden. El servicio de entrenamiento llama a este endpoint al registrar una sesión."
+          }
+        },
+        {
+          "name": "PUT /rutinas/{{rutinaId}}",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.expect([200]).to.include(pm.response.code))"
+                ],
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{cuentas}}/rutinas/{{rutinaId}}",
+              "host": [
+                "{{cuentas}}"
+              ],
+              "path": [
+                "rutinas",
+                "{{rutinaId}}"
+              ]
+            },
+            "description": "Reemplaza la rutina completa: la lista que se manda es la que queda.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Pecho y tríceps (Postman)\",\n  \"objetivo\": \"FUERZA\",\n  \"ejercicios\": [\n    {\n      \"ejercicioId\": 1,\n      \"seriesObjetivo\": 5,\n      \"repeticionesObjetivo\": 5\n    },\n    {\n      \"ejercicioId\": 22,\n      \"seriesObjetivo\": 3,\n      \"repeticionesObjetivo\": 12\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Entrenamiento · Sesiones",
+      "description": "El CRUD de sesiones (contrato §7). Al registrar, el servicio le pide la rutina al de cuentas con el mismo token; los récords se recalculan en cada cambio (regla R6).",
+      "item": [
+        {
+          "name": "GET /sesiones/ultimos-registros",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.expect([200]).to.include(pm.response.code))"
+                ],
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{entrenamiento}}/sesiones/ultimos-registros?rutinaId={{rutinaId}}",
+              "host": [
+                "{{entrenamiento}}"
+              ],
+              "path": [
+                "sesiones",
+                "ultimos-registros"
+              ],
+              "query": [
+                {
+                  "key": "rutinaId",
+                  "value": "{{rutinaId}}"
+                }
+              ]
+            },
+            "description": "Lo que se hizo la última vez en cada ejercicio de la rutina. Con esto la pantalla de entrenar llega prellenada."
+          }
+        },
+        {
+          "name": "POST /sesiones",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 201', () => pm.expect([201]).to.include(pm.response.code))",
+                  "if (pm.response.code < 300) {",
+                  "  pm.environment.set('sesionId', pm.response.json().id)",
+                  "}"
+                ],
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{entrenamiento}}/sesiones",
+              "host": [
+                "{{entrenamiento}}"
+              ],
+              "path": [
+                "sesiones"
+              ]
+            },
+            "description": "Registra la sesión. La fecha {{ahora}} la calcula el script de la colección, en hora de Colombia, para que nunca sea futura.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rutinaId\": {{rutinaId}},\n  \"fechaInicio\": \"{{ahora}}\",\n  \"duracionMinutos\": 52,\n  \"registros\": [\n    {\n      \"ejercicioId\": 1,\n      \"series\": [\n        {\n          \"pesoKg\": 55,\n          \"repeticiones\": 5\n        },\n        {\n          \"pesoKg\": 57.5,\n          \"repeticiones\": 5\n        }\n      ]\n    },\n    {\n      \"ejercicioId\": 22,\n      \"series\": [\n        {\n          \"pesoKg\": 25,\n          \"repeticiones\": 12\n        }\n      ]\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "GET /sesiones",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.expect([200]).to.include(pm.response.code))"
+                ],
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{entrenamiento}}/sesiones",
+              "host": [
+                "{{entrenamiento}}"
+              ],
+              "path": [
+                "sesiones"
+              ]
+            },
+            "description": "Historial, de la sesión más reciente a la más antigua."
+          }
+        },
+        {
+          "name": "GET /sesiones/{{sesionId}}",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.expect([200]).to.include(pm.response.code))"
+                ],
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{entrenamiento}}/sesiones/{{sesionId}}",
+              "host": [
+                "{{entrenamiento}}"
+              ],
+              "path": [
+                "sesiones",
+                "{{sesionId}}"
+              ]
+            },
+            "description": "Detalle con cada serie y las que son récord."
+          }
+        },
+        {
+          "name": "PUT /sesiones/{{sesionId}}",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.expect([200]).to.include(pm.response.code))"
+                ],
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{entrenamiento}}/sesiones/{{sesionId}}",
+              "host": [
+                "{{entrenamiento}}"
+              ],
+              "path": [
+                "sesiones",
+                "{{sesionId}}"
+              ]
+            },
+            "description": "Corrige fecha, duración y series. No se pueden agregar ni quitar ejercicios (regla R5); los récords se recalculan.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fechaInicio\": \"{{ahora}}\",\n  \"duracionMinutos\": 48,\n  \"registros\": [\n    {\n      \"ejercicioId\": 1,\n      \"series\": [\n        {\n          \"pesoKg\": 60,\n          \"repeticiones\": 4\n        },\n        {\n          \"pesoKg\": 60,\n          \"repeticiones\": 4\n        }\n      ]\n    },\n    {\n      \"ejercicioId\": 22,\n      \"series\": [\n        {\n          \"pesoKg\": 27.5,\n          \"repeticiones\": 10\n        }\n      ]\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "DELETE /sesiones/{{sesionId}}",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 204', () => pm.expect([204]).to.include(pm.response.code))"
+                ],
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{entrenamiento}}/sesiones/{{sesionId}}",
+              "host": [
+                "{{entrenamiento}}"
+              ],
+              "path": [
+                "sesiones",
+                "{{sesionId}}"
+              ]
+            },
+            "description": "Borrado físico: la sesión desaparece y los récords de sus ejercicios se recalculan."
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Entrenamiento · Récords y progreso",
+      "description": "Lo que alimenta las pantallas de progreso (contrato §8).",
+      "item": [
+        {
+          "name": "GET /records",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.expect([200]).to.include(pm.response.code))"
+                ],
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{entrenamiento}}/records",
+              "host": [
+                "{{entrenamiento}}"
+              ],
+              "path": [
+                "records"
+              ]
+            },
+            "description": "El récord vigente de cada ejercicio, ordenados por nombre."
+          }
+        },
+        {
+          "name": "GET /progreso/ejercicios",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.expect([200]).to.include(pm.response.code))"
+                ],
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{entrenamiento}}/progreso/ejercicios",
+              "host": [
+                "{{entrenamiento}}"
+              ],
+              "path": [
+                "progreso",
+                "ejercicios"
+              ]
+            },
+            "description": "Ejercicios que el usuario ha registrado alguna vez: es el selector de la pantalla."
+          }
+        },
+        {
+          "name": "GET /progreso/ejercicios/1",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200, 404', () => pm.expect([200, 404]).to.include(pm.response.code))"
+                ],
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{entrenamiento}}/progreso/ejercicios/1",
+              "host": [
+                "{{entrenamiento}}"
+              ],
+              "path": [
+                "progreso",
+                "ejercicios",
+                "1"
+              ]
+            },
+            "description": "Un punto por sesión, en orden cronológico: lo que dibuja la gráfica. Si el usuario nunca ha hecho ese ejercicio, responde 404."
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Entrenamiento · Peso corporal",
+      "description": "El CRUD de peso corporal (contrato §9). Un registro por día: el índice único de MongoDB lo garantiza.",
+      "item": [
+        {
+          "name": "POST /peso-corporal",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 201, 409', () => pm.expect([201, 409]).to.include(pm.response.code))",
+                  "if (pm.response.code < 300) {",
+                  "  pm.environment.set('pesoId', pm.response.json().id)",
+                  "}"
+                ],
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{entrenamiento}}/peso-corporal",
+              "host": [
+                "{{entrenamiento}}"
+              ],
+              "path": [
+                "peso-corporal"
+              ]
+            },
+            "description": "Registra el peso de hoy. La fecha {{hoy}} la calcula el script de la colección.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fecha\": \"{{hoy}}\",\n  \"pesoKg\": 77.9\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "POST /peso-corporal (fecha repetida)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 409', () => pm.expect([409]).to.include(pm.response.code))"
+                ],
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{entrenamiento}}/peso-corporal",
+              "host": [
+                "{{entrenamiento}}"
+              ],
+              "path": [
+                "peso-corporal"
+              ]
+            },
+            "description": "Dos registros el mismo día responden 409 PESO_YA_REGISTRADO.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fecha\": \"{{hoy}}\",\n  \"pesoKg\": 78.4\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "POST /peso-corporal (fecha futura)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 400', () => pm.expect([400]).to.include(pm.response.code))"
+                ],
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{entrenamiento}}/peso-corporal",
+              "host": [
+                "{{entrenamiento}}"
+              ],
+              "path": [
+                "peso-corporal"
+              ]
+            },
+            "description": "Una fecha futura responde 400 con el error en el campo fecha.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fecha\": \"2099-01-01\",\n  \"pesoKg\": 77.9\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "GET /peso-corporal",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.expect([200]).to.include(pm.response.code))"
+                ],
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{entrenamiento}}/peso-corporal",
+              "host": [
+                "{{entrenamiento}}"
+              ],
+              "path": [
+                "peso-corporal"
+              ]
+            },
+            "description": "Del más antiguo al más reciente, que es el orden que necesita la gráfica."
+          }
+        },
+        {
+          "name": "PUT /peso-corporal/{{pesoId}}",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.expect([200]).to.include(pm.response.code))"
+                ],
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{entrenamiento}}/peso-corporal/{{pesoId}}",
+              "host": [
+                "{{entrenamiento}}"
+              ],
+              "path": [
+                "peso-corporal",
+                "{{pesoId}}"
+              ]
+            },
+            "description": "Corrige la fecha o el peso del registro.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fecha\": \"{{hoy}}\",\n  \"pesoKg\": 77.6\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "DELETE /peso-corporal/{{pesoId}}",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 204', () => pm.expect([204]).to.include(pm.response.code))"
+                ],
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{entrenamiento}}/peso-corporal/{{pesoId}}",
+              "host": [
+                "{{entrenamiento}}"
+              ],
+              "path": [
+                "peso-corporal",
+                "{{pesoId}}"
+              ]
+            },
+            "description": "Borrado físico. Repetirlo responde 404 REGISTRO_PESO_NO_ENCONTRADO."
+          }
+        }
+      ]
+    },
+    {
+      "name": "7. Cierre",
+      "description": "Deja la base como estaba y cierra la sesión.",
+      "item": [
+        {
+          "name": "DELETE /rutinas/{{rutinaId}}",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 204', () => pm.expect([204]).to.include(pm.response.code))"
+                ],
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{cuentas}}/rutinas/{{rutinaId}}",
+              "host": [
+                "{{cuentas}}"
+              ],
+              "path": [
+                "rutinas",
+                "{{rutinaId}}"
+              ]
+            },
+            "description": "Borrado lógico de la rutina que creó la colección."
+          }
+        },
+        {
+          "name": "POST /auth/logout",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 204', () => pm.expect([204]).to.include(pm.response.code))"
+                ],
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{cuentas}}/auth/logout",
+              "host": [
+                "{{cuentas}}"
+              ],
+              "path": [
+                "auth",
+                "logout"
+              ]
+            },
+            "description": "Invalida el token: de aquí en adelante todo responde 401."
+          }
+        },
+        {
+          "name": "GET /usuarios/me (después del logout)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 401', () => pm.expect([401]).to.include(pm.response.code))"
+                ],
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{cuentas}}/usuarios/me",
+              "host": [
+                "{{cuentas}}"
+              ],
+              "path": [
+                "usuarios",
+                "me"
+              ]
+            },
+            "description": "El token ya no sirve: 401 NO_AUTENTICADO."
+          }
+        }
+      ]
+    }
+  ]
+}
