@@ -291,10 +291,10 @@ export default function PaginaEntrenar() {
 
       <div className="tarjeta resumen-sesion num">
         <span>
-          <b>{resumen.ejercicios}</b> <span className="texto-3">{resumen.ejercicios === 1 ? 'ejercicio' : 'ejercicios'}</span>
+          <b>{resumen.ejercicios}</b> <span className="texto-3">ejercicios</span>
         </span>
         <span>
-          <b>{resumen.series}</b> <span className="texto-3">{resumen.series === 1 ? 'serie' : 'series'}</span>
+          <b>{resumen.series}</b> <span className="texto-3">series</span>
         </span>
         <span>
           <b>{formatoNumero(resumen.volumenKg)}</b> <span className="texto-3">kg</span>
