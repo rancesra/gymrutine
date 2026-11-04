@@ -52,7 +52,7 @@ export default function PaginaSesion() {
     setEnviando(true)
     try {
       // La respuesta trae la sesión con los récords ya recalculados
-      setSesion(await api.put(`/sesiones/${id}`, aCuerpo(borrador)))
+      setSesion(await api.put(`/sesiones/${id}`, aCuerpo(borrador, sesion)))
       setBorrador(null)
     } catch (e) {
       // Un 400 marca cada campo según la ruta que llega en "campos"
@@ -261,10 +261,13 @@ function aBorrador(sesion) {
   }
 }
 
-// El borrador → el cuerpo de PUT /sesiones/{id} (contrato §7)
-function aCuerpo(borrador) {
+// El borrador → el cuerpo de PUT /sesiones/{id} (contrato §7).
+// El campo de fecha solo maneja minutos: si no se cambió, se conserva la hora original con sus segundos,
+// para que la sesión no quede antes que otra registrada en el mismo minuto (orden de récords y progreso).
+function aCuerpo(borrador, sesion) {
+  const fechaSinCambios = borrador.fechaInicio === sesion.fechaInicio.slice(0, 16)
   return {
-    fechaInicio: `${borrador.fechaInicio}:00`,
+    fechaInicio: fechaSinCambios ? sesion.fechaInicio : `${borrador.fechaInicio}:00`,
     duracionMinutos: leerNumero(borrador.duracionMinutos),
     registros: borrador.registros.map((registro) => ({
       ejercicioId: registro.ejercicio.id,
