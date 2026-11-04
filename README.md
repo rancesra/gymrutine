@@ -46,6 +46,7 @@ graph LR
 |---|---|
 | [Plan de trabajo](PLAN-DE-TRABAJO.md) | Qué pide el curso, calendario hasta el 9 de octubre, un CRUD por integrante, quién espera a quién y cómo verificar cada tarea |
 | [Evidencias](EVIDENCIAS.md) | Participación de cada integrante y trazabilidad del avance en Jira (entrega final) |
+| [Pruebas de punta a punta](docs/PRUEBAS.md) | El recorrido completo de la aplicación con los tres servicios y los casos del servicio de entrenamiento, con sus resultados |
 | [Guion de la demostración](docs/GUION-DEMO.md) | Qué se muestra en cada entrega, en qué orden, quién presenta cada parte y el plan B |
 | [Informe inicial](docs/IDEA.md) | Problema, justificación, alcance, benchmark contra GymTracker y decisiones del proyecto |
 | [Historias de usuario](docs/HISTORIAS.md) | Product Backlog: 24 historias con criterios de aceptación y diagrama de casos de uso |
@@ -119,7 +120,7 @@ Son cinco piezas. Las dos bases de datos arrancan solas con el computador; las o
 - [x] H22 — Ver la evolución de mi peso corporal
 - [x] H24 — Corregir un registro de peso
 - [x] API de catálogo, de rutinas, de sesiones y de peso corporal; algoritmo de récords con pruebas
-- [ ] API de récords y de progreso
+- [x] API de récords y de progreso
 
 ### Sprint 4 — Pantallas, evidencias y entrega final (30 de septiembre al 9 de octubre)
 
