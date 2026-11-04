@@ -250,11 +250,6 @@ ol.lista { margin: 0; padding: 0; list-style: none; }
 .tarjeta.nuevo-record .fila { color: var(--oro-tinta); font-size: 16px; }
 .nuevo-record .texto-3 { color: var(--oro-tinta); }
 
-/* Títulos de sección fuera de la rejilla de .pagina: sin el gap de la rejilla, necesitan su propio espacio */
-.entre:has(> .titulo-bloque) { margin-bottom: 8px; }
-.entre > .titulo-bloque { margin-bottom: 0; }
-:not(.pagina) > .titulo-bloque + .lista { margin-top: 14px; }
-
 /* Progreso por ejercicio (P11): leyenda de la gráfica y tabla con los mismos datos */
 .leyenda { display: flex; justify-content: center; gap: 14px; padding: 4px 0 6px; }
 .leyenda-punto { display: inline-block; width: 10px; height: 10px; margin-right: 4px; border: 2px solid var(--carbon); border-radius: 50%; background: var(--papel); vertical-align: middle; }
