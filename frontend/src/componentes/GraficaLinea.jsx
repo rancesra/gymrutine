@@ -5,6 +5,7 @@ import { formatoFecha, formatoNumero } from '../utilidades/formato.js'
 // Único lugar del proyecto que usa Chart.js (ARQUITECTURA DEC-08): crea la gráfica en un efecto
 // y la destruye al desmontarse, para no dejar gráficas vivas al cambiar de pantalla.
 // Recibe los puntos en orden cronológico: [{ fecha: '2026-09-14', valor: 77.9 }, …]
+// Un punto con destacado: true (un récord) se dibuja dorado y más grande.
 export default function GraficaLinea({ puntos, unidad = 'kg', titulo = 'Evolución' }) {
   const lienzo = useRef(null)
   // El texto de los puntos es la dependencia del efecto: así no se redibuja en cada render
@@ -21,9 +22,9 @@ export default function GraficaLinea({ puntos, unidad = 'kg', titulo = 'Evoluci�
             data: datos.map((punto) => punto.valor),
             borderColor: '#1f2937',
             borderWidth: 2.5,
-            pointRadius: 4,
-            pointBackgroundColor: '#ffffff',
-            pointBorderColor: '#1f2937',
+            pointRadius: datos.map((punto) => (punto.destacado ? 6.5 : 4)),
+            pointBackgroundColor: datos.map((punto) => (punto.destacado ? '#eab308' : '#ffffff')),
+            pointBorderColor: datos.map((punto) => (punto.destacado ? '#713f12' : '#1f2937')),
             pointBorderWidth: 2.5,
           },
         ],

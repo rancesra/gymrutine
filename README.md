@@ -136,7 +136,7 @@ Son cinco piezas. Las dos bases de datos arrancan solas con el computador; las o
 - [x] H23 — Editar una sesión
 - [x] H18 — Detección automática de récords personales
 - [x] H19 — Ver mis récords personales
-- [ ] H20 — Ver el progreso de un ejercicio
+- [x] H20 — Ver el progreso de un ejercicio
 - [x] Pantalla de inicio
 - [x] Colección de Postman
 - [x] Datos de demostración
