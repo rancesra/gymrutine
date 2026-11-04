@@ -96,8 +96,14 @@ Una por CRUD, tomada antes de la sustentación, en `docs/evidencias/`:
 - `crud-peso.png`: la gráfica y la lista de peso corporal, con un registro corregido (Rances).
 - `crud-sesiones.png`: una sesión en la pantalla de entrenar, con las series marcadas y los posibles récords (Santiago).
 - `login.png`: la pantalla de iniciar sesión.
+- `inicio.png`: la pantalla de inicio con el resumen y los récords recientes.
 
-## 5. Retrospectivas
+## 5. Capturas del repositorio y de las bases de datos
+
+- `pull-requests.png`: la lista de pull requests unidos, donde se ve la clave de Jira al inicio de cada título.
+- `base-datos.png`: las 6 tablas en MySQL Workbench y las 2 colecciones de MongoDB.
+
+## 6. Retrospectivas
 
 Lo que funcionó, lo que no y el cambio acordado para el siguiente sprint están en el [plan de trabajo](PLAN-DE-TRABAJO.md#retrospectivas).
 

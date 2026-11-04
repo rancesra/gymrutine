@@ -18,6 +18,15 @@ export function borrarBorrador(rutinaId) {
   localStorage.removeItem(PREFIJO + rutinaId)
 }
 
+// Los entrenamientos sin guardar que hay en este navegador: [{ rutinaId, borrador }] (pantalla P3)
+export function leerBorradores() {
+  return Object.keys(localStorage)
+    .filter((clave) => clave.startsWith(PREFIJO))
+    .map((clave) => clave.slice(PREFIJO.length))
+    .map((rutinaId) => ({ rutinaId, borrador: leerBorrador(rutinaId) }))
+    .filter((pendiente) => pendiente.borrador)
+}
+
 // Al cerrar sesión no deben quedar entrenamientos de esa cuenta en el navegador
 export function borrarTodosLosBorradores() {
   Object.keys(localStorage)

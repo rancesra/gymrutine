@@ -203,6 +203,8 @@ ol.lista { margin: 0; padding: 0; list-style: none; }
 .miniatura { display: grid; place-items: center; flex: none; width: 40px; height: 40px; border-radius: 10px; background: var(--naranja-suave); color: var(--naranja); }
 .btn-volver.naranja { color: var(--naranja); }
 .bloque { display: block; }
+.lista-fila.enlace { color: inherit; font-weight: inherit; text-decoration: none; }
+.lista-fila.enlace:hover { background: var(--naranja-fondo); }
 .tarjeta-enlace.fila { display: flex; }
 .fila > .crece { flex: 1; min-width: 0; }
 

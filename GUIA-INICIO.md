@@ -264,11 +264,10 @@ Para detener el frontend, presiona `Ctrl + C` en su terminal.
 
 ## 7. Probar la API con Postman
 
-> **Disponible cuando exista la colección en `postman/`.**
-
-1. En Postman: **Import** → elige los archivos de la carpeta `postman/` (la colección y el entorno).
+1. En Postman: **Import** → arrastra los dos archivos de la carpeta [`postman/`](postman/README.md): la colección y el entorno.
 2. Arriba a la derecha, selecciona el entorno **GymRutine local**.
-3. Ejecuta primero *Autenticación → Iniciar sesión*: el token queda guardado en el entorno y las demás peticiones lo usan solas.
+3. Ejecuta primero *1. Cuentas · Autenticación y perfil → POST /auth/login*: el token queda guardado en el entorno y las demás peticiones lo usan solas.
+4. Para probarlo todo de una vez, **Collection Runner → Run GymRutine**: las 39 peticiones van en orden y cada una comprueba el código de estado del contrato.
 
 ## 8. Si cambió el modelo de datos
 
