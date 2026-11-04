@@ -249,3 +249,13 @@ ol.lista { margin: 0; padding: 0; list-style: none; }
 .tarjeta.nuevo-record { background: var(--oro-suave); border-color: #fde68a; display: grid; gap: 6px; }
 .tarjeta.nuevo-record .fila { color: var(--oro-tinta); font-size: 16px; }
 .nuevo-record .texto-3 { color: var(--oro-tinta); }
+
+/* Progreso por ejercicio (P11): leyenda de la gráfica y tabla con los mismos datos */
+.leyenda { display: flex; justify-content: center; gap: 14px; padding: 4px 0 6px; }
+.leyenda-punto { display: inline-block; width: 10px; height: 10px; margin-right: 4px; border: 2px solid var(--carbon); border-radius: 50%; background: var(--papel); vertical-align: middle; }
+.leyenda-punto.record { border-color: #713f12; background: #eab308; }
+.tabla { width: 100%; border-collapse: separate; border-spacing: 0; overflow: hidden; font-size: 13px; background: var(--papel); border: 1px solid var(--linea); border-radius: var(--radio); }
+.tabla th, .tabla td { padding: 9px 10px; text-align: left; border-top: 1px solid var(--linea); }
+.tabla th { font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--tinta-3); background: #fafaf9; border-top: 0; }
+.tabla .der { text-align: right; }
+a.chip { text-decoration: none; }
