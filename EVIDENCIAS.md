@@ -29,7 +29,7 @@ El curso pide mostrar el login y **un CRUD por integrante** ([plan de trabajo](P
 |---|---|---|
 | Rances | T0 documentación y Jira · T1 base del servicio de cuentas · T4 API de cuenta y perfil · T10 peso corporal y `GraficaLinea` · datos de demostración y evidencias | [#3](https://github.com/rancesra/gymrutine/pull/3), [#4](https://github.com/rancesra/gymrutine/pull/4), [#11](https://github.com/rancesra/gymrutine/pull/11) |
 | Javier | T2 base del frontend · T4 pantallas de login y registro · T5 API del catálogo · T6 rutinas: API y pantallas | [#5](https://github.com/rancesra/gymrutine/pull/5), [#9](https://github.com/rancesra/gymrutine/pull/9), [#10](https://github.com/rancesra/gymrutine/pull/10), [#12](https://github.com/rancesra/gymrutine/pull/12) |
-| Santiago | T3 base del servicio de entrenamiento · T7 sesiones: API y pantallas de entrenar, resumen, historial y detalle · T8 algoritmo y API de récords · T9 API de progreso · pruebas de punta a punta ([PRUEBAS.md](docs/PRUEBAS.md)) | [#1](https://github.com/rancesra/gymrutine/pull/1), [#2](https://github.com/rancesra/gymrutine/pull/2), [#6](https://github.com/rancesra/gymrutine/pull/6), [#7](https://github.com/rancesra/gymrutine/pull/7), [#8](https://github.com/rancesra/gymrutine/pull/8), [#14](https://github.com/rancesra/gymrutine/pull/14), [#15](https://github.com/rancesra/gymrutine/pull/15), [#16](https://github.com/rancesra/gymrutine/pull/16), [#17](https://github.com/rancesra/gymrutine/pull/17) |
+| Santiago | T3 base del servicio de entrenamiento · T7 sesiones: API y pantallas de entrenar, resumen, historial y detalle · T8 algoritmo y API de récords · T9 API de progreso · pruebas de punta a punta ([PRUEBAS.md](docs/PRUEBAS.md)) | [#1](https://github.com/rancesra/gymrutine/pull/1), [#2](https://github.com/rancesra/gymrutine/pull/2), [#6](https://github.com/rancesra/gymrutine/pull/6), [#7](https://github.com/rancesra/gymrutine/pull/7), [#8](https://github.com/rancesra/gymrutine/pull/8), [#14](https://github.com/rancesra/gymrutine/pull/14), [#15](https://github.com/rancesra/gymrutine/pull/15), [#16](https://github.com/rancesra/gymrutine/pull/16), [#17](https://github.com/rancesra/gymrutine/pull/17), [#22](https://github.com/rancesra/gymrutine/pull/22) |
 
 ### 2.2 Commits y pull requests
 
@@ -43,7 +43,7 @@ git shortlog -sn --no-merges
 |---|---|---|---|
 | Rances | 17 | 3 ([#3](https://github.com/rancesra/gymrutine/pull/3), [#4](https://github.com/rancesra/gymrutine/pull/4), [#11](https://github.com/rancesra/gymrutine/pull/11)) | https://github.com/rancesra/gymrutine/pulls?q=is%3Apr+author%3Arancesra |
 | Javier | 7 | 4 ([#5](https://github.com/rancesra/gymrutine/pull/5), [#9](https://github.com/rancesra/gymrutine/pull/9), [#10](https://github.com/rancesra/gymrutine/pull/10), [#12](https://github.com/rancesra/gymrutine/pull/12)) | https://github.com/rancesra/gymrutine/pulls?q=is%3Apr+author%3AJavierCamargo23 |
-| Santiago | 11 | 9 ([#1](https://github.com/rancesra/gymrutine/pull/1), [#2](https://github.com/rancesra/gymrutine/pull/2), [#6](https://github.com/rancesra/gymrutine/pull/6), [#7](https://github.com/rancesra/gymrutine/pull/7), [#8](https://github.com/rancesra/gymrutine/pull/8), [#14](https://github.com/rancesra/gymrutine/pull/14), [#15](https://github.com/rancesra/gymrutine/pull/15), [#16](https://github.com/rancesra/gymrutine/pull/16), [#17](https://github.com/rancesra/gymrutine/pull/17)) | https://github.com/rancesra/gymrutine/pulls?q=is%3Apr+author%3AThiago3108 |
+| Santiago | 12 | 10 ([#1](https://github.com/rancesra/gymrutine/pull/1), [#2](https://github.com/rancesra/gymrutine/pull/2), [#6](https://github.com/rancesra/gymrutine/pull/6), [#7](https://github.com/rancesra/gymrutine/pull/7), [#8](https://github.com/rancesra/gymrutine/pull/8), [#14](https://github.com/rancesra/gymrutine/pull/14), [#15](https://github.com/rancesra/gymrutine/pull/15), [#16](https://github.com/rancesra/gymrutine/pull/16), [#17](https://github.com/rancesra/gymrutine/pull/17), [#22](https://github.com/rancesra/gymrutine/pull/22)) | https://github.com/rancesra/gymrutine/pulls?q=is%3Apr+author%3AThiago3108 |
 
 ## 3. Trazabilidad en Jira
 
@@ -78,14 +78,14 @@ Cada historia tiene su tarjeta en Jira; la clave abre la tarjeta (hay que tener 
 | H13 — Eliminar una rutina | Javier | [GR-20](https://gymrutine-uis.atlassian.net/browse/GR-20) | [#9](https://github.com/rancesra/gymrutine/pull/9) y [#12](https://github.com/rancesra/gymrutine/pull/12) | 4 |
 | H14 — Registrar una sesión de entrenamiento | Santiago | [GR-21](https://gymrutine-uis.atlassian.net/browse/GR-21) | [#6](https://github.com/rancesra/gymrutine/pull/6) y [#14](https://github.com/rancesra/gymrutine/pull/14) | 4 |
 | H15 — Ver el historial de sesiones | Santiago | [GR-22](https://gymrutine-uis.atlassian.net/browse/GR-22) | [#6](https://github.com/rancesra/gymrutine/pull/6) y [#7](https://github.com/rancesra/gymrutine/pull/7) | 4 |
-| H16 — Ver el detalle de una sesión | Santiago | [GR-23](https://gymrutine-uis.atlassian.net/browse/GR-23) | [#6](https://github.com/rancesra/gymrutine/pull/6) y [#8](https://github.com/rancesra/gymrutine/pull/8) | 4 |
+| H16 — Ver el detalle de una sesión | Santiago | [GR-23](https://gymrutine-uis.atlassian.net/browse/GR-23) | [#6](https://github.com/rancesra/gymrutine/pull/6), [#8](https://github.com/rancesra/gymrutine/pull/8) y [#22](https://github.com/rancesra/gymrutine/pull/22) | 4 |
 | H17 — Eliminar una sesión | Santiago | [GR-24](https://gymrutine-uis.atlassian.net/browse/GR-24) | [#6](https://github.com/rancesra/gymrutine/pull/6) y [#8](https://github.com/rancesra/gymrutine/pull/8) | 4 |
 | H18 — Detección automática de récords personales | Santiago | [GR-25](https://gymrutine-uis.atlassian.net/browse/GR-25) | [#2](https://github.com/rancesra/gymrutine/pull/2), [#6](https://github.com/rancesra/gymrutine/pull/6) y [#14](https://github.com/rancesra/gymrutine/pull/14) | 4 |
-| H19 — Ver mis récords personales | Santiago (API) y Rances (pantalla) | [GR-26](https://gymrutine-uis.atlassian.net/browse/GR-26) | [#16](https://github.com/rancesra/gymrutine/pull/16) (API) | |
-| H20 — Ver el progreso de un ejercicio | Santiago (API) y Javier (pantalla) | [GR-27](https://gymrutine-uis.atlassian.net/browse/GR-27) | [#17](https://github.com/rancesra/gymrutine/pull/17) (API) | |
+| H19 — Ver mis récords personales | Santiago (API) y Rances (pantalla) | [GR-26](https://gymrutine-uis.atlassian.net/browse/GR-26) | [#16](https://github.com/rancesra/gymrutine/pull/16) (API) y [#18](https://github.com/rancesra/gymrutine/pull/18) (pantalla) | |
+| H20 — Ver el progreso de un ejercicio | Santiago (API) y Javier (pantalla) | [GR-27](https://gymrutine-uis.atlassian.net/browse/GR-27) | [#17](https://github.com/rancesra/gymrutine/pull/17) (API) y [#19](https://github.com/rancesra/gymrutine/pull/19) (pantalla) | |
 | H21 — Registrar mi peso corporal | Rances | [GR-28](https://gymrutine-uis.atlassian.net/browse/GR-28) | [#11](https://github.com/rancesra/gymrutine/pull/11) | 3 |
 | H22 — Ver la evolución de mi peso corporal | Rances | [GR-29](https://gymrutine-uis.atlassian.net/browse/GR-29) | [#11](https://github.com/rancesra/gymrutine/pull/11) | 3 |
-| H23 — Editar una sesión | Santiago | [GR-30](https://gymrutine-uis.atlassian.net/browse/GR-30) | [#6](https://github.com/rancesra/gymrutine/pull/6) y [#8](https://github.com/rancesra/gymrutine/pull/8) | 4 |
+| H23 — Editar una sesión | Santiago | [GR-30](https://gymrutine-uis.atlassian.net/browse/GR-30) | [#6](https://github.com/rancesra/gymrutine/pull/6), [#8](https://github.com/rancesra/gymrutine/pull/8) y [#22](https://github.com/rancesra/gymrutine/pull/22) | 4 |
 | H24 — Corregir un registro de peso | Rances | [GR-31](https://gymrutine-uis.atlassian.net/browse/GR-31) | [#11](https://github.com/rancesra/gymrutine/pull/11) | 3 |
 
 ## 4. Capturas de la aplicación
@@ -109,4 +109,4 @@ Lo que funcionó, lo que no y el cambio acordado para el siguiente sprint están
 
 ---
 
-_Última actualización: 2026-10-14_
+_Última actualización: 2026-11-07_
