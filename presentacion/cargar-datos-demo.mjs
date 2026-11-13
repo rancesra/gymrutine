@@ -193,22 +193,30 @@ async function crearRutinas(catalogo) {
   return ids
 }
 
-async function crearSesiones(rutinasIds, catalogo) {
+async function crearSesiones(rutinasIds) {
+  // Los ejercicios salen de la rutina tal como está guardada, no de la plantilla: si la rutina ya
+  // existía con otros ejercicios, la sesión igual cuadra con ella (el servicio la valida contra Spring).
+  const detalles = new Map()
+  for (const id of new Set(rutinasIds)) {
+    detalles.set(id, await cuentas('GET', `/rutinas/${id}`))
+  }
+
   for (const [diasAtras, hora, indiceRutina, factor] of SESIONES) {
-    const plantilla = RUTINAS[indiceRutina]
-    const registros = plantilla.ejercicios.map(([nombre, series, repeticiones]) => {
-      const carga = cargaDe(nombre, factor)
+    const rutinaId = rutinasIds[indiceRutina]
+    const registros = detalles.get(rutinaId).ejercicios.map((item) => {
+      const carga = cargaDe(item.ejercicio.nombre, factor)
+      const series = item.seriesObjetivo
       return {
-        ejercicioId: catalogo.get(nombre),
+        ejercicioId: item.ejercicio.id,
         series: Array.from({ length: series }, (_, i) => ({
           // La última serie es la más pesada: ahí es donde aparecen los récords
           pesoKg: carga === 0 ? 0 : carga + (i === series - 1 ? 2.5 : 0),
-          repeticiones: Math.max(1, repeticiones - i),
+          repeticiones: Math.max(1, item.repeticionesObjetivo - i),
         })),
       }
     })
     await entrenamiento('POST', '/sesiones', {
-      rutinaId: rutinasIds[indiceRutina],
+      rutinaId,
       fechaInicio: fechaHora(diasAtras, hora),
       duracionMinutos: 45 + ((diasAtras * 7) % 20),
       registros,
@@ -237,7 +245,7 @@ async function principal() {
   let catalogo = await catalogoPorNombre()
   catalogo = await crearEjercicioPropio(catalogo)
   const rutinasIds = await crearRutinas(catalogo)
-  await crearSesiones(rutinasIds, catalogo)
+  await crearSesiones(rutinasIds)
   await crearPesos()
 
   const records = await entrenamiento('GET', '/records')
