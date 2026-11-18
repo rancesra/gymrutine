@@ -11,6 +11,16 @@
 
 **Entornos de Programación (24542)** · Universidad Industrial de Santander (UIS) · Entrega del sprint 2: **23 de septiembre** · Entrega final: **9 de octubre de 2026**
 
+> [!IMPORTANT]
+> **📌 Tarea que se entrega: [Spring Boot · NoSQL · React](docs/entregas/SPRING-BOOT-NOSQL-REACT.md)**
+>
+> Lo que pide la tarea y dónde está en el proyecto:
+> [Base de datos NoSQL (MongoDB)](docs/entregas/SPRING-BOOT-NOSQL-REACT.md#2-base-de-datos-no-relacional-mongodb) ·
+> [Backend con Spring Boot y login](docs/entregas/SPRING-BOOT-NOSQL-REACT.md#3-backend-con-spring-boot-y-login-del-usuario) ·
+> [CRUD de documentos](docs/entregas/SPRING-BOOT-NOSQL-REACT.md#4-crud-de-documentos) ·
+> [Frontend con React](docs/entregas/SPRING-BOOT-NOSQL-REACT.md#5-frontend-con-react) ·
+> [Cómo ejecutarlo](docs/entregas/SPRING-BOOT-NOSQL-REACT.md#6-cómo-ejecutarlo)
+
 Aplicación web para personas que **entrenan solas en el gimnasio**: arman rutinas alineadas a su objetivo, registran cada serie que realmente hacen y ven su **progreso medible**, con la evolución de sus cargas en gráficas y récords personales que el sistema detecta solo.
 
 ## Qué hace
