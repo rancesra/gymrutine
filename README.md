@@ -1,5 +1,9 @@
 # 🏋️ GymRutine
 
+### 🎥 Video de la sustentación: **https://youtu.be/5E1894bCNmc**
+
+Rances, Javier y Santiago presentan el proyecto funcionando: el login y un CRUD por integrante.
+
 ![Java](https://img.shields.io/badge/Java-21-ED8B00?logo=openjdk&logoColor=white)
 ![Spring Boot](https://img.shields.io/badge/Spring_Boot-4.1.1-6DB33F?logo=springboot&logoColor=white)
 ![MySQL](https://img.shields.io/badge/MySQL-8.4_LTS-4479A1?logo=mysql&logoColor=white)
