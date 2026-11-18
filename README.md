@@ -24,6 +24,16 @@ Aplicación web para personas que **entrenan solas en el gimnasio**: arman rutin
 7. **Progreso:** gráfica de la evolución del peso levantado por ejercicio.
 8. **Peso corporal:** registro y gráfica, para medir el progreso de quien busca bajar de peso.
 
+## Entregas
+
+Cada tarea del curso tiene su documento, con lo que se pidió y dónde está en el proyecto:
+
+| Tarea | Qué se pidió | Documento |
+|---|---|---|
+| **Sprint 2** · 23 de septiembre | Diseño de la base de datos, repositorio con Git y proyecto en Jira | [Modelo de datos](docs/MODELO-DATOS.md) · [Jira](https://gymrutine-uis.atlassian.net/browse/GR) |
+| **Entrega final** · 9 de octubre | Login y un CRUD por integrante, con las evidencias de participación y la trazabilidad en Jira | [Evidencias](EVIDENCIAS.md) |
+| **Spring Boot · NoSQL · React** | Base de datos no relacional, backend con Spring Boot y login, CRUD de un documento y frontend con React | [Tarea Spring Boot · NoSQL · React](docs/entregas/SPRING-BOOT-NOSQL-REACT.md) |
+
 ## Arquitectura
 
 ```mermaid
@@ -46,6 +56,7 @@ graph LR
 |---|---|
 | [Plan de trabajo](PLAN-DE-TRABAJO.md) | Qué pide el curso, calendario hasta el 9 de octubre, un CRUD por integrante, quién espera a quién y cómo verificar cada tarea |
 | [Evidencias](EVIDENCIAS.md) | Participación de cada integrante y trazabilidad del avance en Jira (entrega final) |
+| [Tarea Spring Boot · NoSQL · React](docs/entregas/SPRING-BOOT-NOSQL-REACT.md) | Cómo cumple GymRutine cada punto de esa tarea: MongoDB, login con Spring Boot, CRUD de documentos y React, con sus diagramas |
 | [Pruebas de punta a punta](docs/PRUEBAS.md) | El recorrido completo de la aplicación con los tres servicios y los casos del servicio de entrenamiento, con sus resultados |
 | [Guion de la demostración](docs/GUION-DEMO.md) | Qué se muestra en cada entrega, en qué orden, quién presenta cada parte y el plan B |
 | [Informe inicial](docs/IDEA.md) | Problema, justificación, alcance, benchmark contra GymTracker y decisiones del proyecto |
@@ -69,6 +80,7 @@ graph LR
 
 ```
 ├── docs/                 Documentación del proyecto
+│   ├── entregas/         Un documento por tarea del curso
 │   ├── evidencias/       Capturas de Jira y de la app para EVIDENCIAS.md
 │   ├── guias/            Guías de T2, T3 y Jira, el backlog para Jira y la API falsa
 │   └── mockup/           Mockup en HTML y reglas de cada pantalla
@@ -95,7 +107,7 @@ Son cinco piezas. Las dos bases de datos arrancan solas con el computador; las o
 
 ## Estado
 
-**Al 3 de noviembre:** la aplicación está completa salvo la pantalla de progreso por ejercicio (P11). Funcionan el login y el perfil, el catálogo, los tres CRUD de la entrega —rutinas (Javier), sesiones (Santiago) y peso corporal (Rances)—, los récords automáticos con su pantalla y el inicio con el resumen. Quedan la pantalla P11 con la API ya lista, la colección de Postman y las capturas de las evidencias.
+**Al 18 de noviembre:** la aplicación está completa: funcionan las 24 historias de usuario. Eso incluye el login y el perfil, el catálogo, los tres CRUD de la entrega —rutinas (Javier), sesiones (Santiago) y peso corporal (Rances)—, los récords automáticos, el progreso por ejercicio y el inicio con el resumen. También están la colección de Postman, los datos de demostración y las [pruebas de punta a punta](docs/PRUEBAS.md). Quedan seis de las siete capturas de las [evidencias](EVIDENCIAS.md) y el pulido en celulares reales.
 
 ### Sprint 2 — Bases, login y Jira (21 al 23 de septiembre) · Entrega del sprint 2
 
@@ -141,8 +153,11 @@ Son cinco piezas. Las dos bases de datos arrancan solas con el computador; las o
 - [x] Pantalla de inicio
 - [x] Colección de Postman
 - [x] Datos de demostración
-- [ ] [Evidencias de participación y trazabilidad en Jira](EVIDENCIAS.md)
-- [ ] Pulido en celulares reales y documentación final
+- [x] [Pruebas de punta a punta](docs/PRUEBAS.md)
+- [x] [Evidencias de participación y trazabilidad en Jira](EVIDENCIAS.md)
+- [ ] Capturas de las evidencias: faltan 6 de las 7 en `docs/evidencias/`
+- [x] Documento de la [tarea Spring Boot · NoSQL · React](docs/entregas/SPRING-BOOT-NOSQL-REACT.md)
+- [ ] Pulido en celulares reales (el primer intento se revirtió)
 - [ ] **Entrega final**
 
 ## Equipo
